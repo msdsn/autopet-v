@@ -1,0 +1,159 @@
+{
+  "description": "Post-processing ablation ladder for the interactive loop. Each rung adds exactly one stage to the one above it, on the same cases, the same strategy assignment and the same seed. Every variant that shares a base model also shares one prediction cache, so a rung only pays for a forward pass when its own scribbles differ from every set already computed.",
+  "defaults": {
+    "strategy": "all",
+    "max_iters": 6,
+    "eval": "fixed",
+    "save_predictions": "all",
+    "args": []
+  },
+  "variants": [
+    {
+      "id": "A0",
+      "label": "A0  fast baseline nnU-Net, no post-processing (control)",
+      "args": ["--predictor", "fast_baseline_nnunet", "--cache_probabilities"]
+    },
+    {
+      "id": "A1",
+      "label": "A1  background-scribble compliance only",
+      "args": ["--predictor", "postproc"],
+      "postproc_set": [
+        "enable_bg_compliance=true",
+        "enable_fg_compliance=false",
+        "enable_cleanup=false",
+        "negative_gate.enabled=false",
+        "monotone.mode=none"
+      ]
+    },
+    {
+      "id": "A2",
+      "label": "A2  A1 + tumor-scribble compliance",
+      "args": ["--predictor", "postproc"],
+      "postproc_set": [
+        "enable_bg_compliance=true",
+        "enable_fg_compliance=true",
+        "enable_cleanup=false",
+        "negative_gate.enabled=false",
+        "monotone.mode=none"
+      ]
+    },
+    {
+      "id": "A3",
+      "label": "A3  A2 + component cleanup (small components + holes, no SUV floor)",
+      "args": ["--predictor", "postproc"],
+      "postproc_set": [
+        "enable_bg_compliance=true",
+        "enable_fg_compliance=true",
+        "enable_cleanup=true",
+        "cleanup.suv_floor_mode=off",
+        "negative_gate.enabled=false",
+        "monotone.mode=none"
+      ]
+    },
+    {
+      "id": "A4",
+      "label": "A4  A3 + tracer SUV floor (FDG 1.5 / PSMA 1.0)",
+      "args": ["--predictor", "postproc"],
+      "postproc_set": [
+        "enable_bg_compliance=true",
+        "enable_fg_compliance=true",
+        "enable_cleanup=true",
+        "cleanup.suv_floor_mode=component",
+        "negative_gate.enabled=false",
+        "monotone.mode=none"
+      ]
+    },
+    {
+      "id": "A5",
+      "label": "A5  A4 + negative gate (max_prob 0.60)",
+      "args": ["--predictor", "postproc"],
+      "postproc_set": [
+        "enable_bg_compliance=true",
+        "enable_fg_compliance=true",
+        "enable_cleanup=true",
+        "cleanup.suv_floor_mode=component",
+        "negative_gate.enabled=true",
+        "negative_gate.max_prob=0.60",
+        "monotone.mode=none"
+      ]
+    },
+    {
+      "id": "A5a",
+      "label": "A5a  A5 with a stricter gate (max_prob 0.45)",
+      "args": ["--predictor", "postproc"],
+      "postproc_set": [
+        "enable_bg_compliance=true",
+        "enable_fg_compliance=true",
+        "enable_cleanup=true",
+        "cleanup.suv_floor_mode=component",
+        "negative_gate.enabled=true",
+        "negative_gate.max_prob=0.45",
+        "monotone.mode=none"
+      ]
+    },
+    {
+      "id": "A5b",
+      "label": "A5b  A5 with a looser gate (max_prob 0.75)",
+      "args": ["--predictor", "postproc"],
+      "postproc_set": [
+        "enable_bg_compliance=true",
+        "enable_fg_compliance=true",
+        "enable_cleanup=true",
+        "cleanup.suv_floor_mode=component",
+        "negative_gate.enabled=true",
+        "negative_gate.max_prob=0.75",
+        "monotone.mode=none"
+      ]
+    },
+    {
+      "id": "A5c",
+      "label": "A5c  A5 with a very loose gate (max_prob 0.90)",
+      "args": ["--predictor", "postproc"],
+      "postproc_set": [
+        "enable_bg_compliance=true",
+        "enable_fg_compliance=true",
+        "enable_cleanup=true",
+        "cleanup.suv_floor_mode=component",
+        "negative_gate.enabled=true",
+        "negative_gate.max_prob=0.90",
+        "monotone.mode=none"
+      ]
+    },
+    {
+      "id": "A6",
+      "label": "A6  A4 + monotone probability blend against the cached previous iteration",
+      "args": ["--predictor", "postproc", "--keep_state"],
+      "postproc_set": [
+        "enable_bg_compliance=true",
+        "enable_fg_compliance=true",
+        "enable_cleanup=true",
+        "cleanup.suv_floor_mode=component",
+        "negative_gate.enabled=false",
+        "monotone.mode=minmax"
+      ]
+    },
+    {
+      "id": "B3",
+      "label": "B3  interactive 5-channel model (CT, PET, EDT guidance, previous mask) + the A6 post-processing config",
+      "args": ["--predictor", "postproc", "--base_predictor", "interactive_nnunet",
+               "--checkpoint", "checkpoint_final.pth", "--keep_state"],
+      "postproc_set": [
+        "enable_bg_compliance=true",
+        "enable_fg_compliance=true",
+        "enable_cleanup=true",
+        "cleanup.suv_floor_mode=component",
+        "negative_gate.enabled=true",
+        "negative_gate.max_total_volume_ml=6.0",
+        "negative_gate.max_prob=null",
+        "monotone.mode=minmax",
+        "pass_cached_prev_pred=true"
+      ],
+      "notes": "The base model consumes the previous FINAL mask as its fifth channel, so it gets its own cache namespace and its cache key additionally carries a hash of that mask (Predictor.cache_state_key). pass_cached_prev_pred makes the same config work in the container, where the loop cannot hand the mask over in memory; inside the harness the explicitly passed prev_pred always wins, so the flag is a no-op there. Pass --model_folder if the checkpoint is not at the default location."
+    },
+    {
+      "id": "A7",
+      "label": "A7  A0 + mirroring TTA (own cache namespace: the network input changes)",
+      "args": ["--predictor", "fast_baseline_nnunet", "--enable_tta", "--cache_probabilities"]
+    }
+  ]
+}
