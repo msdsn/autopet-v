@@ -862,6 +862,41 @@ state) plus the one-off `cc3d` pass, and **exactly 0** at inference. N1 adds a 1
 14×20×16 map, one max-pool and one BCE; the +257 parameters are 0.0008 % of the network and the extra
 work is below the noise of a dataloader-bound epoch.
 
+### Stacked variants (round two)
+
+`nnUNetTrainer_InteractiveStacked.py` combines the sampler with an architecture block by multiple
+inheritance, so nothing is re-implemented: the sampler, the auxiliary loss, the weight surgery and the
+in-process identity gate are the same code that produced the single-mechanism rows.
+
+| class | plans | mechanism | new tensors |
+|---|---|---|---|
+| `nnUNetTrainer_InteractiveS1N1` | `nnUNetPlans_n1` | S1 sampler + N1 presence head | 2 |
+| `nnUNetTrainer_InteractiveS1B14` | `nnUNetPlans_b14` | S1 sampler + `EditBranchUNet` | 112 |
+
+The one thing each class must declare is `NEW_PARAM_PREFIXES`: `nnUNetTrainer_InteractiveS1` sets it to
+`()` and would otherwise shadow the architecture row's prefixes through the MRO. Verified at epoch 0
+against the B10 tensors: both graft with no stray and no unexpected key and reproduce the source logits
+at `0.000e+00`.
+
+`EpochOverrideMixin` reads `NUM_EPOCHS` from the environment (passed through by `train_b6.sh`, which
+unsets the `nnUNet_interactive_*` overrides on purpose). The poly LR schedule is computed from
+`self.num_epochs`, so a 40-epoch screen decays the learning rate over 40 epochs rather than truncating a
+120-epoch schedule. `..._screen40` subclasses pin the same thing to a results folder of their own.
+
+### Screening subset
+
+`docs/valset_screen39.txt` is the 39-case screening list, derived from the `B10g9_nostate_fixed_sub39`
+case list: index blocks 0–23 and 63–77 of `valset_v1.txt`, each starting on a multiple of three with a
+length divisible by three. That alignment matters — `assign_strategies` round-robins
+centerline/random/boundary over the *sorted* case list, so only an aligned subset gives every case the
+same scribble strategy it has in the full run (verified 39/39 against the recorded strategies). A
+paired Δ against the control on these 39 cases is therefore meaningful; an arbitrary 39 would not be.
+
+`scripts/eval_screen.sh` runs one model over a case list or the whole set. It exists next to
+`eval_variant.sh` because case names contain spaces: the list has to reach `interactive_eval.py` as a
+bash array of `--cases` arguments, and **`interactive_eval.py` has no `--cases_file` option** —
+`eval_variant.sh`'s `CASES_FILE` branch passes a flag that does not exist and aborts the run.
+
 ## Known limitations
 
 * **The corruption model is a proxy for the model's own errors.** True RITM-style iterative training (a
