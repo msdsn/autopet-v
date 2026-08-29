@@ -1,0 +1,2 @@
+B10g
+B10 checkpoint_best (epoch 99) instead of checkpoint_final, same A3 + gate v2 6 mL pipeline

@@ -1,0 +1,185 @@
+{
+  "run_id": "20260826-1357_A0-A7_postproc_ladder/A5a",
+  "label": "A5a  A5 with a stricter gate (max_prob 0.45)",
+  "finished_utc": "2026-08-26T22:11:34Z",
+  "gpu": "NVIDIA L4",
+  "args": {
+    "input_cases": "/content/drive/MyDrive/autoPET/evalset",
+    "image_dir": "/content/drive/MyDrive/autoPET/evalset/imagesTr",
+    "label_dir": "/content/drive/MyDrive/autoPET/evalset/labelsTr",
+    "out_dir": "/content/work/runs/20260826-1357_A0-A7_postproc_ladder/A5a",
+    "repo": "/content/autoPETV",
+    "strategy": "all",
+    "strategy_order": "centerline,random,boundary",
+    "max_iters": 6,
+    "cases": null,
+    "limit": null,
+    "prev_pred_dir": null,
+    "save_predictions": "all",
+    "official_case_skip": false,
+    "strict_pairing": true,
+    "eval_mode": "fixed",
+    "determinism_check": false,
+    "iter_budget_s": 600.0,
+    "official_empty_error_crash": false,
+    "replay_scribbles_dir": null,
+    "cache_dir": "/content/work/cache",
+    "cache_probabilities": false,
+    "cache_prob_dtype": "uint8",
+    "dmm_empty_gt": "official",
+    "stop_on_case_error": false,
+    "quiet": false,
+    "predictor": "postproc",
+    "base_predictor": "fast_baseline_nnunet",
+    "postproc_config": null,
+    "postproc_set": [
+      "enable_bg_compliance=true",
+      "enable_fg_compliance=true",
+      "enable_cleanup=true",
+      "cleanup.suv_floor_mode=component",
+      "negative_gate.enabled=true",
+      "negative_gate.max_prob=0.45",
+      "monotone.mode=none"
+    ],
+    "check_guarantees": "auto",
+    "strict_guarantees": false,
+    "keep_state": false,
+    "model_folder": null,
+    "folds": [
+      0
+    ],
+    "checkpoint": "checkpoint_final.pth",
+    "device": "cuda",
+    "enable_tta": false,
+    "tile_step_size": 0.5,
+    "npp": 3,
+    "nps": 3,
+    "verbose_nnunet": false,
+    "resample_channels": "scipy",
+    "resample_logits": "torch",
+    "resample_threads": 4,
+    "guidance_radius": null,
+    "interactive_state_dir": false,
+    "no_cudnn_deterministic": false,
+    "mirror_axes": null,
+    "threshold": 2.5,
+    "min_component_voxels": 0
+  },
+  "predictor": "postproc(cached(fast_baseline_nnunet))",
+  "n_cases": 100,
+  "max_iters": 6,
+  "max_auc": 5.0,
+  "results": {
+    "mean_auc_dice": 3.6387853652934616,
+    "mean_auc_dmm": 3.30071501268089,
+    "final_score_50_50": 3.4697501889871756,
+    "mean_dice_per_iteration": [
+      0.5005052495164558,
+      0.737518192340618,
+      0.7499760088580135,
+      0.7555772697386887,
+      0.7623318083694031,
+      0.7662589224570197
+    ],
+    "mean_dmm_per_iteration": [
+      0.30723726297542037,
+      0.6766530457312848,
+      0.6847064340278536,
+      0.7077751480366914,
+      0.7126434164551396,
+      0.730636673884419
+    ],
+    "by_lesion_status": {
+      "lesion_present": {
+        "n": 64,
+        "auc_dice": 3.6543521332710336,
+        "auc_dmm": 3.3007150126808895
+      },
+      "lesion_absent": {
+        "n": 36,
+        "auc_dice": 3.611111111111111,
+        "auc_dmm": NaN
+      }
+    },
+    "by_tracer": {
+      "fdg": {
+        "all": {
+          "n": 63,
+          "auc_dice": 3.6296617115815657,
+          "auc_dmm": 2.644540804397551
+        },
+        "lesion_present": {
+          "n": 31,
+          "auc_dice": 3.6667318654722147,
+          "auc_dmm": 2.6445408043975505
+        },
+        "lesion_absent": {
+          "n": 32,
+          "auc_dice": 3.59375,
+          "auc_dmm": NaN
+        }
+      },
+      "psma": {
+        "all": {
+          "n": 37,
+          "auc_dice": 3.6543202351272295,
+          "auc_dmm": 3.917121087128874
+        },
+        "lesion_present": {
+          "n": 33,
+          "auc_dice": 3.6427226878699237,
+          "auc_dmm": 3.917121087128874
+        },
+        "lesion_absent": {
+          "n": 4,
+          "auc_dice": 3.75,
+          "auc_dmm": NaN
+        }
+      }
+    }
+  },
+  "empty_error_region_exposure": {
+    "total_iters_with_zero_fp": 189,
+    "total_iters_with_zero_fn": 220,
+    "cases_propagated": []
+  },
+  "determinism_iter0_mismatches": [],
+  "timing": {
+    "total_seconds": 3686.6,
+    "median_iteration_seconds": {
+      "fdg": null,
+      "psma": null
+    },
+    "median_case_seconds": {
+      "fdg": 43.19,
+      "psma": 20.51
+    },
+    "n_model_iterations": {
+      "fdg": 0,
+      "psma": 0
+    }
+  },
+  "cache": {
+    "root": "/content/work/cache/fast_baseline_nnunet_501c60fca2",
+    "hits": 600,
+    "misses": 0,
+    "prob_upgrades": 0,
+    "store_probabilities": true,
+    "prob_dtype": "uint8",
+    "level": "base",
+    "model_calls": 0,
+    "cache_calls": 600
+  },
+  "worst_cases_auc_dice": [
+    "fdg_34aa521b46_03-30-2007-NA-PET-CT Ganzkoerper  primaer mit KM-44072_0000",
+    "fdg_572fca6b44_05-23-2005-NA-PET-CT Ganzkoerper  primaer mit KM-19541_0000",
+    "fdg_69ee62b035_12-26-2002-NA-PET-CT Ganzkoerper  primaer mit KM-42071_0000",
+    "fdg_6e1dba94e8_11-15-2002-NA-PET-CT Ganzkoerper  primaer mit KM-36676_0000",
+    "fdg_a37b4bca43_06-23-2002-NA-PET-CT Ganzkoerper  primaer mit KM-47963_0000",
+    "fdg_b1de3d4248_11-20-2003-NA-PET-CT Ganzkoerper  primaer mit KM-61599_0000",
+    "fdg_b3e923029c_11-21-2003-NA-PET-CT Ganzkoerper  primaer mit KM-64843_0000",
+    "fdg_ca62984a81_08-07-2003-NA-PET-CT Ganzkoerper  primaer mit KM-24067_0000",
+    "fdg_f0a1a38a3b_03-27-2005-NA-PET-CT Ganzkoerper  primaer mit KM-38725_0000",
+    "psma_28f9ecc106933531_2019-06-15_0000"
+  ]
+}

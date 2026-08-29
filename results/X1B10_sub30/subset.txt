@@ -1,0 +1,2 @@
+B10g9_ship
+Category-2 replay: the same B0-derived scribble sequence replayed unchanged into the shipped pipeline

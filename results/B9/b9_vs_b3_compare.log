@@ -1,0 +1,17 @@
+Fri Aug 28 21:51:45 UTC 2026
+[2026-08-28 21:51:44,454] [INFO] SUMMARY  n=100  mean AUC-Dice=3.4689  mean AUC-DMM=3.8243  (max 5.0)  lesion-free cases excluded from DMM: 36  total 10437.5s
+/content/work/scratch/compare.py:34: RuntimeWarning: Mean of empty slice
+  dmm_c, dmm_n = np.nanmean(a[:, 2]), np.nanmean(a[:, 3])
+cases in common: 100
+all                    n=100 | AUC-Dice 3.3242 -> 3.4689 (+0.1447) | AUC-DMM 3.5635 -> 3.8243 (+0.2608)
+positives              n= 64 | AUC-Dice 3.6316 -> 3.8576 (+0.2261) | AUC-DMM 3.5635 -> 3.8243 (+0.2608)
+negatives              n= 36 | AUC-Dice 2.7778 -> 2.7778 (+0.0000) | AUC-DMM nan -> nan (+nan)
+fdg positives          n= 31 | AUC-Dice 3.7417 -> 3.8879 (+0.1462) | AUC-DMM 3.2230 -> 3.3645 (+0.1415)
+psma positives         n= 33 | AUC-Dice 3.5281 -> 3.8292 (+0.3012) | AUC-DMM 3.8833 -> 4.2562 (+0.3729)
+
+positives: DMM better 38, equal 6, worse 20
+worst 3: [('fdg_d3d61785e6_10-19-2001-NA-PET-C', -1.103), ('fdg_74bbceaeeb_06-03-2005-NA-PET-C', -1.1), ('fdg_5d553bf6b4_09-16-2001-NA-PET-C', -0.879)]
+best  3: [('psma_ca36bd95b63289d0_2020-05-15_0', 1.547), ('psma_907f1345abedf4fa_2020-11-21_0', 2.167), ('psma_c265ec063df5602b_2019-12-27_0', 3.3)]
+
+B9 summary: AUC-Dice 3.4689 AUC-DMM 3.8243 50/50 3.6466  (n=100)
+B3 summary: AUC-Dice 3.3242 AUC-DMM 3.5635 50/50 3.4438  (n=100)

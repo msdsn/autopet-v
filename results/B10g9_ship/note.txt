@@ -1,0 +1,1 @@
+the current **shipping candidate**: the B10 checkpoint under `submission/postproc_config.json` (gate v2 at 6 mL, cleanup rule v2 after compliance, bg+fg compliance, monotone minmax blending) with the compliance-collapse fix. Every other `*g` row runs the older A3 configuration without the fix.

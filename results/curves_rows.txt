@@ -1,0 +1,7 @@
+# Rows whose per-iteration curves are printed in RESULTS.md, in this order.
+# One row id per line; blank lines and #-comments ignored. Delete this file to show every row.
+A0
+B0
+B3g
+B10g
+B10g9_ship

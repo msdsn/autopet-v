@@ -1,0 +1,4147 @@
+{
+    "fdg_15cfa01130_02-24-2001-NA-PET-CT Ganzkoerper  primaer mit KM-49873_0000": {
+        "tag": "fdg_15cfa01130_02-24-2001-NA-PET-CT Ganzkoerper  primaer mit KM-49873_0000",
+        "strategy": "centerline",
+        "iter_seconds": [
+            12.522,
+            11.55,
+            11.457,
+            11.446,
+            11.472,
+            11.48
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 2.3592352867126465,
+        "shape": [
+            400,
+            400,
+            284
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 0.978,
+                "ct_pet_preproc_s": 0.41,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.047,
+                "assemble_s": 0.344,
+                "network_s": 8.453,
+                "export_s": 0.838,
+                "total_s": 11.075,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 0.117,
+                "assemble_s": 0.361,
+                "network_s": 7.088,
+                "export_s": 0.842,
+                "total_s": 8.415,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.004,
+                "prev_pred_s": 0.115,
+                "assemble_s": 0.356,
+                "network_s": 7.099,
+                "export_s": 0.846,
+                "total_s": 8.427,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.006,
+                "prev_pred_s": 0.116,
+                "assemble_s": 0.357,
+                "network_s": 7.098,
+                "export_s": 0.846,
+                "total_s": 8.429,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.007,
+                "prev_pred_s": 0.115,
+                "assemble_s": 0.359,
+                "network_s": 7.096,
+                "export_s": 0.849,
+                "total_s": 8.432,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.009,
+                "prev_pred_s": 0.116,
+                "assemble_s": 0.358,
+                "network_s": 7.098,
+                "export_s": 0.845,
+                "total_s": 8.432,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                2000,
+                9938
+            ],
+            [
+                1222,
+                12745
+            ],
+            [
+                1117,
+                13183
+            ],
+            [
+                1118,
+                13118
+            ],
+            [
+                1142,
+                13071
+            ],
+            [
+                1163,
+                13034
+            ]
+        ],
+        "fp_fn": [
+            [
+                10,
+                21
+            ],
+            [
+                11,
+                30
+            ],
+            [
+                11,
+                35
+            ],
+            [
+                12,
+                35
+            ],
+            [
+                10,
+                36
+            ]
+        ],
+        "case_seconds": 72.35
+    },
+    "fdg_1a1712f7d0_02-16-2007-NA-PET-CT Ganzkoerper  primaer mit KM-50630_0000": {
+        "tag": "fdg_1a1712f7d0_02-16-2007-NA-PET-CT Ganzkoerper  primaer mit KM-50630_0000",
+        "strategy": "random",
+        "iter_seconds": [
+            11.414,
+            11.503,
+            11.531,
+            11.485,
+            11.494,
+            11.474
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 2.726864814758301,
+        "shape": [
+            400,
+            400,
+            315
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 1.082,
+                "ct_pet_preproc_s": 0.461,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.053,
+                "assemble_s": 0.388,
+                "network_s": 7.177,
+                "export_s": 0.937,
+                "total_s": 10.103,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 0.129,
+                "assemble_s": 0.394,
+                "network_s": 7.172,
+                "export_s": 0.945,
+                "total_s": 8.647,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 0.127,
+                "assemble_s": 0.394,
+                "network_s": 7.188,
+                "export_s": 0.961,
+                "total_s": 8.678,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 0.13,
+                "assemble_s": 0.395,
+                "network_s": 7.186,
+                "export_s": 0.946,
+                "total_s": 8.666,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 0.129,
+                "assemble_s": 0.399,
+                "network_s": 7.181,
+                "export_s": 0.933,
+                "total_s": 8.649,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.004,
+                "prev_pred_s": 0.132,
+                "assemble_s": 0.398,
+                "network_s": 7.19,
+                "export_s": 0.942,
+                "total_s": 8.674,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                3,
+                829
+            ],
+            [
+                21,
+                137
+            ],
+            [
+                61,
+                152
+            ],
+            [
+                93,
+                152
+            ],
+            [
+                104,
+                152
+            ],
+            [
+                78,
+                152
+            ]
+        ],
+        "fp_fn": [
+            [
+                2,
+                10
+            ],
+            [
+                3,
+                4
+            ],
+            [
+                4,
+                5
+            ],
+            [
+                2,
+                5
+            ],
+            [
+                6,
+                5
+            ]
+        ],
+        "case_seconds": 71.7
+    },
+    "fdg_20a607649d_01-27-2007-NA-PET-CT Ganzkoerper  primaer mit KM-84908_0000": {
+        "tag": "fdg_20a607649d_01-27-2007-NA-PET-CT Ganzkoerper  primaer mit KM-84908_0000",
+        "strategy": "boundary",
+        "iter_seconds": [
+            21.989,
+            22.922,
+            23.086,
+            22.903,
+            23.219,
+            22.916
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 4.735246419906616,
+        "shape": [
+            400,
+            400,
+            584
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 1.984,
+                "ct_pet_preproc_s": 0.852,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.096,
+                "assemble_s": 0.716,
+                "network_s": 14.01,
+                "export_s": 1.712,
+                "total_s": 19.378,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 0.239,
+                "assemble_s": 0.734,
+                "network_s": 14.019,
+                "export_s": 1.717,
+                "total_s": 16.721,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 0.236,
+                "assemble_s": 0.733,
+                "network_s": 14.005,
+                "export_s": 1.763,
+                "total_s": 16.75,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 0.235,
+                "assemble_s": 0.732,
+                "network_s": 14.004,
+                "export_s": 1.717,
+                "total_s": 16.7,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.004,
+                "prev_pred_s": 0.238,
+                "assemble_s": 0.735,
+                "network_s": 14.005,
+                "export_s": 1.721,
+                "total_s": 16.714,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.005,
+                "prev_pred_s": 0.242,
+                "assemble_s": 0.739,
+                "network_s": 14.004,
+                "export_s": 1.713,
+                "total_s": 16.713,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                594,
+                13521
+            ],
+            [
+                2153,
+                13448
+            ],
+            [
+                2611,
+                13430
+            ],
+            [
+                3124,
+                13429
+            ],
+            [
+                3689,
+                13429
+            ],
+            [
+                4167,
+                13429
+            ]
+        ],
+        "fp_fn": [
+            [
+                7,
+                28
+            ],
+            [
+                9,
+                28
+            ],
+            [
+                10,
+                28
+            ],
+            [
+                10,
+                28
+            ],
+            [
+                10,
+                28
+            ]
+        ],
+        "case_seconds": 141.89
+    },
+    "fdg_21853fc15b_10-12-2002-NA-PET-CT Ganzkoerper  primaer mit KM-55807_0000": {
+        "tag": "fdg_21853fc15b_10-12-2002-NA-PET-CT Ganzkoerper  primaer mit KM-55807_0000",
+        "strategy": "centerline",
+        "iter_seconds": [
+            11.634,
+            11.8,
+            11.702,
+            11.802,
+            11.743,
+            11.737
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 2.717822313308716,
+        "shape": [
+            400,
+            400,
+            326
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 1.112,
+                "ct_pet_preproc_s": 0.474,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.054,
+                "assemble_s": 0.406,
+                "network_s": 7.205,
+                "export_s": 0.968,
+                "total_s": 10.225,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 0.134,
+                "assemble_s": 0.412,
+                "network_s": 7.198,
+                "export_s": 0.969,
+                "total_s": 8.72,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 0.132,
+                "assemble_s": 0.403,
+                "network_s": 7.201,
+                "export_s": 0.968,
+                "total_s": 8.713,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 0.132,
+                "assemble_s": 0.412,
+                "network_s": 7.196,
+                "export_s": 0.965,
+                "total_s": 8.713,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 0.133,
+                "assemble_s": 0.409,
+                "network_s": 7.215,
+                "export_s": 0.963,
+                "total_s": 8.729,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 0.133,
+                "assemble_s": 0.406,
+                "network_s": 7.216,
+                "export_s": 0.962,
+                "total_s": 8.726,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                127,
+                688
+            ],
+            [
+                144,
+                769
+            ],
+            [
+                150,
+                781
+            ],
+            [
+                157,
+                786
+            ],
+            [
+                169,
+                788
+            ],
+            [
+                180,
+                789
+            ]
+        ],
+        "fp_fn": [
+            [
+                5,
+                8
+            ],
+            [
+                5,
+                9
+            ],
+            [
+                5,
+                6
+            ],
+            [
+                5,
+                6
+            ],
+            [
+                5,
+                6
+            ]
+        ],
+        "case_seconds": 73.21
+    },
+    "fdg_23ed525e82_08-01-2003-NA-PET-CT Ganzkoerper  primaer mit KM-24219_0000": {
+        "tag": "fdg_23ed525e82_08-01-2003-NA-PET-CT Ganzkoerper  primaer mit KM-24219_0000",
+        "strategy": "random",
+        "iter_seconds": [
+            21.84,
+            22.608,
+            22.675,
+            23.002,
+            20.735,
+            21.58
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 4.668320417404175,
+        "shape": [
+            400,
+            400,
+            577
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 1.962,
+                "ct_pet_preproc_s": 0.839,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.095,
+                "assemble_s": 0.708,
+                "network_s": 13.985,
+                "export_s": 1.707,
+                "total_s": 19.306,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.001,
+                "prev_pred_s": 0.238,
+                "assemble_s": 0.728,
+                "network_s": 13.988,
+                "export_s": 1.7,
+                "total_s": 16.667,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 0.235,
+                "assemble_s": 0.721,
+                "network_s": 13.978,
+                "export_s": 1.718,
+                "total_s": 16.665,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 0.237,
+                "assemble_s": 0.725,
+                "network_s": 13.98,
+                "export_s": 1.712,
+                "total_s": 16.665,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 0.236,
+                "assemble_s": 0.726,
+                "network_s": 13.994,
+                "export_s": 1.71,
+                "total_s": 16.677,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 0.236,
+                "assemble_s": 0.719,
+                "network_s": 13.981,
+                "export_s": 1.712,
+                "total_s": 16.66,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                48,
+                50
+            ],
+            [
+                70,
+                27
+            ],
+            [
+                73,
+                26
+            ],
+            [
+                74,
+                26
+            ],
+            [
+                74,
+                26
+            ],
+            [
+                74,
+                26
+            ]
+        ],
+        "fp_fn": [
+            [
+                3,
+                5
+            ],
+            [
+                3,
+                4
+            ],
+            [
+                3,
+                4
+            ],
+            [
+                3,
+                4
+            ],
+            [
+                3,
+                4
+            ]
+        ],
+        "metrics_reused_at": [
+            4,
+            5
+        ],
+        "case_seconds": 137.23
+    },
+    "fdg_2a41141775_09-24-2005-NA-PET-CT Ganzkoerper  primaer mit KM-94391_0000": {
+        "tag": "fdg_2a41141775_09-24-2005-NA-PET-CT Ganzkoerper  primaer mit KM-94391_0000",
+        "strategy": "boundary",
+        "iter_seconds": [
+            12.916,
+            0.551,
+            0.548,
+            0.546,
+            0.547,
+            0.544
+        ],
+        "reused": [
+            null,
+            "cache",
+            "cache",
+            "cache",
+            "cache",
+            "cache"
+        ],
+        "load_s": 2.3968780040740967,
+        "shape": [
+            400,
+            400,
+            284
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": true,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 0.966,
+                "ct_pet_preproc_s": 0.411,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.047,
+                "assemble_s": 0.345,
+                "network_s": 7.095,
+                "export_s": 0.842,
+                "total_s": 9.71,
+                "ct_pet_cached": false
+            }
+        ],
+        "error_voxels": [
+            [
+                0,
+                0
+            ],
+            [
+                0,
+                0
+            ],
+            [
+                0,
+                0
+            ],
+            [
+                0,
+                0
+            ],
+            [
+                0,
+                0
+            ],
+            [
+                0,
+                0
+            ]
+        ],
+        "metrics_reused_at": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "case_seconds": 18.12
+    },
+    "fdg_2b60c8135a_12-09-2005-NA-PET-CT Ganzkoerper  primaer mit KM-49696_0000": {
+        "tag": "fdg_2b60c8135a_12-09-2005-NA-PET-CT Ganzkoerper  primaer mit KM-49696_0000",
+        "strategy": "centerline",
+        "iter_seconds": [
+            13.111,
+            13.637,
+            13.632,
+            13.726,
+            13.597,
+            13.534
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 2.7973878383636475,
+        "shape": [
+            400,
+            400,
+            327
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 1.118,
+                "ct_pet_preproc_s": 0.481,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.054,
+                "assemble_s": 0.403,
+                "network_s": 7.208,
+                "export_s": 0.976,
+                "total_s": 10.247,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 0.133,
+                "assemble_s": 0.409,
+                "network_s": 7.202,
+                "export_s": 0.972,
+                "total_s": 8.725,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.004,
+                "prev_pred_s": 0.133,
+                "assemble_s": 0.414,
+                "network_s": 7.215,
+                "export_s": 0.972,
+                "total_s": 8.743,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.004,
+                "prev_pred_s": 0.133,
+                "assemble_s": 0.412,
+                "network_s": 7.215,
+                "export_s": 1.043,
+                "total_s": 8.814,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.005,
+                "prev_pred_s": 0.133,
+                "assemble_s": 0.413,
+                "network_s": 7.231,
+                "export_s": 0.973,
+                "total_s": 8.761,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.006,
+                "prev_pred_s": 0.117,
+                "assemble_s": 0.415,
+                "network_s": 7.202,
+                "export_s": 0.971,
+                "total_s": 8.717,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                18107,
+                8614
+            ],
+            [
+                17005,
+                10954
+            ],
+            [
+                17083,
+                11518
+            ],
+            [
+                17302,
+                11678
+            ],
+            [
+                17607,
+                11754
+            ],
+            [
+                17903,
+                11795
+            ]
+        ],
+        "fp_fn": [
+            [
+                27,
+                17
+            ],
+            [
+                32,
+                13
+            ],
+            [
+                26,
+                13
+            ],
+            [
+                29,
+                13
+            ],
+            [
+                32,
+                13
+            ]
+        ],
+        "case_seconds": 84.11
+    },
+    "fdg_30287f520f_11-23-2003-NA-PET-CT Ganzkoerper  primaer mit KM-15029_0000": {
+        "tag": "fdg_30287f520f_11-23-2003-NA-PET-CT Ganzkoerper  primaer mit KM-15029_0000",
+        "strategy": "random",
+        "iter_seconds": [
+            23.518,
+            21.694,
+            21.797,
+            21.738,
+            21.786,
+            21.74
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 5.032023191452026,
+        "shape": [
+            400,
+            400,
+            619
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": true,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 2.137,
+                "ct_pet_preproc_s": 0.902,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.102,
+                "assemble_s": 0.757,
+                "network_s": 15.326,
+                "export_s": 1.825,
+                "total_s": 21.06,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.25,
+                "assemble_s": 0.769,
+                "network_s": 15.329,
+                "export_s": 1.839,
+                "total_s": 18.198,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.251,
+                "assemble_s": 0.768,
+                "network_s": 15.354,
+                "export_s": 1.864,
+                "total_s": 18.247,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.253,
+                "assemble_s": 0.791,
+                "network_s": 15.334,
+                "export_s": 1.851,
+                "total_s": 18.24,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.255,
+                "assemble_s": 0.776,
+                "network_s": 15.344,
+                "export_s": 1.847,
+                "total_s": 18.233,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.249,
+                "assemble_s": 0.772,
+                "network_s": 15.348,
+                "export_s": 1.859,
+                "total_s": 18.24,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                935,
+                0
+            ],
+            [
+                2392,
+                0
+            ],
+            [
+                2733,
+                0
+            ],
+            [
+                2827,
+                0
+            ],
+            [
+                2868,
+                0
+            ],
+            [
+                2890,
+                0
+            ]
+        ],
+        "case_seconds": 137.44
+    },
+    "fdg_34aa521b46_03-30-2007-NA-PET-CT Ganzkoerper  primaer mit KM-44072_0000": {
+        "tag": "fdg_34aa521b46_03-30-2007-NA-PET-CT Ganzkoerper  primaer mit KM-44072_0000",
+        "strategy": "boundary",
+        "iter_seconds": [
+            13.011,
+            11.983,
+            11.996,
+            11.255,
+            0.691,
+            0.688
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            "cache",
+            "cache"
+        ],
+        "load_s": 3.0407752990722656,
+        "shape": [
+            400,
+            400,
+            346
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": true,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 1.189,
+                "ct_pet_preproc_s": 0.512,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.057,
+                "assemble_s": 0.425,
+                "network_s": 8.505,
+                "export_s": 1.02,
+                "total_s": 11.716,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.124,
+                "assemble_s": 0.436,
+                "network_s": 8.502,
+                "export_s": 1.039,
+                "total_s": 10.107,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.143,
+                "assemble_s": 0.431,
+                "network_s": 8.483,
+                "export_s": 1.046,
+                "total_s": 10.109,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.142,
+                "assemble_s": 0.437,
+                "network_s": 8.491,
+                "export_s": 1.032,
+                "total_s": 10.109,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                123,
+                0
+            ],
+            [
+                133,
+                0
+            ],
+            [
+                134,
+                0
+            ],
+            [
+                134,
+                0
+            ],
+            [
+                134,
+                0
+            ],
+            [
+                134,
+                0
+            ]
+        ],
+        "metrics_reused_at": [
+            3,
+            4,
+            5
+        ],
+        "case_seconds": 52.75
+    },
+    "fdg_402c061122_08-25-2003-NA-PET-CT Ganzkoerper nativ-22953_0000": {
+        "tag": "fdg_402c061122_08-25-2003-NA-PET-CT Ganzkoerper nativ-22953_0000",
+        "strategy": "centerline",
+        "iter_seconds": [
+            10.821,
+            9.997,
+            9.934,
+            10.15,
+            10.023,
+            13.388
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 2.4701664447784424,
+        "shape": [
+            400,
+            400,
+            284
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": true,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 0.96,
+                "ct_pet_preproc_s": 0.417,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.047,
+                "assemble_s": 0.344,
+                "network_s": 7.106,
+                "export_s": 0.849,
+                "total_s": 9.73,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.118,
+                "assemble_s": 0.361,
+                "network_s": 7.104,
+                "export_s": 0.853,
+                "total_s": 8.441,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.116,
+                "assemble_s": 0.359,
+                "network_s": 7.101,
+                "export_s": 0.844,
+                "total_s": 8.425,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.114,
+                "assemble_s": 0.354,
+                "network_s": 7.329,
+                "export_s": 0.845,
+                "total_s": 8.647,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.115,
+                "assemble_s": 0.358,
+                "network_s": 7.161,
+                "export_s": 0.851,
+                "total_s": 8.49,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.116,
+                "assemble_s": 0.355,
+                "network_s": 10.54,
+                "export_s": 0.846,
+                "total_s": 11.862,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                347,
+                0
+            ],
+            [
+                361,
+                0
+            ],
+            [
+                378,
+                0
+            ],
+            [
+                406,
+                0
+            ],
+            [
+                438,
+                0
+            ],
+            [
+                486,
+                0
+            ]
+        ],
+        "case_seconds": 66.86
+    },
+    "fdg_44cfacfd6e_04-15-2007-NA-PET-CT Ganzkoerper  primaer mit KM-69456_0000": {
+        "tag": "fdg_44cfacfd6e_04-15-2007-NA-PET-CT Ganzkoerper  primaer mit KM-69456_0000",
+        "strategy": "random",
+        "iter_seconds": [
+            25.443,
+            20.884,
+            19.869,
+            20.117,
+            18.665,
+            1.198
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            "cache"
+        ],
+        "load_s": 4.760366916656494,
+        "shape": [
+            400,
+            400,
+            585
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": true,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 1.988,
+                "ct_pet_preproc_s": 0.853,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.094,
+                "assemble_s": 0.717,
+                "network_s": 17.841,
+                "export_s": 1.732,
+                "total_s": 23.235,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.235,
+                "assemble_s": 0.728,
+                "network_s": 14.948,
+                "export_s": 1.739,
+                "total_s": 17.66,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.236,
+                "assemble_s": 0.728,
+                "network_s": 13.998,
+                "export_s": 1.728,
+                "total_s": 16.699,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.242,
+                "assemble_s": 0.738,
+                "network_s": 14.0,
+                "export_s": 1.733,
+                "total_s": 16.723,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.238,
+                "assemble_s": 0.736,
+                "network_s": 14.015,
+                "export_s": 1.73,
+                "total_s": 16.729,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                30,
+                0
+            ],
+            [
+                86,
+                0
+            ],
+            [
+                105,
+                0
+            ],
+            [
+                108,
+                0
+            ],
+            [
+                108,
+                0
+            ],
+            [
+                108,
+                0
+            ]
+        ],
+        "metrics_reused_at": [
+            4,
+            5
+        ],
+        "case_seconds": 111.08
+    },
+    "fdg_4cc808d16f_06-11-2006-NA-PET-CT Ganzkoerper  primaer mit KM-36881_0000": {
+        "tag": "fdg_4cc808d16f_06-11-2006-NA-PET-CT Ganzkoerper  primaer mit KM-36881_0000",
+        "strategy": "boundary",
+        "iter_seconds": [
+            13.27,
+            0.593,
+            0.582,
+            0.588,
+            0.586,
+            0.587
+        ],
+        "reused": [
+            null,
+            "cache",
+            "cache",
+            "cache",
+            "cache",
+            "cache"
+        ],
+        "load_s": 2.5730888843536377,
+        "shape": [
+            400,
+            400,
+            301
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": true,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 1.024,
+                "ct_pet_preproc_s": 0.443,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.05,
+                "assemble_s": 0.369,
+                "network_s": 7.148,
+                "export_s": 0.896,
+                "total_s": 9.936,
+                "ct_pet_cached": false
+            }
+        ],
+        "error_voxels": [
+            [
+                0,
+                0
+            ],
+            [
+                0,
+                0
+            ],
+            [
+                0,
+                0
+            ],
+            [
+                0,
+                0
+            ],
+            [
+                0,
+                0
+            ],
+            [
+                0,
+                0
+            ]
+        ],
+        "metrics_reused_at": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "case_seconds": 18.86
+    },
+    "fdg_4ea806706c_10-30-2003-NA-PET-CT Ganzkoerper  primaer mit KM-87631_0000": {
+        "tag": "fdg_4ea806706c_10-30-2003-NA-PET-CT Ganzkoerper  primaer mit KM-87631_0000",
+        "strategy": "centerline",
+        "iter_seconds": [
+            11.453,
+            10.47,
+            10.463,
+            10.454,
+            10.476,
+            10.547
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 2.76430082321167,
+        "shape": [
+            400,
+            400,
+            326
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": true,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 1.112,
+                "ct_pet_preproc_s": 0.481,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.054,
+                "assemble_s": 0.399,
+                "network_s": 7.213,
+                "export_s": 0.967,
+                "total_s": 10.231,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.13,
+                "assemble_s": 0.409,
+                "network_s": 7.189,
+                "export_s": 0.973,
+                "total_s": 8.707,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.135,
+                "assemble_s": 0.409,
+                "network_s": 7.204,
+                "export_s": 0.967,
+                "total_s": 8.721,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.132,
+                "assemble_s": 0.405,
+                "network_s": 7.187,
+                "export_s": 0.972,
+                "total_s": 8.701,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.131,
+                "assemble_s": 0.407,
+                "network_s": 7.206,
+                "export_s": 0.972,
+                "total_s": 8.722,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.136,
+                "assemble_s": 0.416,
+                "network_s": 7.262,
+                "export_s": 0.969,
+                "total_s": 8.789,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                1116,
+                0
+            ],
+            [
+                1218,
+                0
+            ],
+            [
+                1251,
+                0
+            ],
+            [
+                1262,
+                0
+            ],
+            [
+                1265,
+                0
+            ],
+            [
+                1268,
+                0
+            ]
+        ],
+        "case_seconds": 66.71
+    },
+    "fdg_55d55902c6_05-11-2006-NA-PET-CT Ganzkoerper  primaer mit KM-26216_0000": {
+        "tag": "fdg_55d55902c6_05-11-2006-NA-PET-CT Ganzkoerper  primaer mit KM-26216_0000",
+        "strategy": "random",
+        "iter_seconds": [
+            21.53,
+            19.906,
+            19.889,
+            19.852,
+            19.808,
+            18.61
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 4.858859539031982,
+        "shape": [
+            400,
+            400,
+            581
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": true,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 1.974,
+                "ct_pet_preproc_s": 0.844,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.095,
+                "assemble_s": 0.707,
+                "network_s": 13.997,
+                "export_s": 1.709,
+                "total_s": 19.335,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.237,
+                "assemble_s": 0.733,
+                "network_s": 13.984,
+                "export_s": 1.709,
+                "total_s": 16.672,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.236,
+                "assemble_s": 0.732,
+                "network_s": 13.991,
+                "export_s": 1.716,
+                "total_s": 16.685,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.235,
+                "assemble_s": 0.725,
+                "network_s": 13.993,
+                "export_s": 1.716,
+                "total_s": 16.678,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.238,
+                "assemble_s": 0.733,
+                "network_s": 13.994,
+                "export_s": 1.711,
+                "total_s": 16.686,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.237,
+                "assemble_s": 0.732,
+                "network_s": 13.997,
+                "export_s": 1.713,
+                "total_s": 16.688,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                26,
+                0
+            ],
+            [
+                78,
+                0
+            ],
+            [
+                87,
+                0
+            ],
+            [
+                91,
+                0
+            ],
+            [
+                94,
+                0
+            ],
+            [
+                94,
+                0
+            ]
+        ],
+        "metrics_reused_at": [
+            5
+        ],
+        "case_seconds": 124.6
+    },
+    "fdg_572fca6b44_05-23-2005-NA-PET-CT Ganzkoerper  primaer mit KM-19541_0000": {
+        "tag": "fdg_572fca6b44_05-23-2005-NA-PET-CT Ganzkoerper  primaer mit KM-19541_0000",
+        "strategy": "boundary",
+        "iter_seconds": [
+            11.251,
+            10.312,
+            10.315,
+            10.295,
+            10.291,
+            9.621
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 2.697768211364746,
+        "shape": [
+            400,
+            400,
+            313
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": true,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 1.068,
+                "ct_pet_preproc_s": 0.46,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.052,
+                "assemble_s": 0.38,
+                "network_s": 7.177,
+                "export_s": 0.93,
+                "total_s": 10.073,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.128,
+                "assemble_s": 0.394,
+                "network_s": 7.173,
+                "export_s": 0.927,
+                "total_s": 8.628,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.13,
+                "assemble_s": 0.395,
+                "network_s": 7.174,
+                "export_s": 0.929,
+                "total_s": 8.633,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.126,
+                "assemble_s": 0.39,
+                "network_s": 7.183,
+                "export_s": 0.927,
+                "total_s": 8.633,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.127,
+                "assemble_s": 0.391,
+                "network_s": 7.172,
+                "export_s": 0.933,
+                "total_s": 8.629,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.127,
+                "assemble_s": 0.391,
+                "network_s": 7.169,
+                "export_s": 0.932,
+                "total_s": 8.625,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                99,
+                0
+            ],
+            [
+                138,
+                0
+            ],
+            [
+                155,
+                0
+            ],
+            [
+                168,
+                0
+            ],
+            [
+                170,
+                0
+            ],
+            [
+                170,
+                0
+            ]
+        ],
+        "metrics_reused_at": [
+            5
+        ],
+        "case_seconds": 64.87
+    },
+    "fdg_86e54ea60a_03-18-2002-NA-PET-CT Ganzkoerper  primaer mit KM-34788_0000": {
+        "tag": "fdg_86e54ea60a_03-18-2002-NA-PET-CT Ganzkoerper  primaer mit KM-34788_0000",
+        "strategy": "centerline",
+        "iter_seconds": [
+            10.929,
+            11.031,
+            11.034,
+            11.615,
+            14.97,
+            11.096
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 2.3798182010650635,
+        "shape": [
+            400,
+            400,
+            284
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 0.971,
+                "ct_pet_preproc_s": 0.413,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.048,
+                "assemble_s": 0.344,
+                "network_s": 7.11,
+                "export_s": 0.846,
+                "total_s": 9.738,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 0.115,
+                "assemble_s": 0.355,
+                "network_s": 7.108,
+                "export_s": 0.846,
+                "total_s": 8.431,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.004,
+                "prev_pred_s": 0.115,
+                "assemble_s": 0.355,
+                "network_s": 7.107,
+                "export_s": 0.846,
+                "total_s": 8.433,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.005,
+                "prev_pred_s": 0.117,
+                "assemble_s": 0.354,
+                "network_s": 7.685,
+                "export_s": 0.84,
+                "total_s": 9.007,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.005,
+                "prev_pred_s": 0.116,
+                "assemble_s": 0.358,
+                "network_s": 10.962,
+                "export_s": 0.865,
+                "total_s": 12.312,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.006,
+                "prev_pred_s": 0.115,
+                "assemble_s": 0.357,
+                "network_s": 7.123,
+                "export_s": 0.846,
+                "total_s": 8.453,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                1612,
+                123
+            ],
+            [
+                1543,
+                108
+            ],
+            [
+                1325,
+                123
+            ],
+            [
+                1164,
+                131
+            ],
+            [
+                1093,
+                136
+            ],
+            [
+                959,
+                175
+            ]
+        ],
+        "fp_fn": [
+            [
+                19,
+                4
+            ],
+            [
+                18,
+                4
+            ],
+            [
+                11,
+                4
+            ],
+            [
+                11,
+                4
+            ],
+            [
+                17,
+                4
+            ]
+        ],
+        "case_seconds": 73.13
+    },
+    "fdg_91cfa804b0_09-22-2006-NA-PET-CT Ganzkoerper  primaer mit KM-30574_0000": {
+        "tag": "fdg_91cfa804b0_09-22-2006-NA-PET-CT Ganzkoerper  primaer mit KM-30574_0000",
+        "strategy": "random",
+        "iter_seconds": [
+            11.142,
+            14.571,
+            10.83,
+            14.6,
+            11.158,
+            11.182
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 2.588594913482666,
+        "shape": [
+            400,
+            400,
+            300
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 1.022,
+                "ct_pet_preproc_s": 0.437,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.049,
+                "assemble_s": 0.373,
+                "network_s": 7.123,
+                "export_s": 0.895,
+                "total_s": 9.905,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.001,
+                "prev_pred_s": 0.121,
+                "assemble_s": 0.373,
+                "network_s": 10.918,
+                "export_s": 0.889,
+                "total_s": 12.308,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 0.122,
+                "assemble_s": 0.376,
+                "network_s": 7.15,
+                "export_s": 0.891,
+                "total_s": 8.548,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 0.125,
+                "assemble_s": 0.377,
+                "network_s": 10.493,
+                "export_s": 0.893,
+                "total_s": 11.896,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.004,
+                "prev_pred_s": 0.122,
+                "assemble_s": 0.373,
+                "network_s": 7.128,
+                "export_s": 0.886,
+                "total_s": 8.518,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.004,
+                "prev_pred_s": 0.121,
+                "assemble_s": 0.373,
+                "network_s": 7.143,
+                "export_s": 0.89,
+                "total_s": 8.537,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                0,
+                52
+            ],
+            [
+                0,
+                41
+            ],
+            [
+                7,
+                20
+            ],
+            [
+                17,
+                11
+            ],
+            [
+                18,
+                12
+            ],
+            [
+                20,
+                9
+            ]
+        ],
+        "fp_fn": [
+            [
+                0,
+                2
+            ],
+            [
+                0,
+                3
+            ],
+            [
+                1,
+                3
+            ],
+            [
+                2,
+                1
+            ],
+            [
+                1,
+                1
+            ]
+        ],
+        "case_seconds": 76.15
+    },
+    "fdg_94cc0dac49_03-09-2007-NA-PET-CT Ganzkoerper  primaer mit KM-58245_0000": {
+        "tag": "fdg_94cc0dac49_03-09-2007-NA-PET-CT Ganzkoerper  primaer mit KM-58245_0000",
+        "strategy": "boundary",
+        "iter_seconds": [
+            24.115,
+            24.983,
+            25.386,
+            24.608,
+            25.017,
+            24.965
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 5.270308256149292,
+        "shape": [
+            400,
+            400,
+            642
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 2.241,
+                "ct_pet_preproc_s": 0.961,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.108,
+                "assemble_s": 0.844,
+                "network_s": 15.413,
+                "export_s": 1.902,
+                "total_s": 21.482,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.001,
+                "prev_pred_s": 0.263,
+                "assemble_s": 0.813,
+                "network_s": 15.384,
+                "export_s": 1.892,
+                "total_s": 18.364,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 0.263,
+                "assemble_s": 0.807,
+                "network_s": 15.404,
+                "export_s": 1.901,
+                "total_s": 18.39,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 0.259,
+                "assemble_s": 0.799,
+                "network_s": 15.365,
+                "export_s": 1.894,
+                "total_s": 18.332,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 0.261,
+                "assemble_s": 0.808,
+                "network_s": 15.378,
+                "export_s": 1.913,
+                "total_s": 18.373,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 0.259,
+                "assemble_s": 0.81,
+                "network_s": 15.375,
+                "export_s": 1.894,
+                "total_s": 18.351,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                19,
+                3
+            ],
+            [
+                9,
+                7
+            ],
+            [
+                10,
+                5
+            ],
+            [
+                12,
+                4
+            ],
+            [
+                13,
+                3
+            ],
+            [
+                14,
+                3
+            ]
+        ],
+        "fp_fn": [
+            [
+                3,
+                2
+            ],
+            [
+                2,
+                3
+            ],
+            [
+                2,
+                3
+            ],
+            [
+                2,
+                2
+            ],
+            [
+                2,
+                2
+            ]
+        ],
+        "case_seconds": 154.5
+    },
+    "psma_02826eb561d6e0c7_2016-11-04_0000": {
+        "tag": "psma_02826eb561d6e0c7_2016-11-04_0000",
+        "strategy": "centerline",
+        "iter_seconds": [
+            22.507,
+            12.393,
+            12.398,
+            12.34,
+            12.366,
+            12.347
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 0.9905416965484619,
+        "shape": [
+            256,
+            256,
+            263
+        ],
+        "spacing": [
+            2.734375,
+            2.734375,
+            3.27001953125
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 0.377,
+                "ct_pet_preproc_s": 14.997,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.034,
+                "assemble_s": 0.261,
+                "network_s": 5.924,
+                "export_s": 0.488,
+                "total_s": 22.082,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.001,
+                "prev_pred_s": 4.894,
+                "assemble_s": 0.269,
+                "network_s": 5.901,
+                "export_s": 0.468,
+                "total_s": 11.535,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 4.863,
+                "assemble_s": 0.271,
+                "network_s": 5.919,
+                "export_s": 0.469,
+                "total_s": 11.527,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 4.809,
+                "assemble_s": 0.269,
+                "network_s": 5.898,
+                "export_s": 0.466,
+                "total_s": 11.447,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.004,
+                "prev_pred_s": 4.848,
+                "assemble_s": 0.266,
+                "network_s": 5.915,
+                "export_s": 0.476,
+                "total_s": 11.511,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.004,
+                "prev_pred_s": 4.823,
+                "assemble_s": 0.267,
+                "network_s": 5.902,
+                "export_s": 0.467,
+                "total_s": 11.465,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                19,
+                75
+            ],
+            [
+                29,
+                68
+            ],
+            [
+                17,
+                66
+            ],
+            [
+                29,
+                46
+            ],
+            [
+                21,
+                48
+            ],
+            [
+                22,
+                49
+            ]
+        ],
+        "fp_fn": [
+            [
+                3,
+                6
+            ],
+            [
+                11,
+                6
+            ],
+            [
+                3,
+                5
+            ],
+            [
+                7,
+                6
+            ],
+            [
+                2,
+                6
+            ]
+        ],
+        "case_seconds": 85.37
+    },
+    "psma_0ec0e718244b2a79_2015-06-19_0000": {
+        "tag": "psma_0ec0e718244b2a79_2015-06-19_0000",
+        "strategy": "random",
+        "iter_seconds": [
+            22.196,
+            11.658,
+            11.632,
+            11.586,
+            11.514,
+            11.494
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 0.264279842376709,
+        "shape": [
+            168,
+            168,
+            195
+        ],
+        "spacing": [
+            4.0728302001953125,
+            4.0728302001953125,
+            5.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 0.115,
+                "ct_pet_preproc_s": 15.469,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.038,
+                "assemble_s": 0.287,
+                "network_s": 5.962,
+                "export_s": 0.192,
+                "total_s": 22.065,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.001,
+                "prev_pred_s": 4.996,
+                "assemble_s": 0.29,
+                "network_s": 5.959,
+                "export_s": 0.186,
+                "total_s": 11.433,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.001,
+                "prev_pred_s": 4.948,
+                "assemble_s": 0.289,
+                "network_s": 5.956,
+                "export_s": 0.183,
+                "total_s": 11.379,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.001,
+                "prev_pred_s": 4.967,
+                "assemble_s": 0.295,
+                "network_s": 5.954,
+                "export_s": 0.184,
+                "total_s": 11.405,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.001,
+                "prev_pred_s": 4.923,
+                "assemble_s": 0.288,
+                "network_s": 5.939,
+                "export_s": 0.179,
+                "total_s": 11.332,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.001,
+                "prev_pred_s": 4.898,
+                "assemble_s": 0.287,
+                "network_s": 5.936,
+                "export_s": 0.182,
+                "total_s": 11.306,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                0,
+                8
+            ],
+            [
+                2,
+                2
+            ],
+            [
+                6,
+                2
+            ],
+            [
+                6,
+                2
+            ],
+            [
+                6,
+                2
+            ],
+            [
+                6,
+                2
+            ]
+        ],
+        "fp_fn": [
+            [
+                0,
+                1
+            ],
+            [
+                1,
+                1
+            ],
+            [
+                1,
+                1
+            ],
+            [
+                1,
+                1
+            ],
+            [
+                1,
+                1
+            ]
+        ],
+        "metrics_reused_at": [
+            3,
+            4,
+            5
+        ],
+        "case_seconds": 80.35
+    },
+    "psma_0fcbcd7dc52d5b82_2020-06-19_0000": {
+        "tag": "psma_0fcbcd7dc52d5b82_2020-06-19_0000",
+        "strategy": "boundary",
+        "iter_seconds": [
+            29.91,
+            16.915,
+            16.922,
+            16.875,
+            16.903,
+            16.871
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 0.8385944366455078,
+        "shape": [
+            200,
+            200,
+            421
+        ],
+        "spacing": [
+            4.0728302001953125,
+            4.0728302001953125,
+            2.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 0.346,
+                "ct_pet_preproc_s": 19.556,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.046,
+                "assemble_s": 0.345,
+                "network_s": 7.102,
+                "export_s": 0.48,
+                "total_s": 27.878,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 6.288,
+                "assemble_s": 0.352,
+                "network_s": 7.114,
+                "export_s": 0.475,
+                "total_s": 14.234,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 6.334,
+                "assemble_s": 0.355,
+                "network_s": 7.104,
+                "export_s": 0.476,
+                "total_s": 14.274,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.004,
+                "prev_pred_s": 6.264,
+                "assemble_s": 0.35,
+                "network_s": 7.1,
+                "export_s": 0.484,
+                "total_s": 14.205,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.004,
+                "prev_pred_s": 6.247,
+                "assemble_s": 0.355,
+                "network_s": 7.108,
+                "export_s": 0.477,
+                "total_s": 14.195,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.005,
+                "prev_pred_s": 6.23,
+                "assemble_s": 0.354,
+                "network_s": 7.13,
+                "export_s": 0.48,
+                "total_s": 14.201,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                6359,
+                2054
+            ],
+            [
+                6211,
+                1985
+            ],
+            [
+                6962,
+                1882
+            ],
+            [
+                7831,
+                1879
+            ],
+            [
+                8688,
+                1885
+            ],
+            [
+                9468,
+                1898
+            ]
+        ],
+        "fp_fn": [
+            [
+                5,
+                5
+            ],
+            [
+                5,
+                5
+            ],
+            [
+                8,
+                4
+            ],
+            [
+                11,
+                4
+            ],
+            [
+                12,
+                5
+            ]
+        ],
+        "case_seconds": 115.26
+    },
+    "psma_14c16d0ce2b3229d_2020-02-22_0000": {
+        "tag": "psma_14c16d0ce2b3229d_2020-02-22_0000",
+        "strategy": "centerline",
+        "iter_seconds": [
+            27.976,
+            15.41,
+            15.318,
+            15.353,
+            15.35,
+            15.379
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 0.8030941486358643,
+        "shape": [
+            200,
+            200,
+            405
+        ],
+        "spacing": [
+            4.0728302001953125,
+            4.0728302001953125,
+            2.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 0.335,
+                "ct_pet_preproc_s": 18.896,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.044,
+                "assemble_s": 0.332,
+                "network_s": 5.847,
+                "export_s": 0.462,
+                "total_s": 25.919,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 5.982,
+                "assemble_s": 0.343,
+                "network_s": 5.833,
+                "export_s": 0.452,
+                "total_s": 12.614,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.005,
+                "prev_pred_s": 5.953,
+                "assemble_s": 0.337,
+                "network_s": 5.829,
+                "export_s": 0.452,
+                "total_s": 12.578,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.006,
+                "prev_pred_s": 5.978,
+                "assemble_s": 0.34,
+                "network_s": 5.836,
+                "export_s": 0.454,
+                "total_s": 12.616,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.007,
+                "prev_pred_s": 5.964,
+                "assemble_s": 0.339,
+                "network_s": 5.831,
+                "export_s": 0.452,
+                "total_s": 12.595,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.007,
+                "prev_pred_s": 6.017,
+                "assemble_s": 0.337,
+                "network_s": 5.831,
+                "export_s": 0.453,
+                "total_s": 12.649,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                9817,
+                3268
+            ],
+            [
+                9257,
+                3536
+            ],
+            [
+                9049,
+                3600
+            ],
+            [
+                9033,
+                3591
+            ],
+            [
+                9043,
+                3589
+            ],
+            [
+                9059,
+                3590
+            ]
+        ],
+        "fp_fn": [
+            [
+                11,
+                17
+            ],
+            [
+                15,
+                14
+            ],
+            [
+                14,
+                14
+            ],
+            [
+                14,
+                18
+            ],
+            [
+                12,
+                18
+            ]
+        ],
+        "case_seconds": 105.62
+    },
+    "psma_1d7ce562612262cb_2019-11-01_0000": {
+        "tag": "psma_1d7ce562612262cb_2019-11-01_0000",
+        "strategy": "random",
+        "iter_seconds": [
+            30.065,
+            17.674,
+            17.521,
+            18.344,
+            17.556,
+            17.561
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 0.8036422729492188,
+        "shape": [
+            200,
+            200,
+            401
+        ],
+        "spacing": [
+            4.0728302001953125,
+            4.0728302001953125,
+            2.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 0.332,
+                "ct_pet_preproc_s": 18.67,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.044,
+                "assemble_s": 0.326,
+                "network_s": 5.835,
+                "export_s": 0.454,
+                "total_s": 25.665,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 5.993,
+                "assemble_s": 0.337,
+                "network_s": 5.838,
+                "export_s": 0.454,
+                "total_s": 12.626,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 5.911,
+                "assemble_s": 0.337,
+                "network_s": 5.832,
+                "export_s": 0.453,
+                "total_s": 12.539,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.005,
+                "prev_pred_s": 6.563,
+                "assemble_s": 0.34,
+                "network_s": 5.828,
+                "export_s": 0.45,
+                "total_s": 13.19,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.006,
+                "prev_pred_s": 5.916,
+                "assemble_s": 0.332,
+                "network_s": 5.823,
+                "export_s": 0.455,
+                "total_s": 12.534,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.005,
+                "prev_pred_s": 5.924,
+                "assemble_s": 0.334,
+                "network_s": 5.834,
+                "export_s": 0.451,
+                "total_s": 12.551,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                9422,
+                4446
+            ],
+            [
+                9421,
+                4811
+            ],
+            [
+                10043,
+                4878
+            ],
+            [
+                10664,
+                4911
+            ],
+            [
+                11001,
+                4903
+            ],
+            [
+                11174,
+                4891
+            ]
+        ],
+        "fp_fn": [
+            [
+                6,
+                5
+            ],
+            [
+                4,
+                4
+            ],
+            [
+                2,
+                4
+            ],
+            [
+                6,
+                2
+            ],
+            [
+                6,
+                2
+            ]
+        ],
+        "case_seconds": 119.55
+    },
+    "psma_28f9ecc106933531_2019-06-15_0000": {
+        "tag": "psma_28f9ecc106933531_2019-06-15_0000",
+        "strategy": "boundary",
+        "iter_seconds": [
+            22.441,
+            12.035,
+            12.025,
+            11.982,
+            12.006,
+            11.991
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 1.0283520221710205,
+        "shape": [
+            256,
+            256,
+            263
+        ],
+        "spacing": [
+            2.734375,
+            2.734375,
+            3.2700042724609375
+        ],
+        "empty_gt": true,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 0.359,
+                "ct_pet_preproc_s": 15.028,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.035,
+                "assemble_s": 0.267,
+                "network_s": 5.895,
+                "export_s": 0.474,
+                "total_s": 22.06,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 4.84,
+                "assemble_s": 0.266,
+                "network_s": 5.912,
+                "export_s": 0.472,
+                "total_s": 11.492,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 4.825,
+                "assemble_s": 0.27,
+                "network_s": 5.919,
+                "export_s": 0.467,
+                "total_s": 11.484,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 4.796,
+                "assemble_s": 0.266,
+                "network_s": 5.906,
+                "export_s": 0.47,
+                "total_s": 11.44,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 4.803,
+                "assemble_s": 0.269,
+                "network_s": 5.915,
+                "export_s": 0.474,
+                "total_s": 11.464,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 4.806,
+                "assemble_s": 0.268,
+                "network_s": 5.898,
+                "export_s": 0.475,
+                "total_s": 11.449,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                814,
+                0
+            ],
+            [
+                705,
+                0
+            ],
+            [
+                675,
+                0
+            ],
+            [
+                660,
+                0
+            ],
+            [
+                649,
+                0
+            ],
+            [
+                648,
+                0
+            ]
+        ],
+        "case_seconds": 83.54
+    },
+    "psma_4fc4664327ba8d0b_2014-06-06_0000": {
+        "tag": "psma_4fc4664327ba8d0b_2014-06-06_0000",
+        "strategy": "centerline",
+        "iter_seconds": [
+            22.397,
+            12.032,
+            11.996,
+            11.988,
+            11.952,
+            11.984
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 0.2713615894317627,
+        "shape": [
+            168,
+            168,
+            195
+        ],
+        "spacing": [
+            4.0728302001953125,
+            4.0728302001953125,
+            5.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 0.113,
+                "ct_pet_preproc_s": 15.449,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.038,
+                "assemble_s": 0.28,
+                "network_s": 5.953,
+                "export_s": 0.162,
+                "total_s": 21.998,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 4.996,
+                "assemble_s": 0.288,
+                "network_s": 5.951,
+                "export_s": 0.185,
+                "total_s": 11.427,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.005,
+                "prev_pred_s": 4.955,
+                "assemble_s": 0.289,
+                "network_s": 5.944,
+                "export_s": 0.185,
+                "total_s": 11.381,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.005,
+                "prev_pred_s": 4.937,
+                "assemble_s": 0.289,
+                "network_s": 5.952,
+                "export_s": 0.186,
+                "total_s": 11.372,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.006,
+                "prev_pred_s": 4.933,
+                "assemble_s": 0.29,
+                "network_s": 5.939,
+                "export_s": 0.184,
+                "total_s": 11.353,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.006,
+                "prev_pred_s": 4.954,
+                "assemble_s": 0.287,
+                "network_s": 5.946,
+                "export_s": 0.184,
+                "total_s": 11.38,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                1339,
+                2438
+            ],
+            [
+                1296,
+                1566
+            ],
+            [
+                1261,
+                1488
+            ],
+            [
+                1251,
+                1442
+            ],
+            [
+                1243,
+                1417
+            ],
+            [
+                1221,
+                1408
+            ]
+        ],
+        "fp_fn": [
+            [
+                16,
+                20
+            ],
+            [
+                12,
+                9
+            ],
+            [
+                11,
+                9
+            ],
+            [
+                12,
+                10
+            ],
+            [
+                10,
+                8
+            ]
+        ],
+        "case_seconds": 82.63
+    },
+    "psma_4fc4664327ba8d0b_2014-12-19_0000": {
+        "tag": "psma_4fc4664327ba8d0b_2014-12-19_0000",
+        "strategy": "random",
+        "iter_seconds": [
+            22.221,
+            11.846,
+            11.873,
+            11.852,
+            11.853,
+            11.815
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 0.2670257091522217,
+        "shape": [
+            168,
+            168,
+            195
+        ],
+        "spacing": [
+            4.0728302001953125,
+            4.0728302001953125,
+            5.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 0.114,
+                "ct_pet_preproc_s": 15.384,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.037,
+                "assemble_s": 0.281,
+                "network_s": 5.959,
+                "export_s": 0.162,
+                "total_s": 21.94,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.001,
+                "prev_pred_s": 4.946,
+                "assemble_s": 0.288,
+                "network_s": 5.947,
+                "export_s": 0.188,
+                "total_s": 11.373,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 4.96,
+                "assemble_s": 0.29,
+                "network_s": 5.953,
+                "export_s": 0.191,
+                "total_s": 11.398,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.004,
+                "prev_pred_s": 4.947,
+                "assemble_s": 0.29,
+                "network_s": 5.95,
+                "export_s": 0.188,
+                "total_s": 11.382,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.004,
+                "prev_pred_s": 4.948,
+                "assemble_s": 0.29,
+                "network_s": 5.951,
+                "export_s": 0.186,
+                "total_s": 11.383,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.004,
+                "prev_pred_s": 4.918,
+                "assemble_s": 0.29,
+                "network_s": 5.952,
+                "export_s": 0.182,
+                "total_s": 11.348,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                620,
+                1075
+            ],
+            [
+                504,
+                1192
+            ],
+            [
+                474,
+                1240
+            ],
+            [
+                467,
+                1241
+            ],
+            [
+                459,
+                1245
+            ],
+            [
+                458,
+                1246
+            ]
+        ],
+        "fp_fn": [
+            [
+                2,
+                4
+            ],
+            [
+                2,
+                4
+            ],
+            [
+                2,
+                4
+            ],
+            [
+                2,
+                2
+            ],
+            [
+                2,
+                2
+            ]
+        ],
+        "case_seconds": 81.73
+    },
+    "psma_5203bac8a9bfd9e2_2020-06-06_0000": {
+        "tag": "psma_5203bac8a9bfd9e2_2020-06-06_0000",
+        "strategy": "boundary",
+        "iter_seconds": [
+            26.215,
+            13.454,
+            13.501,
+            13.489,
+            13.492,
+            13.524
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 0.7439243793487549,
+        "shape": [
+            200,
+            200,
+            403
+        ],
+        "spacing": [
+            4.0728302001953125,
+            4.0728302001953125,
+            2.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 0.331,
+                "ct_pet_preproc_s": 18.799,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.044,
+                "assemble_s": 0.33,
+                "network_s": 5.837,
+                "export_s": 0.46,
+                "total_s": 25.803,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 5.968,
+                "assemble_s": 0.336,
+                "network_s": 5.846,
+                "export_s": 0.459,
+                "total_s": 12.614,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 5.982,
+                "assemble_s": 0.339,
+                "network_s": 5.856,
+                "export_s": 0.461,
+                "total_s": 12.642,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 6.007,
+                "assemble_s": 0.336,
+                "network_s": 5.838,
+                "export_s": 0.458,
+                "total_s": 12.643,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 5.987,
+                "assemble_s": 0.339,
+                "network_s": 5.848,
+                "export_s": 0.46,
+                "total_s": 12.638,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 6.002,
+                "assemble_s": 0.337,
+                "network_s": 5.85,
+                "export_s": 0.463,
+                "total_s": 12.657,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                27,
+                1003
+            ],
+            [
+                40,
+                923
+            ],
+            [
+                51,
+                905
+            ],
+            [
+                55,
+                898
+            ],
+            [
+                56,
+                893
+            ],
+            [
+                57,
+                892
+            ]
+        ],
+        "fp_fn": [
+            [
+                2,
+                4
+            ],
+            [
+                3,
+                4
+            ],
+            [
+                3,
+                4
+            ],
+            [
+                3,
+                4
+            ],
+            [
+                3,
+                4
+            ]
+        ],
+        "case_seconds": 94.44
+    },
+    "psma_ba6433757dfc9d21_2021-10-09_0000": {
+        "tag": "psma_ba6433757dfc9d21_2021-10-09_0000",
+        "strategy": "centerline",
+        "iter_seconds": [
+            29.222,
+            15.661,
+            15.642,
+            15.67,
+            15.654,
+            15.626
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 0.8550121784210205,
+        "shape": [
+            200,
+            200,
+            435
+        ],
+        "spacing": [
+            4.0728302001953125,
+            4.0728302001953125,
+            2.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 0.361,
+                "ct_pet_preproc_s": 20.155,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.047,
+                "assemble_s": 0.357,
+                "network_s": 7.128,
+                "export_s": 0.492,
+                "total_s": 28.544,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 6.449,
+                "assemble_s": 0.365,
+                "network_s": 7.121,
+                "export_s": 0.485,
+                "total_s": 14.424,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 6.426,
+                "assemble_s": 0.361,
+                "network_s": 7.124,
+                "export_s": 0.494,
+                "total_s": 14.411,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 6.451,
+                "assemble_s": 0.36,
+                "network_s": 7.131,
+                "export_s": 0.489,
+                "total_s": 14.436,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 6.433,
+                "assemble_s": 0.366,
+                "network_s": 7.128,
+                "export_s": 0.488,
+                "total_s": 14.421,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 6.424,
+                "assemble_s": 0.365,
+                "network_s": 7.117,
+                "export_s": 0.488,
+                "total_s": 14.4,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                393,
+                378
+            ],
+            [
+                393,
+                398
+            ],
+            [
+                402,
+                410
+            ],
+            [
+                403,
+                412
+            ],
+            [
+                405,
+                411
+            ],
+            [
+                406,
+                411
+            ]
+        ],
+        "fp_fn": [
+            [
+                3,
+                5
+            ],
+            [
+                3,
+                4
+            ],
+            [
+                4,
+                6
+            ],
+            [
+                4,
+                6
+            ],
+            [
+                4,
+                6
+            ]
+        ],
+        "case_seconds": 108.36
+    },
+    "psma_c265ec063df5602b_2019-12-27_0000": {
+        "tag": "psma_c265ec063df5602b_2019-12-27_0000",
+        "strategy": "random",
+        "iter_seconds": [
+            28.929,
+            15.206,
+            15.212,
+            15.205,
+            15.168,
+            15.303
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 0.8504176139831543,
+        "shape": [
+            200,
+            200,
+            435
+        ],
+        "spacing": [
+            4.0728302001953125,
+            4.0728302001953125,
+            2.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 0.354,
+                "ct_pet_preproc_s": 20.129,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.047,
+                "assemble_s": 0.354,
+                "network_s": 7.119,
+                "export_s": 0.487,
+                "total_s": 28.493,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.001,
+                "prev_pred_s": 6.466,
+                "assemble_s": 0.361,
+                "network_s": 7.124,
+                "export_s": 0.488,
+                "total_s": 14.444,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 6.453,
+                "assemble_s": 0.368,
+                "network_s": 7.124,
+                "export_s": 0.489,
+                "total_s": 14.438,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.004,
+                "prev_pred_s": 6.425,
+                "assemble_s": 0.366,
+                "network_s": 7.154,
+                "export_s": 0.498,
+                "total_s": 14.45,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.004,
+                "prev_pred_s": 6.43,
+                "assemble_s": 0.365,
+                "network_s": 7.13,
+                "export_s": 0.487,
+                "total_s": 14.419,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.004,
+                "prev_pred_s": 6.528,
+                "assemble_s": 0.369,
+                "network_s": 7.137,
+                "export_s": 0.498,
+                "total_s": 14.538,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                131,
+                0
+            ],
+            [
+                221,
+                0
+            ],
+            [
+                225,
+                0
+            ],
+            [
+                222,
+                0
+            ],
+            [
+                224,
+                0
+            ],
+            [
+                223,
+                0
+            ]
+        ],
+        "fp_fn": [
+            [
+                3,
+                0
+            ],
+            [
+                2,
+                0
+            ],
+            [
+                2,
+                0
+            ],
+            [
+                2,
+                0
+            ],
+            [
+                2,
+                0
+            ]
+        ],
+        "case_seconds": 105.9
+    },
+    "psma_ca36bd95b63289d0_2020-05-15_0000": {
+        "tag": "psma_ca36bd95b63289d0_2020-05-15_0000",
+        "strategy": "boundary",
+        "iter_seconds": [
+            30.129,
+            16.988,
+            15.81,
+            16.192,
+            15.859,
+            15.828
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 0.855400562286377,
+        "shape": [
+            200,
+            200,
+            446
+        ],
+        "spacing": [
+            4.0728302001953125,
+            4.0728302001953125,
+            2.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 0.367,
+                "ct_pet_preproc_s": 21.086,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.049,
+                "assemble_s": 0.363,
+                "network_s": 7.147,
+                "export_s": 0.504,
+                "total_s": 29.518,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 6.622,
+                "assemble_s": 0.376,
+                "network_s": 8.4,
+                "export_s": 0.509,
+                "total_s": 15.911,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 6.704,
+                "assemble_s": 0.377,
+                "network_s": 7.148,
+                "export_s": 0.506,
+                "total_s": 14.741,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 6.637,
+                "assemble_s": 0.376,
+                "network_s": 7.612,
+                "export_s": 0.502,
+                "total_s": 15.134,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 6.766,
+                "assemble_s": 0.374,
+                "network_s": 7.138,
+                "export_s": 0.504,
+                "total_s": 14.788,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.004,
+                "prev_pred_s": 6.638,
+                "assemble_s": 0.376,
+                "network_s": 7.235,
+                "export_s": 0.509,
+                "total_s": 14.765,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                1106,
+                61
+            ],
+            [
+                1089,
+                81
+            ],
+            [
+                1144,
+                88
+            ],
+            [
+                1198,
+                91
+            ],
+            [
+                1352,
+                92
+            ],
+            [
+                1497,
+                92
+            ]
+        ],
+        "fp_fn": [
+            [
+                5,
+                3
+            ],
+            [
+                4,
+                3
+            ],
+            [
+                4,
+                3
+            ],
+            [
+                4,
+                3
+            ],
+            [
+                4,
+                3
+            ]
+        ],
+        "case_seconds": 111.69
+    }
+}

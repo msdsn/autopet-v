@@ -1,0 +1,4113 @@
+{
+    "fdg_15cfa01130_02-24-2001-NA-PET-CT Ganzkoerper  primaer mit KM-49873_0000": {
+        "tag": "fdg_15cfa01130_02-24-2001-NA-PET-CT Ganzkoerper  primaer mit KM-49873_0000",
+        "strategy": "centerline",
+        "iter_seconds": [
+            9.03,
+            10.793,
+            7.915,
+            10.012,
+            7.945,
+            7.881
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 2.427739143371582,
+        "shape": [
+            400,
+            400,
+            284
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 0.974,
+                "ct_pet_preproc_s": 0.422,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.047,
+                "assemble_s": 0.354,
+                "network_s": 4.927,
+                "export_s": 0.846,
+                "total_s": 7.576,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 0.114,
+                "assemble_s": 0.356,
+                "network_s": 6.416,
+                "export_s": 0.857,
+                "total_s": 7.751,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.004,
+                "prev_pred_s": 0.117,
+                "assemble_s": 0.359,
+                "network_s": 3.548,
+                "export_s": 0.838,
+                "total_s": 4.872,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.007,
+                "prev_pred_s": 0.123,
+                "assemble_s": 0.357,
+                "network_s": 5.53,
+                "export_s": 0.839,
+                "total_s": 6.862,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.006,
+                "prev_pred_s": 0.116,
+                "assemble_s": 0.356,
+                "network_s": 3.544,
+                "export_s": 0.877,
+                "total_s": 4.904,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.007,
+                "prev_pred_s": 0.117,
+                "assemble_s": 0.356,
+                "network_s": 3.538,
+                "export_s": 0.841,
+                "total_s": 4.864,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                2327,
+                9416
+            ],
+            [
+                1361,
+                12413
+            ],
+            [
+                1219,
+                12942
+            ],
+            [
+                1197,
+                13036
+            ],
+            [
+                1257,
+                12849
+            ],
+            [
+                1314,
+                12663
+            ]
+        ],
+        "fp_fn": [
+            [
+                14,
+                19
+            ],
+            [
+                13,
+                30
+            ],
+            [
+                12,
+                28
+            ],
+            [
+                10,
+                37
+            ],
+            [
+                9,
+                24
+            ]
+        ],
+        "case_seconds": 56.09
+    },
+    "fdg_1a1712f7d0_02-16-2007-NA-PET-CT Ganzkoerper  primaer mit KM-50630_0000": {
+        "tag": "fdg_1a1712f7d0_02-16-2007-NA-PET-CT Ganzkoerper  primaer mit KM-50630_0000",
+        "strategy": "random",
+        "iter_seconds": [
+            7.772,
+            7.778,
+            10.802,
+            7.858,
+            7.916,
+            7.9
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 2.754180908203125,
+        "shape": [
+            400,
+            400,
+            315
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 1.069,
+                "ct_pet_preproc_s": 0.455,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.052,
+                "assemble_s": 0.381,
+                "network_s": 3.581,
+                "export_s": 0.929,
+                "total_s": 6.472,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 0.126,
+                "assemble_s": 0.395,
+                "network_s": 3.574,
+                "export_s": 0.934,
+                "total_s": 5.036,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 0.126,
+                "assemble_s": 0.391,
+                "network_s": 6.582,
+                "export_s": 0.944,
+                "total_s": 8.053,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 0.131,
+                "assemble_s": 0.4,
+                "network_s": 3.587,
+                "export_s": 0.938,
+                "total_s": 5.065,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 0.127,
+                "assemble_s": 0.393,
+                "network_s": 3.679,
+                "export_s": 0.945,
+                "total_s": 5.152,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 0.13,
+                "assemble_s": 0.399,
+                "network_s": 3.572,
+                "export_s": 0.943,
+                "total_s": 5.053,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                16,
+                829
+            ],
+            [
+                79,
+                144
+            ],
+            [
+                88,
+                178
+            ],
+            [
+                92,
+                179
+            ],
+            [
+                95,
+                176
+            ],
+            [
+                97,
+                171
+            ]
+        ],
+        "fp_fn": [
+            [
+                3,
+                10
+            ],
+            [
+                2,
+                4
+            ],
+            [
+                2,
+                3
+            ],
+            [
+                2,
+                2
+            ],
+            [
+                3,
+                5
+            ]
+        ],
+        "case_seconds": 52.87
+    },
+    "fdg_20a607649d_01-27-2007-NA-PET-CT Ganzkoerper  primaer mit KM-84908_0000": {
+        "tag": "fdg_20a607649d_01-27-2007-NA-PET-CT Ganzkoerper  primaer mit KM-84908_0000",
+        "strategy": "boundary",
+        "iter_seconds": [
+            15.689,
+            18.755,
+            18.771,
+            16.158,
+            15.665,
+            18.712
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 4.742019414901733,
+        "shape": [
+            400,
+            400,
+            584
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 1.983,
+                "ct_pet_preproc_s": 0.849,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.097,
+                "assemble_s": 0.716,
+                "network_s": 7.581,
+                "export_s": 1.729,
+                "total_s": 12.965,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 0.236,
+                "assemble_s": 0.734,
+                "network_s": 10.151,
+                "export_s": 1.726,
+                "total_s": 12.86,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 0.237,
+                "assemble_s": 0.724,
+                "network_s": 10.127,
+                "export_s": 1.742,
+                "total_s": 12.846,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.004,
+                "prev_pred_s": 0.235,
+                "assemble_s": 0.737,
+                "network_s": 6.963,
+                "export_s": 1.717,
+                "total_s": 9.665,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.004,
+                "prev_pred_s": 0.234,
+                "assemble_s": 0.724,
+                "network_s": 6.977,
+                "export_s": 1.737,
+                "total_s": 9.687,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.005,
+                "prev_pred_s": 0.24,
+                "assemble_s": 0.739,
+                "network_s": 10.13,
+                "export_s": 1.726,
+                "total_s": 12.85,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                6314,
+                13496
+            ],
+            [
+                6443,
+                13449
+            ],
+            [
+                6481,
+                13432
+            ],
+            [
+                6499,
+                13430
+            ],
+            [
+                6484,
+                13430
+            ],
+            [
+                6474,
+                13430
+            ]
+        ],
+        "fp_fn": [
+            [
+                14,
+                28
+            ],
+            [
+                14,
+                28
+            ],
+            [
+                14,
+                28
+            ],
+            [
+                14,
+                28
+            ],
+            [
+                14,
+                28
+            ]
+        ],
+        "case_seconds": 108.64
+    },
+    "fdg_21853fc15b_10-12-2002-NA-PET-CT Ganzkoerper  primaer mit KM-55807_0000": {
+        "tag": "fdg_21853fc15b_10-12-2002-NA-PET-CT Ganzkoerper  primaer mit KM-55807_0000",
+        "strategy": "centerline",
+        "iter_seconds": [
+            10.26,
+            8.041,
+            10.199,
+            8.081,
+            10.133,
+            8.087
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 2.7033889293670654,
+        "shape": [
+            400,
+            400,
+            326
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 1.113,
+                "ct_pet_preproc_s": 0.472,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.053,
+                "assemble_s": 0.398,
+                "network_s": 5.84,
+                "export_s": 0.976,
+                "total_s": 8.859,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 0.132,
+                "assemble_s": 0.409,
+                "network_s": 3.586,
+                "export_s": 0.962,
+                "total_s": 5.096,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 0.134,
+                "assemble_s": 0.412,
+                "network_s": 5.669,
+                "export_s": 0.977,
+                "total_s": 7.201,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 0.131,
+                "assemble_s": 0.408,
+                "network_s": 3.592,
+                "export_s": 0.964,
+                "total_s": 5.104,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 0.134,
+                "assemble_s": 0.411,
+                "network_s": 5.583,
+                "export_s": 0.972,
+                "total_s": 7.109,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 0.133,
+                "assemble_s": 0.411,
+                "network_s": 3.588,
+                "export_s": 0.964,
+                "total_s": 5.104,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                182,
+                636
+            ],
+            [
+                188,
+                696
+            ],
+            [
+                195,
+                709
+            ],
+            [
+                202,
+                696
+            ],
+            [
+                208,
+                687
+            ],
+            [
+                211,
+                678
+            ]
+        ],
+        "fp_fn": [
+            [
+                5,
+                9
+            ],
+            [
+                6,
+                10
+            ],
+            [
+                5,
+                10
+            ],
+            [
+                5,
+                11
+            ],
+            [
+                5,
+                12
+            ]
+        ],
+        "case_seconds": 57.59
+    },
+    "fdg_23ed525e82_08-01-2003-NA-PET-CT Ganzkoerper  primaer mit KM-24219_0000": {
+        "tag": "fdg_23ed525e82_08-01-2003-NA-PET-CT Ganzkoerper  primaer mit KM-24219_0000",
+        "strategy": "random",
+        "iter_seconds": [
+            14.937,
+            15.194,
+            15.138,
+            15.355,
+            16.664,
+            17.5
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 4.8314056396484375,
+        "shape": [
+            400,
+            400,
+            577
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 1.968,
+                "ct_pet_preproc_s": 0.847,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.096,
+                "assemble_s": 0.706,
+                "network_s": 6.972,
+                "export_s": 1.713,
+                "total_s": 12.312,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.001,
+                "prev_pred_s": 0.232,
+                "assemble_s": 0.725,
+                "network_s": 6.961,
+                "export_s": 1.701,
+                "total_s": 9.631,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 0.234,
+                "assemble_s": 0.726,
+                "network_s": 6.976,
+                "export_s": 1.725,
+                "total_s": 9.676,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 0.234,
+                "assemble_s": 0.721,
+                "network_s": 6.965,
+                "export_s": 1.704,
+                "total_s": 9.638,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 0.233,
+                "assemble_s": 0.725,
+                "network_s": 8.399,
+                "export_s": 1.706,
+                "total_s": 11.077,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 0.234,
+                "assemble_s": 0.727,
+                "network_s": 9.009,
+                "export_s": 1.719,
+                "total_s": 11.704,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                462,
+                50
+            ],
+            [
+                1721,
+                50
+            ],
+            [
+                1845,
+                29
+            ],
+            [
+                1847,
+                27
+            ],
+            [
+                1841,
+                26
+            ],
+            [
+                1840,
+                26
+            ]
+        ],
+        "fp_fn": [
+            [
+                6,
+                5
+            ],
+            [
+                5,
+                5
+            ],
+            [
+                5,
+                4
+            ],
+            [
+                6,
+                4
+            ],
+            [
+                6,
+                4
+            ]
+        ],
+        "case_seconds": 99.77
+    },
+    "fdg_2a41141775_09-24-2005-NA-PET-CT Ganzkoerper  primaer mit KM-94391_0000": {
+        "tag": "fdg_2a41141775_09-24-2005-NA-PET-CT Ganzkoerper  primaer mit KM-94391_0000",
+        "strategy": "boundary",
+        "iter_seconds": [
+            9.292,
+            0.541,
+            0.54,
+            0.539,
+            0.538,
+            0.544
+        ],
+        "reused": [
+            null,
+            "cache",
+            "cache",
+            "cache",
+            "cache",
+            "cache"
+        ],
+        "load_s": 2.4357872009277344,
+        "shape": [
+            400,
+            400,
+            284
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": true,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 0.978,
+                "ct_pet_preproc_s": 0.418,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.047,
+                "assemble_s": 0.347,
+                "network_s": 3.545,
+                "export_s": 0.842,
+                "total_s": 6.182,
+                "ct_pet_cached": false
+            }
+        ],
+        "error_voxels": [
+            [
+                0,
+                0
+            ],
+            [
+                0,
+                0
+            ],
+            [
+                0,
+                0
+            ],
+            [
+                0,
+                0
+            ],
+            [
+                0,
+                0
+            ],
+            [
+                0,
+                0
+            ]
+        ],
+        "metrics_reused_at": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "case_seconds": 14.51
+    },
+    "fdg_2b60c8135a_12-09-2005-NA-PET-CT Ganzkoerper  primaer mit KM-49696_0000": {
+        "tag": "fdg_2b60c8135a_12-09-2005-NA-PET-CT Ganzkoerper  primaer mit KM-49696_0000",
+        "strategy": "centerline",
+        "iter_seconds": [
+            9.47,
+            10.141,
+            10.603,
+            10.242,
+            10.184,
+            10.134
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 2.8246424198150635,
+        "shape": [
+            400,
+            400,
+            327
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 1.126,
+                "ct_pet_preproc_s": 0.487,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.054,
+                "assemble_s": 0.398,
+                "network_s": 3.574,
+                "export_s": 0.971,
+                "total_s": 6.617,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 0.131,
+                "assemble_s": 0.409,
+                "network_s": 3.583,
+                "export_s": 0.97,
+                "total_s": 5.102,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 0.132,
+                "assemble_s": 0.413,
+                "network_s": 4.088,
+                "export_s": 0.972,
+                "total_s": 5.616,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.004,
+                "prev_pred_s": 0.135,
+                "assemble_s": 0.414,
+                "network_s": 3.604,
+                "export_s": 0.968,
+                "total_s": 5.131,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.005,
+                "prev_pred_s": 0.116,
+                "assemble_s": 0.411,
+                "network_s": 3.58,
+                "export_s": 0.967,
+                "total_s": 5.086,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.006,
+                "prev_pred_s": 0.133,
+                "assemble_s": 0.408,
+                "network_s": 3.59,
+                "export_s": 0.974,
+                "total_s": 5.117,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                20237,
+                7958
+            ],
+            [
+                19061,
+                10481
+            ],
+            [
+                19381,
+                11021
+            ],
+            [
+                20253,
+                11131
+            ],
+            [
+                21470,
+                11038
+            ],
+            [
+                22233,
+                10831
+            ]
+        ],
+        "fp_fn": [
+            [
+                29,
+                17
+            ],
+            [
+                25,
+                17
+            ],
+            [
+                32,
+                17
+            ],
+            [
+                32,
+                19
+            ],
+            [
+                38,
+                10
+            ]
+        ],
+        "case_seconds": 63.69
+    },
+    "fdg_30287f520f_11-23-2003-NA-PET-CT Ganzkoerper  primaer mit KM-15029_0000": {
+        "tag": "fdg_30287f520f_11-23-2003-NA-PET-CT Ganzkoerper  primaer mit KM-15029_0000",
+        "strategy": "random",
+        "iter_seconds": [
+            18.947,
+            16.176,
+            15.32,
+            14.059,
+            13.994,
+            13.932
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 5.024362325668335,
+        "shape": [
+            400,
+            400,
+            619
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": true,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 2.097,
+                "ct_pet_preproc_s": 0.89,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.102,
+                "assemble_s": 0.752,
+                "network_s": 10.802,
+                "export_s": 1.841,
+                "total_s": 16.495,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.25,
+                "assemble_s": 0.782,
+                "network_s": 9.837,
+                "export_s": 1.831,
+                "total_s": 12.711,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.256,
+                "assemble_s": 0.779,
+                "network_s": 8.975,
+                "export_s": 1.843,
+                "total_s": 11.865,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.249,
+                "assemble_s": 0.771,
+                "network_s": 7.734,
+                "export_s": 1.832,
+                "total_s": 10.597,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.254,
+                "assemble_s": 0.779,
+                "network_s": 7.645,
+                "export_s": 1.822,
+                "total_s": 10.512,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.252,
+                "assemble_s": 0.781,
+                "network_s": 7.636,
+                "export_s": 1.815,
+                "total_s": 10.493,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                3634,
+                0
+            ],
+            [
+                3519,
+                0
+            ],
+            [
+                3777,
+                0
+            ],
+            [
+                3981,
+                0
+            ],
+            [
+                4156,
+                0
+            ],
+            [
+                4242,
+                0
+            ]
+        ],
+        "case_seconds": 97.61
+    },
+    "fdg_34aa521b46_03-30-2007-NA-PET-CT Ganzkoerper  primaer mit KM-44072_0000": {
+        "tag": "fdg_34aa521b46_03-30-2007-NA-PET-CT Ganzkoerper  primaer mit KM-44072_0000",
+        "strategy": "boundary",
+        "iter_seconds": [
+            8.748,
+            9.335,
+            6.971,
+            0.666,
+            0.676,
+            0.665
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            "cache",
+            "cache",
+            "cache"
+        ],
+        "load_s": 3.04569935798645,
+        "shape": [
+            400,
+            400,
+            346
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": true,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 1.184,
+                "ct_pet_preproc_s": 0.505,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.056,
+                "assemble_s": 0.425,
+                "network_s": 4.244,
+                "export_s": 1.026,
+                "total_s": 7.449,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.14,
+                "assemble_s": 0.435,
+                "network_s": 5.847,
+                "export_s": 1.033,
+                "total_s": 7.462,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.142,
+                "assemble_s": 0.434,
+                "network_s": 4.243,
+                "export_s": 1.027,
+                "total_s": 5.855,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                121,
+                0
+            ],
+            [
+                127,
+                0
+            ],
+            [
+                127,
+                0
+            ],
+            [
+                127,
+                0
+            ],
+            [
+                127,
+                0
+            ],
+            [
+                127,
+                0
+            ]
+        ],
+        "metrics_reused_at": [
+            2,
+            3,
+            4,
+            5
+        ],
+        "case_seconds": 30.2
+    },
+    "fdg_402c061122_08-25-2003-NA-PET-CT Ganzkoerper nativ-22953_0000": {
+        "tag": "fdg_402c061122_08-25-2003-NA-PET-CT Ganzkoerper nativ-22953_0000",
+        "strategy": "centerline",
+        "iter_seconds": [
+            7.249,
+            6.38,
+            9.009,
+            6.475,
+            6.345,
+            8.153
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 2.4846839904785156,
+        "shape": [
+            400,
+            400,
+            284
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": true,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 0.973,
+                "ct_pet_preproc_s": 0.417,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.047,
+                "assemble_s": 0.347,
+                "network_s": 3.55,
+                "export_s": 0.845,
+                "total_s": 6.183,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.116,
+                "assemble_s": 0.357,
+                "network_s": 3.538,
+                "export_s": 0.844,
+                "total_s": 4.86,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.114,
+                "assemble_s": 0.359,
+                "network_s": 6.168,
+                "export_s": 0.847,
+                "total_s": 7.494,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.116,
+                "assemble_s": 0.358,
+                "network_s": 3.642,
+                "export_s": 0.85,
+                "total_s": 4.971,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.117,
+                "assemble_s": 0.356,
+                "network_s": 3.522,
+                "export_s": 0.839,
+                "total_s": 4.839,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.117,
+                "assemble_s": 0.356,
+                "network_s": 5.315,
+                "export_s": 0.849,
+                "total_s": 6.644,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                530,
+                0
+            ],
+            [
+                531,
+                0
+            ],
+            [
+                551,
+                0
+            ],
+            [
+                563,
+                0
+            ],
+            [
+                576,
+                0
+            ],
+            [
+                584,
+                0
+            ]
+        ],
+        "case_seconds": 46.17
+    },
+    "fdg_44cfacfd6e_04-15-2007-NA-PET-CT Ganzkoerper  primaer mit KM-69456_0000": {
+        "tag": "fdg_44cfacfd6e_04-15-2007-NA-PET-CT Ganzkoerper  primaer mit KM-69456_0000",
+        "strategy": "random",
+        "iter_seconds": [
+            17.272,
+            12.903,
+            12.838,
+            11.583,
+            1.14,
+            1.156
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            "cache",
+            "cache"
+        ],
+        "load_s": 4.690495014190674,
+        "shape": [
+            400,
+            400,
+            585
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": true,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 2.009,
+                "ct_pet_preproc_s": 0.85,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.096,
+                "assemble_s": 0.713,
+                "network_s": 9.64,
+                "export_s": 1.743,
+                "total_s": 15.063,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.238,
+                "assemble_s": 0.734,
+                "network_s": 6.985,
+                "export_s": 1.738,
+                "total_s": 9.707,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.239,
+                "assemble_s": 0.735,
+                "network_s": 6.98,
+                "export_s": 1.731,
+                "total_s": 9.694,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.236,
+                "assemble_s": 0.734,
+                "network_s": 6.985,
+                "export_s": 1.726,
+                "total_s": 9.695,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                52,
+                0
+            ],
+            [
+                95,
+                0
+            ],
+            [
+                106,
+                0
+            ],
+            [
+                106,
+                0
+            ],
+            [
+                106,
+                0
+            ],
+            [
+                106,
+                0
+            ]
+        ],
+        "metrics_reused_at": [
+            3,
+            4,
+            5
+        ],
+        "case_seconds": 61.74
+    },
+    "fdg_4cc808d16f_06-11-2006-NA-PET-CT Ganzkoerper  primaer mit KM-36881_0000": {
+        "tag": "fdg_4cc808d16f_06-11-2006-NA-PET-CT Ganzkoerper  primaer mit KM-36881_0000",
+        "strategy": "boundary",
+        "iter_seconds": [
+            12.979,
+            0.577,
+            0.575,
+            0.578,
+            0.583,
+            0.578
+        ],
+        "reused": [
+            null,
+            "cache",
+            "cache",
+            "cache",
+            "cache",
+            "cache"
+        ],
+        "load_s": 2.5776901245117188,
+        "shape": [
+            400,
+            400,
+            301
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": true,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 1.025,
+                "ct_pet_preproc_s": 0.443,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.05,
+                "assemble_s": 0.37,
+                "network_s": 6.813,
+                "export_s": 0.901,
+                "total_s": 9.609,
+                "ct_pet_cached": false
+            }
+        ],
+        "error_voxels": [
+            [
+                0,
+                0
+            ],
+            [
+                0,
+                0
+            ],
+            [
+                0,
+                0
+            ],
+            [
+                0,
+                0
+            ],
+            [
+                0,
+                0
+            ],
+            [
+                0,
+                0
+            ]
+        ],
+        "metrics_reused_at": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "case_seconds": 18.53
+    },
+    "fdg_4ea806706c_10-30-2003-NA-PET-CT Ganzkoerper  primaer mit KM-87631_0000": {
+        "tag": "fdg_4ea806706c_10-30-2003-NA-PET-CT Ganzkoerper  primaer mit KM-87631_0000",
+        "strategy": "centerline",
+        "iter_seconds": [
+            11.623,
+            6.856,
+            6.872,
+            7.17,
+            6.851,
+            10.435
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 2.769838333129883,
+        "shape": [
+            400,
+            400,
+            326
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": true,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 1.109,
+                "ct_pet_preproc_s": 0.474,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.053,
+                "assemble_s": 0.396,
+                "network_s": 7.373,
+                "export_s": 0.98,
+                "total_s": 10.393,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.134,
+                "assemble_s": 0.411,
+                "network_s": 3.602,
+                "export_s": 0.973,
+                "total_s": 5.127,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.133,
+                "assemble_s": 0.411,
+                "network_s": 3.598,
+                "export_s": 0.975,
+                "total_s": 5.124,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.134,
+                "assemble_s": 0.41,
+                "network_s": 3.89,
+                "export_s": 0.973,
+                "total_s": 5.415,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.134,
+                "assemble_s": 0.415,
+                "network_s": 3.589,
+                "export_s": 0.963,
+                "total_s": 5.106,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.131,
+                "assemble_s": 0.41,
+                "network_s": 7.15,
+                "export_s": 0.978,
+                "total_s": 8.676,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                2040,
+                0
+            ],
+            [
+                1521,
+                0
+            ],
+            [
+                1347,
+                0
+            ],
+            [
+                1292,
+                0
+            ],
+            [
+                1338,
+                0
+            ],
+            [
+                1590,
+                0
+            ]
+        ],
+        "case_seconds": 52.66
+    },
+    "fdg_55d55902c6_05-11-2006-NA-PET-CT Ganzkoerper  primaer mit KM-26216_0000": {
+        "tag": "fdg_55d55902c6_05-11-2006-NA-PET-CT Ganzkoerper  primaer mit KM-26216_0000",
+        "strategy": "random",
+        "iter_seconds": [
+            18.5,
+            12.851,
+            12.769,
+            11.562,
+            1.155,
+            1.152
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            "cache",
+            "cache"
+        ],
+        "load_s": 4.855807542800903,
+        "shape": [
+            400,
+            400,
+            581
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": true,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 1.979,
+                "ct_pet_preproc_s": 0.847,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.095,
+                "assemble_s": 0.711,
+                "network_s": 10.925,
+                "export_s": 1.728,
+                "total_s": 16.297,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.237,
+                "assemble_s": 0.731,
+                "network_s": 6.992,
+                "export_s": 1.735,
+                "total_s": 9.705,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.235,
+                "assemble_s": 0.738,
+                "network_s": 6.984,
+                "export_s": 1.704,
+                "total_s": 9.67,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.235,
+                "assemble_s": 0.732,
+                "network_s": 6.984,
+                "export_s": 1.715,
+                "total_s": 9.679,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                24,
+                0
+            ],
+            [
+                76,
+                0
+            ],
+            [
+                83,
+                0
+            ],
+            [
+                83,
+                0
+            ],
+            [
+                83,
+                0
+            ],
+            [
+                83,
+                0
+            ]
+        ],
+        "metrics_reused_at": [
+            3,
+            4,
+            5
+        ],
+        "case_seconds": 63.0
+    },
+    "fdg_572fca6b44_05-23-2005-NA-PET-CT Ganzkoerper  primaer mit KM-19541_0000": {
+        "tag": "fdg_572fca6b44_05-23-2005-NA-PET-CT Ganzkoerper  primaer mit KM-19541_0000",
+        "strategy": "boundary",
+        "iter_seconds": [
+            7.668,
+            6.884,
+            6.701,
+            6.662,
+            9.542,
+            6.717
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 2.7060647010803223,
+        "shape": [
+            400,
+            400,
+            313
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": true,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 1.077,
+                "ct_pet_preproc_s": 0.462,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.052,
+                "assemble_s": 0.384,
+                "network_s": 3.585,
+                "export_s": 0.927,
+                "total_s": 6.491,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.126,
+                "assemble_s": 0.395,
+                "network_s": 3.745,
+                "export_s": 0.933,
+                "total_s": 5.206,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.127,
+                "assemble_s": 0.4,
+                "network_s": 3.57,
+                "export_s": 0.927,
+                "total_s": 5.031,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.124,
+                "assemble_s": 0.389,
+                "network_s": 3.559,
+                "export_s": 0.923,
+                "total_s": 5.002,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.128,
+                "assemble_s": 0.393,
+                "network_s": 6.417,
+                "export_s": 0.928,
+                "total_s": 7.873,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.126,
+                "assemble_s": 0.394,
+                "network_s": 3.578,
+                "export_s": 0.932,
+                "total_s": 5.037,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                90,
+                0
+            ],
+            [
+                129,
+                0
+            ],
+            [
+                150,
+                0
+            ],
+            [
+                163,
+                0
+            ],
+            [
+                170,
+                0
+            ],
+            [
+                171,
+                0
+            ]
+        ],
+        "case_seconds": 46.97
+    },
+    "fdg_86e54ea60a_03-18-2002-NA-PET-CT Ganzkoerper  primaer mit KM-34788_0000": {
+        "tag": "fdg_86e54ea60a_03-18-2002-NA-PET-CT Ganzkoerper  primaer mit KM-34788_0000",
+        "strategy": "centerline",
+        "iter_seconds": [
+            8.549,
+            7.56,
+            7.441,
+            8.527,
+            7.454,
+            7.474
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 2.3546090126037598,
+        "shape": [
+            400,
+            400,
+            284
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 0.964,
+                "ct_pet_preproc_s": 0.41,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.046,
+                "assemble_s": 0.346,
+                "network_s": 4.751,
+                "export_s": 0.846,
+                "total_s": 7.369,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 0.118,
+                "assemble_s": 0.363,
+                "network_s": 3.538,
+                "export_s": 0.842,
+                "total_s": 4.869,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.004,
+                "prev_pred_s": 0.115,
+                "assemble_s": 0.355,
+                "network_s": 3.538,
+                "export_s": 0.837,
+                "total_s": 4.854,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.004,
+                "prev_pred_s": 0.115,
+                "assemble_s": 0.356,
+                "network_s": 4.593,
+                "export_s": 0.849,
+                "total_s": 5.923,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.005,
+                "prev_pred_s": 0.116,
+                "assemble_s": 0.359,
+                "network_s": 3.534,
+                "export_s": 0.844,
+                "total_s": 4.865,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.006,
+                "prev_pred_s": 0.116,
+                "assemble_s": 0.356,
+                "network_s": 3.551,
+                "export_s": 0.835,
+                "total_s": 4.869,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                1670,
+                126
+            ],
+            [
+                1600,
+                105
+            ],
+            [
+                1393,
+                121
+            ],
+            [
+                1305,
+                126
+            ],
+            [
+                1193,
+                129
+            ],
+            [
+                1059,
+                166
+            ]
+        ],
+        "fp_fn": [
+            [
+                19,
+                4
+            ],
+            [
+                20,
+                4
+            ],
+            [
+                12,
+                4
+            ],
+            [
+                11,
+                4
+            ],
+            [
+                18,
+                4
+            ]
+        ],
+        "case_seconds": 49.44
+    },
+    "fdg_91cfa804b0_09-22-2006-NA-PET-CT Ganzkoerper  primaer mit KM-30574_0000": {
+        "tag": "fdg_91cfa804b0_09-22-2006-NA-PET-CT Ganzkoerper  primaer mit KM-30574_0000",
+        "strategy": "random",
+        "iter_seconds": [
+            7.543,
+            7.216,
+            10.938,
+            7.636,
+            9.412,
+            6.902
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 2.5623793601989746,
+        "shape": [
+            400,
+            400,
+            300
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 1.016,
+                "ct_pet_preproc_s": 0.429,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.049,
+                "assemble_s": 0.365,
+                "network_s": 3.557,
+                "export_s": 0.88,
+                "total_s": 6.302,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.001,
+                "prev_pred_s": 0.12,
+                "assemble_s": 0.376,
+                "network_s": 3.552,
+                "export_s": 0.909,
+                "total_s": 4.964,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 0.124,
+                "assemble_s": 0.379,
+                "network_s": 7.232,
+                "export_s": 0.918,
+                "total_s": 8.662,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 0.124,
+                "assemble_s": 0.378,
+                "network_s": 3.566,
+                "export_s": 0.887,
+                "total_s": 4.963,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 0.122,
+                "assemble_s": 0.377,
+                "network_s": 5.331,
+                "export_s": 0.893,
+                "total_s": 6.732,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 0.123,
+                "assemble_s": 0.379,
+                "network_s": 3.574,
+                "export_s": 0.89,
+                "total_s": 4.975,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                0,
+                55
+            ],
+            [
+                0,
+                42
+            ],
+            [
+                5,
+                22
+            ],
+            [
+                14,
+                18
+            ],
+            [
+                15,
+                18
+            ],
+            [
+                15,
+                18
+            ]
+        ],
+        "fp_fn": [
+            [
+                0,
+                2
+            ],
+            [
+                0,
+                3
+            ],
+            [
+                1,
+                3
+            ],
+            [
+                2,
+                3
+            ],
+            [
+                2,
+                3
+            ]
+        ],
+        "metrics_reused_at": [
+            5
+        ],
+        "case_seconds": 52.29
+    },
+    "fdg_94cc0dac49_03-09-2007-NA-PET-CT Ganzkoerper  primaer mit KM-58245_0000": {
+        "tag": "fdg_94cc0dac49_03-09-2007-NA-PET-CT Ganzkoerper  primaer mit KM-58245_0000",
+        "strategy": "boundary",
+        "iter_seconds": [
+            16.222,
+            17.27,
+            18.043,
+            17.195,
+            15.254,
+            15.054
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 5.243822813034058,
+        "shape": [
+            400,
+            400,
+            642
+        ],
+        "spacing": [
+            2.0364201068878174,
+            2.0364201068878174,
+            3.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 2.202,
+                "ct_pet_preproc_s": 0.927,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.104,
+                "assemble_s": 0.787,
+                "network_s": 7.648,
+                "export_s": 1.904,
+                "total_s": 13.582,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.001,
+                "prev_pred_s": 0.258,
+                "assemble_s": 0.8,
+                "network_s": 8.169,
+                "export_s": 1.9,
+                "total_s": 11.14,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 0.258,
+                "assemble_s": 0.799,
+                "network_s": 8.847,
+                "export_s": 1.916,
+                "total_s": 11.834,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 0.259,
+                "assemble_s": 0.8,
+                "network_s": 7.672,
+                "export_s": 1.896,
+                "total_s": 10.641,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 0.259,
+                "assemble_s": 0.806,
+                "network_s": 7.659,
+                "export_s": 1.898,
+                "total_s": 10.636,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 0.261,
+                "assemble_s": 0.805,
+                "network_s": 7.658,
+                "export_s": 1.899,
+                "total_s": 10.64,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                15,
+                3
+            ],
+            [
+                6,
+                7
+            ],
+            [
+                6,
+                6
+            ],
+            [
+                8,
+                4
+            ],
+            [
+                8,
+                4
+            ],
+            [
+                8,
+                4
+            ]
+        ],
+        "fp_fn": [
+            [
+                3,
+                2
+            ],
+            [
+                2,
+                3
+            ],
+            [
+                2,
+                3
+            ],
+            [
+                2,
+                2
+            ],
+            [
+                2,
+                2
+            ]
+        ],
+        "metrics_reused_at": [
+            4,
+            5
+        ],
+        "case_seconds": 104.44
+    },
+    "psma_02826eb561d6e0c7_2016-11-04_0000": {
+        "tag": "psma_02826eb561d6e0c7_2016-11-04_0000",
+        "strategy": "centerline",
+        "iter_seconds": [
+            21.336,
+            9.4,
+            9.456,
+            9.451,
+            9.56,
+            11.285
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 0.9890320301055908,
+        "shape": [
+            256,
+            256,
+            263
+        ],
+        "spacing": [
+            2.734375,
+            2.734375,
+            3.27001953125
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 0.378,
+                "ct_pet_preproc_s": 15.119,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.035,
+                "assemble_s": 0.262,
+                "network_s": 4.637,
+                "export_s": 0.486,
+                "total_s": 20.919,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 4.862,
+                "assemble_s": 0.268,
+                "network_s": 2.943,
+                "export_s": 0.467,
+                "total_s": 8.543,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 4.91,
+                "assemble_s": 0.268,
+                "network_s": 2.941,
+                "export_s": 0.477,
+                "total_s": 8.601,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 4.854,
+                "assemble_s": 0.269,
+                "network_s": 2.968,
+                "export_s": 0.476,
+                "total_s": 8.572,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 4.919,
+                "assemble_s": 0.268,
+                "network_s": 2.958,
+                "export_s": 0.474,
+                "total_s": 8.624,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.004,
+                "prev_pred_s": 4.844,
+                "assemble_s": 0.27,
+                "network_s": 4.85,
+                "export_s": 0.475,
+                "total_s": 10.445,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                23,
+                67
+            ],
+            [
+                8,
+                81
+            ],
+            [
+                8,
+                71
+            ],
+            [
+                15,
+                58
+            ],
+            [
+                27,
+                45
+            ],
+            [
+                18,
+                51
+            ]
+        ],
+        "fp_fn": [
+            [
+                11,
+                6
+            ],
+            [
+                2,
+                6
+            ],
+            [
+                2,
+                5
+            ],
+            [
+                2,
+                6
+            ],
+            [
+                7,
+                6
+            ]
+        ],
+        "case_seconds": 71.51
+    },
+    "psma_0ec0e718244b2a79_2015-06-19_0000": {
+        "tag": "psma_0ec0e718244b2a79_2015-06-19_0000",
+        "strategy": "random",
+        "iter_seconds": [
+            19.224,
+            8.572,
+            8.681,
+            8.648,
+            9.318,
+            8.699
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 0.2664937973022461,
+        "shape": [
+            168,
+            168,
+            195
+        ],
+        "spacing": [
+            4.0728302001953125,
+            4.0728302001953125,
+            5.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 0.114,
+                "ct_pet_preproc_s": 15.539,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.039,
+                "assemble_s": 0.285,
+                "network_s": 2.963,
+                "export_s": 0.159,
+                "total_s": 19.102,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.001,
+                "prev_pred_s": 4.933,
+                "assemble_s": 0.286,
+                "network_s": 2.964,
+                "export_s": 0.181,
+                "total_s": 8.366,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.001,
+                "prev_pred_s": 4.999,
+                "assemble_s": 0.291,
+                "network_s": 2.969,
+                "export_s": 0.181,
+                "total_s": 8.445,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.001,
+                "prev_pred_s": 5.036,
+                "assemble_s": 0.289,
+                "network_s": 2.954,
+                "export_s": 0.188,
+                "total_s": 8.47,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.001,
+                "prev_pred_s": 5.043,
+                "assemble_s": 0.29,
+                "network_s": 3.602,
+                "export_s": 0.193,
+                "total_s": 9.132,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.001,
+                "prev_pred_s": 5.056,
+                "assemble_s": 0.291,
+                "network_s": 2.981,
+                "export_s": 0.188,
+                "total_s": 8.519,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                0,
+                7
+            ],
+            [
+                1,
+                2
+            ],
+            [
+                6,
+                2
+            ],
+            [
+                6,
+                2
+            ],
+            [
+                6,
+                2
+            ],
+            [
+                6,
+                2
+            ]
+        ],
+        "fp_fn": [
+            [
+                0,
+                1
+            ],
+            [
+                1,
+                1
+            ],
+            [
+                1,
+                1
+            ],
+            [
+                1,
+                1
+            ],
+            [
+                1,
+                1
+            ]
+        ],
+        "metrics_reused_at": [
+            3,
+            4,
+            5
+        ],
+        "case_seconds": 63.41
+    },
+    "psma_0fcbcd7dc52d5b82_2020-06-19_0000": {
+        "tag": "psma_0fcbcd7dc52d5b82_2020-06-19_0000",
+        "strategy": "boundary",
+        "iter_seconds": [
+            26.505,
+            13.286,
+            13.515,
+            13.437,
+            13.293,
+            13.934
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 0.8232123851776123,
+        "shape": [
+            200,
+            200,
+            421
+        ],
+        "spacing": [
+            4.0728302001953125,
+            4.0728302001953125,
+            2.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 0.348,
+                "ct_pet_preproc_s": 19.756,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.046,
+                "assemble_s": 0.344,
+                "network_s": 3.538,
+                "export_s": 0.478,
+                "total_s": 24.513,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 6.231,
+                "assemble_s": 0.362,
+                "network_s": 3.543,
+                "export_s": 0.472,
+                "total_s": 10.612,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 6.393,
+                "assemble_s": 0.356,
+                "network_s": 3.554,
+                "export_s": 0.493,
+                "total_s": 10.801,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.004,
+                "prev_pred_s": 6.359,
+                "assemble_s": 0.356,
+                "network_s": 3.552,
+                "export_s": 0.487,
+                "total_s": 10.761,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.004,
+                "prev_pred_s": 6.292,
+                "assemble_s": 0.352,
+                "network_s": 3.541,
+                "export_s": 0.473,
+                "total_s": 10.665,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.007,
+                "prev_pred_s": 6.336,
+                "assemble_s": 0.361,
+                "network_s": 4.059,
+                "export_s": 0.485,
+                "total_s": 11.25,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                6683,
+                1954
+            ],
+            [
+                6403,
+                1870
+            ],
+            [
+                6582,
+                1787
+            ],
+            [
+                7110,
+                1770
+            ],
+            [
+                8199,
+                1780
+            ],
+            [
+                9411,
+                1785
+            ]
+        ],
+        "fp_fn": [
+            [
+                5,
+                5
+            ],
+            [
+                5,
+                5
+            ],
+            [
+                5,
+                3
+            ],
+            [
+                5,
+                3
+            ],
+            [
+                10,
+                3
+            ]
+        ],
+        "case_seconds": 94.82
+    },
+    "psma_14c16d0ce2b3229d_2020-02-22_0000": {
+        "tag": "psma_14c16d0ce2b3229d_2020-02-22_0000",
+        "strategy": "centerline",
+        "iter_seconds": [
+            25.23,
+            14.121,
+            14.084,
+            12.473,
+            12.533,
+            12.582
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 0.7965304851531982,
+        "shape": [
+            200,
+            200,
+            405
+        ],
+        "spacing": [
+            4.0728302001953125,
+            4.0728302001953125,
+            2.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 0.342,
+                "ct_pet_preproc_s": 19.038,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.044,
+                "assemble_s": 0.354,
+                "network_s": 2.967,
+                "export_s": 0.46,
+                "total_s": 23.207,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 6.188,
+                "assemble_s": 0.339,
+                "network_s": 4.435,
+                "export_s": 0.468,
+                "total_s": 11.435,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 6.019,
+                "assemble_s": 0.339,
+                "network_s": 4.533,
+                "export_s": 0.466,
+                "total_s": 11.363,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.006,
+                "prev_pred_s": 6.103,
+                "assemble_s": 0.341,
+                "network_s": 2.91,
+                "export_s": 0.451,
+                "total_s": 9.813,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.006,
+                "prev_pred_s": 6.093,
+                "assemble_s": 0.34,
+                "network_s": 2.912,
+                "export_s": 0.471,
+                "total_s": 9.824,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.007,
+                "prev_pred_s": 6.148,
+                "assemble_s": 0.34,
+                "network_s": 2.92,
+                "export_s": 0.474,
+                "total_s": 9.892,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                10120,
+                3159
+            ],
+            [
+                9912,
+                3354
+            ],
+            [
+                9955,
+                3362
+            ],
+            [
+                9866,
+                3367
+            ],
+            [
+                9713,
+                3359
+            ],
+            [
+                9566,
+                3362
+            ]
+        ],
+        "fp_fn": [
+            [
+                11,
+                13
+            ],
+            [
+                16,
+                17
+            ],
+            [
+                16,
+                12
+            ],
+            [
+                14,
+                12
+            ],
+            [
+                17,
+                12
+            ]
+        ],
+        "case_seconds": 91.84
+    },
+    "psma_1d7ce562612262cb_2019-11-01_0000": {
+        "tag": "psma_1d7ce562612262cb_2019-11-01_0000",
+        "strategy": "random",
+        "iter_seconds": [
+            27.203,
+            14.72,
+            14.777,
+            14.774,
+            14.731,
+            14.653
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 0.795783519744873,
+        "shape": [
+            200,
+            200,
+            401
+        ],
+        "spacing": [
+            4.0728302001953125,
+            4.0728302001953125,
+            2.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 0.333,
+                "ct_pet_preproc_s": 18.785,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.044,
+                "assemble_s": 0.327,
+                "network_s": 2.913,
+                "export_s": 0.455,
+                "total_s": 22.86,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 5.973,
+                "assemble_s": 0.337,
+                "network_s": 2.912,
+                "export_s": 0.459,
+                "total_s": 9.685,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 6.062,
+                "assemble_s": 0.338,
+                "network_s": 2.915,
+                "export_s": 0.453,
+                "total_s": 9.774,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.005,
+                "prev_pred_s": 5.999,
+                "assemble_s": 0.334,
+                "network_s": 2.916,
+                "export_s": 0.458,
+                "total_s": 9.715,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.005,
+                "prev_pred_s": 6.022,
+                "assemble_s": 0.336,
+                "network_s": 2.917,
+                "export_s": 0.46,
+                "total_s": 9.742,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.006,
+                "prev_pred_s": 5.961,
+                "assemble_s": 0.335,
+                "network_s": 2.898,
+                "export_s": 0.459,
+                "total_s": 9.662,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                10521,
+                4236
+            ],
+            [
+                11251,
+                4320
+            ],
+            [
+                11986,
+                4389
+            ],
+            [
+                12386,
+                4400
+            ],
+            [
+                12781,
+                4385
+            ],
+            [
+                13000,
+                4386
+            ]
+        ],
+        "fp_fn": [
+            [
+                4,
+                5
+            ],
+            [
+                5,
+                4
+            ],
+            [
+                3,
+                4
+            ],
+            [
+                3,
+                3
+            ],
+            [
+                3,
+                2
+            ]
+        ],
+        "case_seconds": 101.68
+    },
+    "psma_28f9ecc106933531_2019-06-15_0000": {
+        "tag": "psma_28f9ecc106933531_2019-06-15_0000",
+        "strategy": "boundary",
+        "iter_seconds": [
+            19.598,
+            10.806,
+            9.131,
+            9.15,
+            10.35,
+            8.93
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 0.9852056503295898,
+        "shape": [
+            256,
+            256,
+            263
+        ],
+        "spacing": [
+            2.734375,
+            2.734375,
+            3.2700042724609375
+        ],
+        "empty_gt": true,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 0.356,
+                "ct_pet_preproc_s": 15.125,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.035,
+                "assemble_s": 0.26,
+                "network_s": 2.955,
+                "export_s": 0.476,
+                "total_s": 19.21,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 4.914,
+                "assemble_s": 0.268,
+                "network_s": 4.602,
+                "export_s": 0.482,
+                "total_s": 10.268,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 4.9,
+                "assemble_s": 0.269,
+                "network_s": 2.939,
+                "export_s": 0.468,
+                "total_s": 8.578,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 4.881,
+                "assemble_s": 0.272,
+                "network_s": 2.962,
+                "export_s": 0.481,
+                "total_s": 8.598,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 4.855,
+                "assemble_s": 0.266,
+                "network_s": 4.216,
+                "export_s": 0.476,
+                "total_s": 9.816,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 4.899,
+                "assemble_s": 0.268,
+                "network_s": 2.958,
+                "export_s": 0.472,
+                "total_s": 8.599,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                844,
+                0
+            ],
+            [
+                721,
+                0
+            ],
+            [
+                688,
+                0
+            ],
+            [
+                675,
+                0
+            ],
+            [
+                668,
+                0
+            ],
+            [
+                668,
+                0
+            ]
+        ],
+        "metrics_reused_at": [
+            5
+        ],
+        "case_seconds": 68.98
+    },
+    "psma_4fc4664327ba8d0b_2014-06-06_0000": {
+        "tag": "psma_4fc4664327ba8d0b_2014-06-06_0000",
+        "strategy": "centerline",
+        "iter_seconds": [
+            19.523,
+            8.998,
+            9.064,
+            9.105,
+            9.06,
+            9.066
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 0.2936568260192871,
+        "shape": [
+            168,
+            168,
+            195
+        ],
+        "spacing": [
+            4.0728302001953125,
+            4.0728302001953125,
+            5.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 0.113,
+                "ct_pet_preproc_s": 15.498,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.04,
+                "assemble_s": 0.284,
+                "network_s": 2.974,
+                "export_s": 0.186,
+                "total_s": 19.097,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 4.956,
+                "assemble_s": 0.288,
+                "network_s": 2.97,
+                "export_s": 0.182,
+                "total_s": 8.401,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.005,
+                "prev_pred_s": 4.993,
+                "assemble_s": 0.287,
+                "network_s": 2.98,
+                "export_s": 0.19,
+                "total_s": 8.457,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.006,
+                "prev_pred_s": 5.002,
+                "assemble_s": 0.291,
+                "network_s": 2.979,
+                "export_s": 0.188,
+                "total_s": 8.469,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.006,
+                "prev_pred_s": 4.996,
+                "assemble_s": 0.289,
+                "network_s": 2.969,
+                "export_s": 0.187,
+                "total_s": 8.449,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.006,
+                "prev_pred_s": 4.996,
+                "assemble_s": 0.288,
+                "network_s": 2.972,
+                "export_s": 0.188,
+                "total_s": 8.453,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                1236,
+                2461
+            ],
+            [
+                1261,
+                1573
+            ],
+            [
+                1251,
+                1475
+            ],
+            [
+                1247,
+                1446
+            ],
+            [
+                1244,
+                1418
+            ],
+            [
+                1240,
+                1411
+            ]
+        ],
+        "fp_fn": [
+            [
+                16,
+                20
+            ],
+            [
+                14,
+                13
+            ],
+            [
+                12,
+                11
+            ],
+            [
+                11,
+                8
+            ],
+            [
+                12,
+                8
+            ]
+        ],
+        "case_seconds": 65.12
+    },
+    "psma_4fc4664327ba8d0b_2014-12-19_0000": {
+        "tag": "psma_4fc4664327ba8d0b_2014-12-19_0000",
+        "strategy": "random",
+        "iter_seconds": [
+            19.392,
+            8.944,
+            8.885,
+            8.891,
+            8.903,
+            8.9
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 0.2898838520050049,
+        "shape": [
+            168,
+            168,
+            195
+        ],
+        "spacing": [
+            4.0728302001953125,
+            4.0728302001953125,
+            5.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 0.113,
+                "ct_pet_preproc_s": 15.473,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.038,
+                "assemble_s": 0.281,
+                "network_s": 2.982,
+                "export_s": 0.193,
+                "total_s": 19.084,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.001,
+                "prev_pred_s": 5.005,
+                "assemble_s": 0.289,
+                "network_s": 2.974,
+                "export_s": 0.192,
+                "total_s": 8.463,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 4.969,
+                "assemble_s": 0.288,
+                "network_s": 2.958,
+                "export_s": 0.184,
+                "total_s": 8.403,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.004,
+                "prev_pred_s": 4.955,
+                "assemble_s": 0.292,
+                "network_s": 2.974,
+                "export_s": 0.183,
+                "total_s": 8.409,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.004,
+                "prev_pred_s": 4.967,
+                "assemble_s": 0.293,
+                "network_s": 2.976,
+                "export_s": 0.184,
+                "total_s": 8.425,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.004,
+                "prev_pred_s": 4.964,
+                "assemble_s": 0.29,
+                "network_s": 2.965,
+                "export_s": 0.183,
+                "total_s": 8.408,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                641,
+                1127
+            ],
+            [
+                547,
+                1210
+            ],
+            [
+                520,
+                1239
+            ],
+            [
+                506,
+                1235
+            ],
+            [
+                496,
+                1233
+            ],
+            [
+                495,
+                1237
+            ]
+        ],
+        "fp_fn": [
+            [
+                2,
+                4
+            ],
+            [
+                2,
+                4
+            ],
+            [
+                2,
+                4
+            ],
+            [
+                2,
+                2
+            ],
+            [
+                2,
+                2
+            ]
+        ],
+        "case_seconds": 64.21
+    },
+    "psma_5203bac8a9bfd9e2_2020-06-06_0000": {
+        "tag": "psma_5203bac8a9bfd9e2_2020-06-06_0000",
+        "strategy": "boundary",
+        "iter_seconds": [
+            23.304,
+            10.724,
+            10.635,
+            10.804,
+            10.747,
+            10.747
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 0.7203922271728516,
+        "shape": [
+            200,
+            200,
+            403
+        ],
+        "spacing": [
+            4.0728302001953125,
+            4.0728302001953125,
+            2.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 0.333,
+                "ct_pet_preproc_s": 18.77,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.045,
+                "assemble_s": 0.328,
+                "network_s": 2.915,
+                "export_s": 0.464,
+                "total_s": 22.856,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 6.106,
+                "assemble_s": 0.335,
+                "network_s": 2.914,
+                "export_s": 0.46,
+                "total_s": 9.818,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 6.023,
+                "assemble_s": 0.337,
+                "network_s": 2.922,
+                "export_s": 0.467,
+                "total_s": 9.753,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 6.154,
+                "assemble_s": 0.341,
+                "network_s": 2.922,
+                "export_s": 0.466,
+                "total_s": 9.887,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 6.109,
+                "assemble_s": 0.343,
+                "network_s": 2.921,
+                "export_s": 0.464,
+                "total_s": 9.841,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 6.113,
+                "assemble_s": 0.339,
+                "network_s": 2.923,
+                "export_s": 0.463,
+                "total_s": 9.843,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                170,
+                971
+            ],
+            [
+                226,
+                891
+            ],
+            [
+                278,
+                877
+            ],
+            [
+                299,
+                874
+            ],
+            [
+                312,
+                868
+            ],
+            [
+                318,
+                864
+            ]
+        ],
+        "fp_fn": [
+            [
+                3,
+                4
+            ],
+            [
+                3,
+                4
+            ],
+            [
+                3,
+                4
+            ],
+            [
+                3,
+                4
+            ],
+            [
+                3,
+                4
+            ]
+        ],
+        "case_seconds": 77.71
+    },
+    "psma_ba6433757dfc9d21_2021-10-09_0000": {
+        "tag": "psma_ba6433757dfc9d21_2021-10-09_0000",
+        "strategy": "centerline",
+        "iter_seconds": [
+            25.808,
+            12.251,
+            12.238,
+            12.152,
+            12.211,
+            12.292
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 0.8542876243591309,
+        "shape": [
+            200,
+            200,
+            435
+        ],
+        "spacing": [
+            4.0728302001953125,
+            4.0728302001953125,
+            2.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 0.374,
+                "ct_pet_preproc_s": 20.281,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.047,
+                "assemble_s": 0.356,
+                "network_s": 3.555,
+                "export_s": 0.498,
+                "total_s": 25.114,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 6.584,
+                "assemble_s": 0.367,
+                "network_s": 3.553,
+                "export_s": 0.485,
+                "total_s": 10.994,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 6.589,
+                "assemble_s": 0.367,
+                "network_s": 3.552,
+                "export_s": 0.484,
+                "total_s": 10.998,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.005,
+                "prev_pred_s": 6.502,
+                "assemble_s": 0.363,
+                "network_s": 3.549,
+                "export_s": 0.486,
+                "total_s": 10.906,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.005,
+                "prev_pred_s": 6.527,
+                "assemble_s": 0.366,
+                "network_s": 3.556,
+                "export_s": 0.491,
+                "total_s": 10.947,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.005,
+                "prev_pred_s": 6.646,
+                "assemble_s": 0.367,
+                "network_s": 3.551,
+                "export_s": 0.495,
+                "total_s": 11.067,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                485,
+                376
+            ],
+            [
+                444,
+                398
+            ],
+            [
+                443,
+                405
+            ],
+            [
+                442,
+                402
+            ],
+            [
+                438,
+                400
+            ],
+            [
+                434,
+                399
+            ]
+        ],
+        "fp_fn": [
+            [
+                5,
+                2
+            ],
+            [
+                3,
+                4
+            ],
+            [
+                3,
+                6
+            ],
+            [
+                3,
+                6
+            ],
+            [
+                3,
+                6
+            ]
+        ],
+        "case_seconds": 87.83
+    },
+    "psma_c265ec063df5602b_2019-12-27_0000": {
+        "tag": "psma_c265ec063df5602b_2019-12-27_0000",
+        "strategy": "random",
+        "iter_seconds": [
+            25.639,
+            11.767,
+            11.875,
+            11.831,
+            11.783,
+            11.47
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 0.8409080505371094,
+        "shape": [
+            200,
+            200,
+            435
+        ],
+        "spacing": [
+            4.0728302001953125,
+            4.0728302001953125,
+            2.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 0.392,
+                "ct_pet_preproc_s": 20.303,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.048,
+                "assemble_s": 0.358,
+                "network_s": 3.572,
+                "export_s": 0.5,
+                "total_s": 25.176,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 6.57,
+                "assemble_s": 0.367,
+                "network_s": 3.56,
+                "export_s": 0.491,
+                "total_s": 10.992,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 6.674,
+                "assemble_s": 0.367,
+                "network_s": 3.557,
+                "export_s": 0.491,
+                "total_s": 11.094,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 6.633,
+                "assemble_s": 0.36,
+                "network_s": 3.561,
+                "export_s": 0.491,
+                "total_s": 11.051,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.004,
+                "prev_pred_s": 6.601,
+                "assemble_s": 0.369,
+                "network_s": 3.55,
+                "export_s": 0.485,
+                "total_s": 11.011,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.004,
+                "prev_pred_s": 6.527,
+                "assemble_s": 0.365,
+                "network_s": 3.575,
+                "export_s": 0.499,
+                "total_s": 10.973,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                191,
+                0
+            ],
+            [
+                275,
+                0
+            ],
+            [
+                291,
+                0
+            ],
+            [
+                284,
+                0
+            ],
+            [
+                271,
+                0
+            ],
+            [
+                271,
+                0
+            ]
+        ],
+        "fp_fn": [
+            [
+                3,
+                0
+            ],
+            [
+                2,
+                0
+            ],
+            [
+                2,
+                0
+            ],
+            [
+                2,
+                0
+            ],
+            [
+                2,
+                0
+            ]
+        ],
+        "metrics_reused_at": [
+            5
+        ],
+        "case_seconds": 85.23
+    },
+    "psma_ca36bd95b63289d0_2020-05-15_0000": {
+        "tag": "psma_ca36bd95b63289d0_2020-05-15_0000",
+        "strategy": "boundary",
+        "iter_seconds": [
+            26.574,
+            12.801,
+            12.505,
+            12.292,
+            12.485,
+            12.304
+        ],
+        "reused": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "load_s": 0.8654477596282959,
+        "shape": [
+            200,
+            200,
+            446
+        ],
+        "spacing": [
+            4.0728302001953125,
+            4.0728302001953125,
+            2.0
+        ],
+        "empty_gt": false,
+        "predictor_timings": [
+            {
+                "crop_bbox_s": 0.385,
+                "ct_pet_preproc_s": 21.04,
+                "guidance_preproc_s": 0.0,
+                "prev_pred_s": 0.052,
+                "assemble_s": 0.369,
+                "network_s": 3.581,
+                "export_s": 0.509,
+                "total_s": 25.938,
+                "ct_pet_cached": false
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.002,
+                "prev_pred_s": 7.163,
+                "assemble_s": 0.394,
+                "network_s": 3.576,
+                "export_s": 0.499,
+                "total_s": 11.637,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 6.894,
+                "assemble_s": 0.371,
+                "network_s": 3.561,
+                "export_s": 0.501,
+                "total_s": 11.334,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 6.666,
+                "assemble_s": 0.378,
+                "network_s": 3.569,
+                "export_s": 0.504,
+                "total_s": 11.123,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.003,
+                "prev_pred_s": 6.864,
+                "assemble_s": 0.374,
+                "network_s": 3.563,
+                "export_s": 0.506,
+                "total_s": 11.313,
+                "ct_pet_cached": true
+            },
+            {
+                "crop_bbox_s": 0.0,
+                "ct_pet_preproc_s": 0.0,
+                "guidance_preproc_s": 0.004,
+                "prev_pred_s": 6.713,
+                "assemble_s": 0.371,
+                "network_s": 3.564,
+                "export_s": 0.499,
+                "total_s": 11.154,
+                "ct_pet_cached": true
+            }
+        ],
+        "error_voxels": [
+            [
+                1435,
+                47
+            ],
+            [
+                1362,
+                68
+            ],
+            [
+                1405,
+                77
+            ],
+            [
+                1480,
+                79
+            ],
+            [
+                1524,
+                81
+            ],
+            [
+                1567,
+                82
+            ]
+        ],
+        "fp_fn": [
+            [
+                5,
+                3
+            ],
+            [
+                4,
+                3
+            ],
+            [
+                4,
+                3
+            ],
+            [
+                4,
+                3
+            ],
+            [
+                5,
+                3
+            ]
+        ],
+        "case_seconds": 89.85
+    }
+}

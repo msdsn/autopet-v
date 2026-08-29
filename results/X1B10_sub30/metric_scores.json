@@ -1,0 +1,962 @@
+{
+    "fdg_15cfa01130_02-24-2001-NA-PET-CT Ganzkoerper  primaer mit KM-49873_0000": [
+        {
+            "iteration": 0,
+            "dice": 0.8809122204795865,
+            "dmm": 0.8333333333333334
+        },
+        {
+            "iteration": 1,
+            "dice": 0.8610936262665232,
+            "dmm": 0.8333333333333334
+        },
+        {
+            "iteration": 2,
+            "dice": 0.8590868870966102,
+            "dmm": 0.7692307692307693
+        },
+        {
+            "iteration": 3,
+            "dice": 0.8589989935035227,
+            "dmm": 0.7692307692307693
+        },
+        {
+            "iteration": 4,
+            "dice": 0.8603950451958486,
+            "dmm": 0.7692307692307693
+        },
+        {
+            "iteration": 5,
+            "dice": 0.8629174877469556,
+            "dmm": 0.8461538461538461
+        }
+    ],
+    "fdg_1a1712f7d0_02-16-2007-NA-PET-CT Ganzkoerper  primaer mit KM-50630_0000": [
+        {
+            "iteration": 0,
+            "dice": 0.0,
+            "dmm": 0.0
+        },
+        {
+            "iteration": 1,
+            "dice": 0.9369931378665003,
+            "dmm": 1.0
+        },
+        {
+            "iteration": 2,
+            "dice": 0.8888888888888888,
+            "dmm": 1.0
+        },
+        {
+            "iteration": 3,
+            "dice": 0.8855664174813112,
+            "dmm": 1.0
+        },
+        {
+            "iteration": 4,
+            "dice": 0.9230769230769231,
+            "dmm": 1.0
+        },
+        {
+            "iteration": 5,
+            "dice": 0.9254658385093167,
+            "dmm": 1.0
+        }
+    ],
+    "fdg_20a607649d_01-27-2007-NA-PET-CT Ganzkoerper  primaer mit KM-84908_0000": [
+        {
+            "iteration": 0,
+            "dice": 0.0,
+            "dmm": 0.0
+        },
+        {
+            "iteration": 1,
+            "dice": 0.0044986213902191265,
+            "dmm": 0.0
+        },
+        {
+            "iteration": 2,
+            "dice": 0.015871870716398527,
+            "dmm": 0.0
+        },
+        {
+            "iteration": 3,
+            "dice": 0.03458872293289502,
+            "dmm": 0.0
+        },
+        {
+            "iteration": 4,
+            "dice": 0.06677444296056793,
+            "dmm": 0.0
+        },
+        {
+            "iteration": 5,
+            "dice": 0.23502274620362656,
+            "dmm": 0.2857142857142857
+        }
+    ],
+    "fdg_21853fc15b_10-12-2002-NA-PET-CT Ganzkoerper  primaer mit KM-55807_0000": [
+        {
+            "iteration": 0,
+            "dice": 0.8701630328029857,
+            "dmm": 0.8
+        },
+        {
+            "iteration": 1,
+            "dice": 0.8524722502522705,
+            "dmm": 0.8
+        },
+        {
+            "iteration": 2,
+            "dice": 0.8408580183861083,
+            "dmm": 0.8
+        },
+        {
+            "iteration": 3,
+            "dice": 0.8357289527720739,
+            "dmm": 0.8
+        },
+        {
+            "iteration": 4,
+            "dice": 0.8335733388191731,
+            "dmm": 0.8
+        },
+        {
+            "iteration": 5,
+            "dice": 0.8321318228630278,
+            "dmm": 0.8
+        }
+    ],
+    "fdg_23ed525e82_08-01-2003-NA-PET-CT Ganzkoerper  primaer mit KM-24219_0000": [
+        {
+            "iteration": 0,
+            "dice": 0.0,
+            "dmm": 0.0
+        },
+        {
+            "iteration": 1,
+            "dice": 0.44274809160305345,
+            "dmm": 0.4
+        },
+        {
+            "iteration": 2,
+            "dice": 0.45255474452554745,
+            "dmm": 0.4
+        },
+        {
+            "iteration": 3,
+            "dice": 0.4460431654676259,
+            "dmm": 0.4
+        },
+        {
+            "iteration": 4,
+            "dice": 0.43661971830985913,
+            "dmm": 0.4
+        },
+        {
+            "iteration": 5,
+            "dice": 0.4305555555555556,
+            "dmm": 0.4
+        }
+    ],
+    "fdg_2a41141775_09-24-2005-NA-PET-CT Ganzkoerper  primaer mit KM-94391_0000": [
+        {
+            "iteration": 0,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 1,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 2,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 3,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 4,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 5,
+            "dice": 1.0,
+            "dmm": NaN
+        }
+    ],
+    "fdg_2b60c8135a_12-09-2005-NA-PET-CT Ganzkoerper  primaer mit KM-49696_0000": [
+        {
+            "iteration": 0,
+            "dice": 0.8544499089061365,
+            "dmm": 0.6326530612244898
+        },
+        {
+            "iteration": 1,
+            "dice": 0.8431326150173268,
+            "dmm": 0.6534653465346535
+        },
+        {
+            "iteration": 2,
+            "dice": 0.8398243414114598,
+            "dmm": 0.6666666666666666
+        },
+        {
+            "iteration": 3,
+            "dice": 0.8388787005501703,
+            "dmm": 0.6601941747572816
+        },
+        {
+            "iteration": 4,
+            "dice": 0.8382720120601121,
+            "dmm": 0.6601941747572816
+        },
+        {
+            "iteration": 5,
+            "dice": 0.8375796677872877,
+            "dmm": 0.6666666666666666
+        }
+    ],
+    "fdg_30287f520f_11-23-2003-NA-PET-CT Ganzkoerper  primaer mit KM-15029_0000": [
+        {
+            "iteration": 0,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 1,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 2,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 3,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 4,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 5,
+            "dice": 1.0,
+            "dmm": NaN
+        }
+    ],
+    "fdg_34aa521b46_03-30-2007-NA-PET-CT Ganzkoerper  primaer mit KM-44072_0000": [
+        {
+            "iteration": 0,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 1,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 2,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 3,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 4,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 5,
+            "dice": 1.0,
+            "dmm": NaN
+        }
+    ],
+    "fdg_402c061122_08-25-2003-NA-PET-CT Ganzkoerper nativ-22953_0000": [
+        {
+            "iteration": 0,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 1,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 2,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 3,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 4,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 5,
+            "dice": 1.0,
+            "dmm": NaN
+        }
+    ],
+    "fdg_44cfacfd6e_04-15-2007-NA-PET-CT Ganzkoerper  primaer mit KM-69456_0000": [
+        {
+            "iteration": 0,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 1,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 2,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 3,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 4,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 5,
+            "dice": 1.0,
+            "dmm": NaN
+        }
+    ],
+    "fdg_4cc808d16f_06-11-2006-NA-PET-CT Ganzkoerper  primaer mit KM-36881_0000": [
+        {
+            "iteration": 0,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 1,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 2,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 3,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 4,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 5,
+            "dice": 1.0,
+            "dmm": NaN
+        }
+    ],
+    "fdg_4ea806706c_10-30-2003-NA-PET-CT Ganzkoerper  primaer mit KM-87631_0000": [
+        {
+            "iteration": 0,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 1,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 2,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 3,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 4,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 5,
+            "dice": 1.0,
+            "dmm": NaN
+        }
+    ],
+    "fdg_55d55902c6_05-11-2006-NA-PET-CT Ganzkoerper  primaer mit KM-26216_0000": [
+        {
+            "iteration": 0,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 1,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 2,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 3,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 4,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 5,
+            "dice": 1.0,
+            "dmm": NaN
+        }
+    ],
+    "fdg_572fca6b44_05-23-2005-NA-PET-CT Ganzkoerper  primaer mit KM-19541_0000": [
+        {
+            "iteration": 0,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 1,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 2,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 3,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 4,
+            "dice": 1.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 5,
+            "dice": 1.0,
+            "dmm": NaN
+        }
+    ],
+    "fdg_86e54ea60a_03-18-2002-NA-PET-CT Ganzkoerper  primaer mit KM-34788_0000": [
+        {
+            "iteration": 0,
+            "dice": 0.8904487640988721,
+            "dmm": 0.2857142857142857
+        },
+        {
+            "iteration": 1,
+            "dice": 0.905049786628734,
+            "dmm": 0.5
+        },
+        {
+            "iteration": 2,
+            "dice": 0.9108166189111748,
+            "dmm": 0.5
+        },
+        {
+            "iteration": 3,
+            "dice": 0.9171277363483281,
+            "dmm": 0.5
+        },
+        {
+            "iteration": 4,
+            "dice": 0.9201690821256039,
+            "dmm": 0.5
+        },
+        {
+            "iteration": 5,
+            "dice": 0.9267667521054559,
+            "dmm": 0.5
+        }
+    ],
+    "fdg_91cfa804b0_09-22-2006-NA-PET-CT Ganzkoerper  primaer mit KM-30574_0000": [
+        {
+            "iteration": 0,
+            "dice": 0.0,
+            "dmm": 0.0
+        },
+        {
+            "iteration": 1,
+            "dice": 0.8881578947368421,
+            "dmm": 0.6666666666666666
+        },
+        {
+            "iteration": 2,
+            "dice": 0.9221902017291066,
+            "dmm": 1.0
+        },
+        {
+            "iteration": 3,
+            "dice": 0.8931506849315068,
+            "dmm": 1.0
+        },
+        {
+            "iteration": 4,
+            "dice": 0.9005524861878453,
+            "dmm": 1.0
+        },
+        {
+            "iteration": 5,
+            "dice": 0.9005524861878453,
+            "dmm": 1.0
+        }
+    ],
+    "fdg_94cc0dac49_03-09-2007-NA-PET-CT Ganzkoerper  primaer mit KM-58245_0000": [
+        {
+            "iteration": 0,
+            "dice": 0.0,
+            "dmm": 0.0
+        },
+        {
+            "iteration": 1,
+            "dice": 0.8187919463087249,
+            "dmm": 1.0
+        },
+        {
+            "iteration": 2,
+            "dice": 0.9017341040462428,
+            "dmm": 1.0
+        },
+        {
+            "iteration": 3,
+            "dice": 0.8817204301075269,
+            "dmm": 1.0
+        },
+        {
+            "iteration": 4,
+            "dice": 0.9162011173184358,
+            "dmm": 1.0
+        },
+        {
+            "iteration": 5,
+            "dice": 0.9230769230769231,
+            "dmm": 1.0
+        }
+    ],
+    "psma_02826eb561d6e0c7_2016-11-04_0000": [
+        {
+            "iteration": 0,
+            "dice": 0.0,
+            "dmm": 0.0
+        },
+        {
+            "iteration": 1,
+            "dice": 0.801980198019802,
+            "dmm": 0.6666666666666666
+        },
+        {
+            "iteration": 2,
+            "dice": 0.8256410256410256,
+            "dmm": 1.0
+        },
+        {
+            "iteration": 3,
+            "dice": 0.8375634517766497,
+            "dmm": 1.0
+        },
+        {
+            "iteration": 4,
+            "dice": 0.848,
+            "dmm": 1.0
+        },
+        {
+            "iteration": 5,
+            "dice": 0.8418230563002681,
+            "dmm": 1.0
+        }
+    ],
+    "psma_0ec0e718244b2a79_2015-06-19_0000": [
+        {
+            "iteration": 0,
+            "dice": 0.0,
+            "dmm": 0.0
+        },
+        {
+            "iteration": 1,
+            "dice": 0.7428571428571429,
+            "dmm": 0.5
+        },
+        {
+            "iteration": 2,
+            "dice": 0.7878787878787878,
+            "dmm": 0.6666666666666666
+        },
+        {
+            "iteration": 3,
+            "dice": 0.7878787878787878,
+            "dmm": 0.6666666666666666
+        },
+        {
+            "iteration": 4,
+            "dice": 0.7878787878787878,
+            "dmm": 0.6666666666666666
+        },
+        {
+            "iteration": 5,
+            "dice": 0.7878787878787878,
+            "dmm": 0.6666666666666666
+        }
+    ],
+    "psma_0fcbcd7dc52d5b82_2020-06-19_0000": [
+        {
+            "iteration": 0,
+            "dice": 0.6785112981834294,
+            "dmm": 0.6985645933014354
+        },
+        {
+            "iteration": 1,
+            "dice": 0.6905954610794093,
+            "dmm": 0.6963562753036437
+        },
+        {
+            "iteration": 2,
+            "dice": 0.6928553049146582,
+            "dmm": 0.7044534412955465
+        },
+        {
+            "iteration": 3,
+            "dice": 0.692557186753158,
+            "dmm": 0.7044534412955465
+        },
+        {
+            "iteration": 4,
+            "dice": 0.6917312441454484,
+            "dmm": 0.7044534412955465
+        },
+        {
+            "iteration": 5,
+            "dice": 0.6917088526821797,
+            "dmm": 0.7044534412955465
+        }
+    ],
+    "psma_14c16d0ce2b3229d_2020-02-22_0000": [
+        {
+            "iteration": 0,
+            "dice": 0.7820134716912434,
+            "dmm": 0.8127853881278538
+        },
+        {
+            "iteration": 1,
+            "dice": 0.7845330204246269,
+            "dmm": 0.8108108108108109
+        },
+        {
+            "iteration": 2,
+            "dice": 0.7844466015861097,
+            "dmm": 0.8161434977578476
+        },
+        {
+            "iteration": 3,
+            "dice": 0.7832068050855209,
+            "dmm": 0.8198198198198198
+        },
+        {
+            "iteration": 4,
+            "dice": 0.7824306786817525,
+            "dmm": 0.8198198198198198
+        },
+        {
+            "iteration": 5,
+            "dice": 0.781741465285769,
+            "dmm": 0.8198198198198198
+        }
+    ],
+    "psma_1d7ce562612262cb_2019-11-01_0000": [
+        {
+            "iteration": 0,
+            "dice": 0.8239376008606778,
+            "dmm": 0.8505747126436781
+        },
+        {
+            "iteration": 1,
+            "dice": 0.8184021326439939,
+            "dmm": 0.828169014084507
+        },
+        {
+            "iteration": 2,
+            "dice": 0.8118265897501105,
+            "dmm": 0.8441926345609065
+        },
+        {
+            "iteration": 3,
+            "dice": 0.8062258879872289,
+            "dmm": 0.8441926345609065
+        },
+        {
+            "iteration": 4,
+            "dice": 0.8024102767845318,
+            "dmm": 0.8457142857142858
+        },
+        {
+            "iteration": 5,
+            "dice": 0.8002113048071844,
+            "dmm": 0.8481375358166189
+        }
+    ],
+    "psma_28f9ecc106933531_2019-06-15_0000": [
+        {
+            "iteration": 0,
+            "dice": 0.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 1,
+            "dice": 0.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 2,
+            "dice": 0.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 3,
+            "dice": 0.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 4,
+            "dice": 0.0,
+            "dmm": NaN
+        },
+        {
+            "iteration": 5,
+            "dice": 0.0,
+            "dmm": NaN
+        }
+    ],
+    "psma_4fc4664327ba8d0b_2014-06-06_0000": [
+        {
+            "iteration": 0,
+            "dice": 0.718331261223926,
+            "dmm": 0.7105263157894737
+        },
+        {
+            "iteration": 1,
+            "dice": 0.7969004362831282,
+            "dmm": 0.7951807228915663
+        },
+        {
+            "iteration": 2,
+            "dice": 0.8130322580645162,
+            "dmm": 0.7857142857142857
+        },
+        {
+            "iteration": 3,
+            "dice": 0.8219935691318327,
+            "dmm": 0.7857142857142857
+        },
+        {
+            "iteration": 4,
+            "dice": 0.8275418275418276,
+            "dmm": 0.7857142857142857
+        },
+        {
+            "iteration": 5,
+            "dice": 0.8295352130809837,
+            "dmm": 0.7857142857142857
+        }
+    ],
+    "psma_4fc4664327ba8d0b_2014-12-19_0000": [
+        {
+            "iteration": 0,
+            "dice": 0.8454296473810339,
+            "dmm": 0.6823529411764706
+        },
+        {
+            "iteration": 1,
+            "dice": 0.8431270584156699,
+            "dmm": 0.7191011235955056
+        },
+        {
+            "iteration": 2,
+            "dice": 0.8399407510673521,
+            "dmm": 0.7126436781609196
+        },
+        {
+            "iteration": 3,
+            "dice": 0.8398464759246337,
+            "dmm": 0.7126436781609196
+        },
+        {
+            "iteration": 4,
+            "dice": 0.8408476497776227,
+            "dmm": 0.7045454545454546
+        },
+        {
+            "iteration": 5,
+            "dice": 0.8410122164048865,
+            "dmm": 0.7045454545454546
+        }
+    ],
+    "psma_5203bac8a9bfd9e2_2020-06-06_0000": [
+        {
+            "iteration": 0,
+            "dice": 0.8200463706081683,
+            "dmm": 0.8
+        },
+        {
+            "iteration": 1,
+            "dice": 0.8419590135463703,
+            "dmm": 0.7272727272727273
+        },
+        {
+            "iteration": 2,
+            "dice": 0.8492445054945055,
+            "dmm": 0.7272727272727273
+        },
+        {
+            "iteration": 3,
+            "dice": 0.8494605240623394,
+            "dmm": 0.8
+        },
+        {
+            "iteration": 4,
+            "dice": 0.850068306010929,
+            "dmm": 0.8
+        },
+        {
+            "iteration": 5,
+            "dice": 0.8527659574468085,
+            "dmm": 0.7272727272727273
+        }
+    ],
+    "psma_ba6433757dfc9d21_2021-10-09_0000": [
+        {
+            "iteration": 0,
+            "dice": 0.8619914127990186,
+            "dmm": 0.9433962264150944
+        },
+        {
+            "iteration": 1,
+            "dice": 0.8639441822286066,
+            "dmm": 0.9259259259259259
+        },
+        {
+            "iteration": 2,
+            "dice": 0.8641772671317193,
+            "dmm": 0.9259259259259259
+        },
+        {
+            "iteration": 3,
+            "dice": 0.8657265481299816,
+            "dmm": 0.9259259259259259
+        },
+        {
+            "iteration": 4,
+            "dice": 0.8647323252962812,
+            "dmm": 0.9259259259259259
+        },
+        {
+            "iteration": 5,
+            "dice": 0.8643236616264814,
+            "dmm": 0.9259259259259259
+        }
+    ],
+    "psma_c265ec063df5602b_2019-12-27_0000": [
+        {
+            "iteration": 0,
+            "dice": 0.0,
+            "dmm": 0.0
+        },
+        {
+            "iteration": 1,
+            "dice": 0.0,
+            "dmm": 0.0
+        },
+        {
+            "iteration": 2,
+            "dice": 0.0,
+            "dmm": 0.0
+        },
+        {
+            "iteration": 3,
+            "dice": 0.0,
+            "dmm": 0.0
+        },
+        {
+            "iteration": 4,
+            "dice": 0.0,
+            "dmm": 0.0
+        },
+        {
+            "iteration": 5,
+            "dice": 0.0,
+            "dmm": 0.0
+        }
+    ],
+    "psma_ca36bd95b63289d0_2020-05-15_0000": [
+        {
+            "iteration": 0,
+            "dice": 0.46835443037974683,
+            "dmm": 0.8
+        },
+        {
+            "iteration": 1,
+            "dice": 0.4720616570327553,
+            "dmm": 0.5714285714285714
+        },
+        {
+            "iteration": 2,
+            "dice": 0.4582560296846011,
+            "dmm": 0.5454545454545454
+        },
+        {
+            "iteration": 3,
+            "dice": 0.45504587155963305,
+            "dmm": 0.5454545454545454
+        },
+        {
+            "iteration": 4,
+            "dice": 0.4529680365296804,
+            "dmm": 0.5454545454545454
+        },
+        {
+            "iteration": 5,
+            "dice": 0.45049954586739327,
+            "dmm": 0.5454545454545454
+        }
+    ]
+}

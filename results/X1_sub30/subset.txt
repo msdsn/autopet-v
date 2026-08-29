@@ -1,0 +1,2 @@
+B3
+Category-2 replay: the scribble sequence simulated against B0's errors, replayed unchanged into the B3 pipeline instead of scribbles derived from this row's own errors

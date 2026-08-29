@@ -1,0 +1,2 @@
+B3
+B3 configuration with prev_pred forced to zeros at every iteration and pass_cached_prev_pred=false — bounds the loss if the container cannot persist state between calls

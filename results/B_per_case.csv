@@ -1,0 +1,101 @@
+case,tracer,lesion_status,strategy,A0_auc_dice,A0_auc_dmm,A3_auc_dice,A3_auc_dmm,B0_auc_dice,B0_auc_dmm,B3_auc_dice,B3_auc_dmm,B3b_auc_dice,B3b_auc_dmm,d_dice_B0_minus_A0,d_dice_B3_minus_A3,in_subset30,in_subset39
+fdg_0168f65af8_04-04-2003-NA-PET-CT Ganzkoerper  primaer mit KM-82224_0000,fdg,present,centerline,2.7562,1.2857,2.7562,1.2857,2.8742,2.5,2.543,2.5,,,0.118,-0.2132,0,1
+fdg_07fec0d985_05-04-2006-NA-PET-CT Ganzkoerper  primaer mit KM-11312_0000,fdg,absent,random,5.0,,5.0,,5.0,,5.0,,,,0.0,0.0,0,1
+fdg_0e9a98ecda_02-20-2003-NA-PET-CT Ganzkoerper  primaer mit KM-36915_0000,fdg,absent,boundary,5.0,,5.0,,5.0,,5.0,,,,0.0,0.0,0,1
+fdg_15cfa01130_02-24-2001-NA-PET-CT Ganzkoerper  primaer mit KM-49873_0000,fdg,present,centerline,4.3412,3.7413,4.3411,3.833,4.2718,4.2985,4.2805,4.2985,,,-0.0694,-0.0606,1,1
+fdg_1a1712f7d0_02-16-2007-NA-PET-CT Ganzkoerper  primaer mit KM-50630_0000,fdg,present,random,4.0999,4.5,4.0999,4.5,4.109,4.5,2.7896,4.5,,,0.0091,-1.3103,1,1
+fdg_20a607649d_01-27-2007-NA-PET-CT Ganzkoerper  primaer mit KM-84908_0000,fdg,present,boundary,4.1003,3.1883,4.0993,3.1883,0.1829,3.25,2.6182,3.5409,,,-3.9174,-1.4811,1,1
+fdg_21853fc15b_10-12-2002-NA-PET-CT Ganzkoerper  primaer mit KM-55807_0000,fdg,present,centerline,4.2714,2.9429,4.2751,3.3714,4.0596,3.3333,3.4993,3.3333,,,-0.2118,-0.7758,1,1
+fdg_23ed525e82_08-01-2003-NA-PET-CT Ganzkoerper  primaer mit KM-24219_0000,fdg,present,random,2.8394,3.8571,2.5832,3.4762,2.6348,3.2,2.6541,3.8667,,,-0.2046,0.071,1,1
+fdg_2a41141775_09-24-2005-NA-PET-CT Ganzkoerper  primaer mit KM-94391_0000,fdg,absent,boundary,5.0,,5.0,,5.0,,5.0,,,,0.0,0.0,1,1
+fdg_2b60c8135a_12-09-2005-NA-PET-CT Ganzkoerper  primaer mit KM-49696_0000,fdg,present,centerline,4.0395,2.6415,4.0397,2.649,4.2372,3.3804,4.226,3.3426,,,0.1977,0.1863,1,1
+fdg_30287f520f_11-23-2003-NA-PET-CT Ganzkoerper  primaer mit KM-15029_0000,fdg,absent,random,5.0,,5.0,,0.0,,0.0,,,,-5.0,-5.0,1,1
+fdg_34aa521b46_03-30-2007-NA-PET-CT Ganzkoerper  primaer mit KM-44072_0000,fdg,absent,boundary,0.0,,0.0,,0.0,,0.0,,,,0.0,0.0,1,1
+fdg_389c968170_08-19-2005-NA-PET-CT Ganzkoerper  primaer mit KM-57236_0000,fdg,absent,centerline,5.0,,5.0,,5.0,,5.0,,,,0.0,0.0,0,1
+fdg_3cf68da275_03-20-2003-NA-PET-CT Ganzkoerper  primaer mit KM-37413_0000,fdg,absent,random,5.0,,5.0,,0.0,,0.0,,,,-5.0,-5.0,0,1
+fdg_3d6f425a76_01-28-2002-NA-PET-CT Ganzkoerper  primaer mit KM-67631_0000,fdg,present,boundary,3.69,2.814,3.6899,2.814,4.2812,3.8952,4.2806,3.9119,,,0.5913,0.5907,0,1
+fdg_402c061122_08-25-2003-NA-PET-CT Ganzkoerper nativ-22953_0000,fdg,absent,centerline,5.0,,5.0,,0.0,,0.0,,,,-5.0,-5.0,1,1
+fdg_44cfacfd6e_04-15-2007-NA-PET-CT Ganzkoerper  primaer mit KM-69456_0000,fdg,absent,random,5.0,,5.0,,0.0,,0.0,,,,-5.0,-5.0,1,1
+fdg_4cc808d16f_06-11-2006-NA-PET-CT Ganzkoerper  primaer mit KM-36881_0000,fdg,absent,boundary,5.0,,5.0,,5.0,,5.0,,,,0.0,0.0,1,1
+fdg_4ea806706c_10-30-2003-NA-PET-CT Ganzkoerper  primaer mit KM-87631_0000,fdg,absent,centerline,5.0,,5.0,,0.0,,0.0,,,,-5.0,-5.0,1,1
+fdg_55d55902c6_05-11-2006-NA-PET-CT Ganzkoerper  primaer mit KM-26216_0000,fdg,absent,random,5.0,,5.0,,0.0,,0.0,,,,-5.0,-5.0,1,1
+fdg_572fca6b44_05-23-2005-NA-PET-CT Ganzkoerper  primaer mit KM-19541_0000,fdg,absent,boundary,0.0,,0.0,,0.0,,0.0,,,,0.0,0.0,1,1
+fdg_5c1baad5d8_03-06-2003-NA-PET-CT Ganzkoerper  primaer mit KM-62219_0000,fdg,present,centerline,2.9247,1.9833,2.9789,1.9833,3.8465,3.0,3.8454,3.0,,,0.9218,0.8664,0,1
+fdg_5d553bf6b4_09-16-2001-NA-PET-CT Ganzkoerper  primaer mit KM-78907_0000,fdg,present,random,3.3235,1.2744,3.3232,1.413,3.162,2.0278,3.1726,1.9897,,,-0.1615,-0.1506,0,1
+fdg_5e339b2ecf_05-27-2006-NA-PET-CT Ganzkoerper  primaer mit KM-41089_0000,fdg,absent,boundary,5.0,,5.0,,5.0,,5.0,,,,0.0,0.0,0,1
+fdg_685d7c09b5_12-23-2000-NA-PET-CT Ganzkoerper  primaer mit KM-22883_0000,fdg,present,centerline,3.1749,2.8611,3.1752,2.8842,3.6711,3.1747,3.6731,3.1581,,,0.4962,0.4979,0,0
+fdg_68a7ade33c_07-08-2001-NA-PET-CT Ganzkoerper  primaer mit KM-05114_0000,fdg,present,random,3.8715,2.167,3.8727,2.167,4.162,3.8387,4.166,3.8387,,,0.2906,0.2932,0,0
+fdg_69ee62b035_12-26-2002-NA-PET-CT Ganzkoerper  primaer mit KM-42071_0000,fdg,absent,boundary,0.0,,0.0,,5.0,,5.0,,,,5.0,5.0,0,0
+fdg_6aea5c3a03_12-27-2001-NA-PET-CT Ganzkoerper  primaer mit KM-48586_0000,fdg,present,centerline,2.3303,1.7835,2.3375,2.0094,2.8232,2.4318,2.847,2.6545,,,0.4929,0.5095,0,0
+fdg_6c660140ca_08-06-2006-NA-PET-CT Ganzkoerper  primaer mit KM-39365_0000,fdg,present,random,3.7052,2.7,3.7061,2.8667,3.6201,3.0,3.6226,3.0,,,-0.0851,-0.0835,0,0
+fdg_6e1dba94e8_11-15-2002-NA-PET-CT Ganzkoerper  primaer mit KM-36676_0000,fdg,absent,boundary,0.0,,0.0,,5.0,,5.0,,,,5.0,5.0,0,0
+fdg_6e7c7f8087_03-23-2003-NA-PET-CT Ganzkoerper  primaer mit KM-20555_0000,fdg,present,centerline,3.9513,1.8714,3.9513,1.8714,4.3023,1.8368,4.3205,1.8409,,,0.351,0.3692,0,0
+fdg_6efefcb92a_03-26-2005-NA-PET-CT Ganzkoerper  primaer mit KM-24165_0000,fdg,present,random,3.182,2.1521,3.1827,2.1778,3.1247,2.4182,3.1544,2.4658,,,-0.0573,-0.0283,0,0
+fdg_71ae114917_04-13-2003-NA-PET-CT Ganzkoerper  primaer mit KM-89747_0000,fdg,absent,boundary,5.0,,5.0,,5.0,,5.0,,,,0.0,0.0,0,0
+fdg_74bbceaeeb_06-03-2005-NA-PET-CT Ganzkoerper  primaer mit KM-94697_0000,fdg,present,centerline,2.9277,3.3,2.9277,3.3,2.3489,3.85,2.413,4.15,,,-0.5788,-0.5147,0,0
+fdg_80ccbdadf9_05-06-2002-NA-PET-CT Ganzkoerper  primaer mit KM-73465_0000,fdg,present,random,3.5085,2.675,3.5085,2.675,3.9962,3.7083,2.9937,3.6738,,,0.4877,-0.5148,0,0
+fdg_80f21e1ed0_11-12-2006-NA-PET-CT Ganzkoerper  primaer mit KM-60752_0000,fdg,absent,boundary,5.0,,5.0,,5.0,,5.0,,,,0.0,0.0,0,0
+fdg_86e54ea60a_03-18-2002-NA-PET-CT Ganzkoerper  primaer mit KM-34788_0000,fdg,present,centerline,4.626,2.3373,4.626,2.3373,4.5917,2.5833,4.5948,2.5,,,-0.0343,-0.0311,1,0
+fdg_91cfa804b0_09-22-2006-NA-PET-CT Ganzkoerper  primaer mit KM-30574_0000,fdg,present,random,4.013,3.481,4.013,3.481,4.5204,4.5,4.4581,4.2238,,,0.5073,0.445,1,0
+fdg_94cc0dac49_03-09-2007-NA-PET-CT Ganzkoerper  primaer mit KM-58245_0000,fdg,present,boundary,3.391,4.1667,3.4055,4.5,4.4471,5.0,4.1985,5.0,,,1.0562,0.793,1,0
+fdg_94cc0dac49_03-10-2006-NA-PET-CT Ganzkoerper  primaer mit KM-53966_0000,fdg,absent,centerline,5.0,,5.0,,5.0,,5.0,,,,0.0,0.0,0,0
+fdg_9902caa7ec_08-13-2006-NA-PET-CT Ganzkoerper  primaer mit KM-17819_0000,fdg,absent,random,5.0,,5.0,,5.0,,5.0,,,,0.0,0.0,0,0
+fdg_9c68e484a7_08-14-2003-NA-PET-CT Ganzkoerper  primaer mit KM-11439_0000,fdg,absent,boundary,5.0,,5.0,,0.0,,0.0,,,,-5.0,-5.0,0,0
+fdg_a37b4bca43_06-23-2002-NA-PET-CT Ganzkoerper  primaer mit KM-47963_0000,fdg,absent,centerline,0.0,,0.0,,5.0,,5.0,,,,5.0,5.0,0,0
+fdg_b1219c408b_10-04-2002-NA-PET-CT Ganzkoerper  primaer mit KM-34572_0000,fdg,present,random,2.8612,3.6202,2.8594,3.6202,3.666,3.2976,3.6507,3.4583,,,0.8048,0.7913,0,0
+fdg_b1de3d4248_11-20-2003-NA-PET-CT Ganzkoerper  primaer mit KM-61599_0000,fdg,absent,boundary,0.0,,0.0,,0.0,,0.0,,,,0.0,0.0,0,0
+fdg_b3e923029c_11-21-2003-NA-PET-CT Ganzkoerper  primaer mit KM-64843_0000,fdg,absent,centerline,0.0,,0.0,,5.0,,5.0,,,,5.0,5.0,0,0
+fdg_c16d325d12_02-15-2003-NA-PET-CT Ganzkoerper  primaer mit KM-77095_0000,fdg,present,random,4.3209,2.3145,4.3211,2.3145,4.4497,2.4762,4.464,2.6184,,,0.1288,0.1429,0,0
+fdg_ca62984a81_08-07-2003-NA-PET-CT Ganzkoerper  primaer mit KM-24067_0000,fdg,absent,boundary,0.0,,0.0,,0.0,,0.0,,,,0.0,0.0,0,0
+fdg_d098458d29_08-01-2003-NA-PET-CT Ganzkoerper  primaer mit KM-08899_0000,fdg,absent,centerline,5.0,,5.0,,5.0,,5.0,,,,0.0,0.0,0,0
+fdg_d3d61785e6_10-19-2001-NA-PET-CT Ganzkoerper  primaer mit KM-35929_0000,fdg,present,random,4.1323,2.274,4.1322,2.3104,4.4626,4.0385,4.4637,4.1026,,,0.3303,0.3315,0,0
+fdg_dd887591a9_05-06-2006-NA-PET-CT Ganzkoerper  primaer mit KM-16620_0000,fdg,absent,boundary,5.0,,5.0,,5.0,,5.0,,,,0.0,0.0,0,0
+fdg_e2834e6f5c_06-14-2002-NA-PET-CT Ganzkoerper  primaer mit KM-51062_0000,fdg,present,centerline,2.7362,2.1775,2.7368,2.1775,3.5989,3.724,3.6169,3.7179,,,0.8627,0.8801,0,0
+fdg_e5c7be07a8_04-08-2005-NA-PET-CT Ganzkoerper  primaer mit KM-61301_0000,fdg,absent,random,5.0,,5.0,,5.0,,5.0,,,,0.0,0.0,0,0
+fdg_e68c4577d8_05-25-2007-NA-PET-CT Ganzkoerper nativ-04338_0000,fdg,absent,boundary,5.0,,5.0,,5.0,,5.0,,,,0.0,0.0,0,0
+fdg_e77124b7f4_09-29-2005-NA-PET-CT Ganzkoerper  primaer mit KM-55351_0000,fdg,present,centerline,4.122,3.3769,4.1216,3.3769,4.0359,2.7591,4.0206,2.7825,,,-0.0861,-0.101,0,0
+fdg_e90a287d09_02-24-2003-NA-PET-CT Ganzkoerper nativ-91559_0000,fdg,absent,random,5.0,,5.0,,0.0,,0.0,,,,-5.0,-5.0,0,0
+fdg_ea42c88cc7_02-26-2006-NA-PET-CT Ganzkoerper  primaer mit KM-88113_0000,fdg,present,boundary,4.0787,1.9799,4.0788,1.9799,4.2279,2.3585,4.2174,2.3934,,,0.1491,0.1386,0,0
+fdg_efd619ecbf_02-23-2003-NA-PET-CT Ganzkoerper  primaer mit KM-27081_0000,fdg,present,centerline,3.8033,2.5615,3.8033,2.5615,4.1573,3.3333,3.8575,3.2667,,,0.354,0.0542,0,0
+fdg_f0a1a38a3b_03-27-2005-NA-PET-CT Ganzkoerper  primaer mit KM-38725_0000,fdg,absent,random,0.0,,0.0,,5.0,,5.0,,,,5.0,5.0,0,0
+fdg_f21755a99b_05-05-2005-NA-PET-CT Ganzkoerper  primaer mit KM-44651_0000,fdg,present,boundary,4.2801,1.566,4.2808,1.6087,4.4062,2.2717,4.4075,2.2848,,,0.126,0.1268,0,0
+fdg_f5c2c09846_10-28-2002-NA-PET-CT Ganzkoerper  primaer mit KM-57257_0000,fdg,present,centerline,4.3504,1.0694,4.3505,1.0972,4.4809,1.75,4.4831,1.75,,,0.1305,0.1326,0,0
+fdg_fde79b6aa9_05-09-2005-NA-PET-CT Ganzkoerper  primaer mit KM-13154_0000,fdg,present,random,4.0914,2.15,4.0914,2.15,4.5061,2.5,4.4607,2.75,,,0.4148,0.3694,0,0
+fdg_fde79b6aa9_08-16-2003-NA-PET-CT Ganzkoerper  primaer mit KM-88178_0000,fdg,absent,boundary,5.0,,5.0,,0.0,,0.0,,,,-5.0,-5.0,0,0
+psma_02826eb561d6e0c7_2016-11-04_0000,psma,present,centerline,3.4981,4.1667,3.4993,4.5,3.8884,3.3333,4.0352,4.5,,,0.3903,0.5359,1,1
+psma_0ec0e718244b2a79_2015-06-19_0000,psma,present,random,3.565,4.3,3.565,4.3,4.3061,4.1,4.5595,4.8,,,0.741,0.9944,1,1
+psma_0fcbcd7dc52d5b82_2020-06-19_0000,psma,present,boundary,3.4168,3.4236,3.419,3.4062,3.185,3.3905,3.1865,3.432,,,-0.2318,-0.2325,1,1
+psma_14c16d0ce2b3229d_2020-02-22_0000,psma,present,centerline,4.0649,3.9816,4.0647,3.9648,3.8677,4.0942,3.8733,4.1124,,,-0.1972,-0.1914,1,1
+psma_1d7ce562612262cb_2019-11-01_0000,psma,present,random,4.0976,3.9913,4.0987,4.0653,4.033,4.081,4.0335,4.075,,,-0.0646,-0.0653,1,1
+psma_28f9ecc106933531_2019-06-15_0000,psma,absent,boundary,0.0,,0.0,,0.0,,0.0,,,,0.0,0.0,1,1
+psma_2ebe8e333bdbc130_2016-10-23_0000,psma,present,centerline,3.5995,4.75,3.5995,4.75,2.15,4.0,2.425,4.0,,,-1.4495,-1.1745,0,1
+psma_37af1d5c2373d0c4_2019-09-30_0000,psma,present,random,3.2899,2.6381,3.3941,3.6667,3.4571,3.6667,3.4475,4.25,,,0.1672,0.0534,0,1
+psma_41260c3678449a2f_2020-06-12_0000,psma,present,boundary,3.0741,4.5,2.7399,4.5,2.3924,4.5,1.5609,4.5,,,-0.6817,-1.179,0,1
+psma_4fc4664327ba8d0b_2014-06-06_0000,psma,present,centerline,3.7649,3.295,3.7642,3.369,4.0857,3.9267,4.0908,3.95,,,0.3208,0.3266,1,1
+psma_4fc4664327ba8d0b_2014-12-19_0000,psma,present,random,4.1515,3.7687,4.1517,3.7686,4.2922,3.9812,4.2952,4.004,,,0.1406,0.1435,1,1
+psma_5203bac8a9bfd9e2_2020-06-06_0000,psma,present,boundary,4.2954,2.5974,4.3005,2.9848,4.1395,4.2222,4.1728,4.2384,,,-0.1559,-0.1277,1,1
+psma_602ab51cfa8fae3b_2014-08-03_0000,psma,present,centerline,3.0305,3.1706,3.0464,3.254,3.937,4.3152,4.0315,4.7639,,,0.9065,0.9851,0,1
+psma_64a9ae45dc1a48f1_2018-11-12_0000,psma,present,random,4.2235,4.465,4.2234,4.465,4.0933,4.3132,4.0947,4.3258,,,-0.1302,-0.1287,0,1
+psma_64a9ae45dc1a48f1_2019-04-27_0000,psma,present,boundary,4.0759,4.1724,4.0755,4.2203,4.0148,4.1221,4.0167,4.1838,,,-0.061,-0.0588,0,1
+psma_7fd33c03d8712a0b_2018-02-16_0000,psma,present,centerline,3.7169,4.6157,3.7166,4.6157,3.811,4.7076,3.8664,4.7826,,,0.0941,0.1498,0,0
+psma_80d66794f885f503_2019-10-11_0000,psma,present,random,4.3108,2.8086,4.3118,2.9154,4.2405,3.3573,4.2406,3.3668,,,-0.0703,-0.0711,0,0
+psma_81b53d3911e09543_2021-03-13_0000,psma,present,boundary,3.7285,4.0057,3.7285,4.0057,3.8018,4.3879,3.8374,4.3879,,,0.0733,0.109,0,0
+psma_824e2839cf42ef24_2019-10-19_0000,psma,present,centerline,4.1442,3.9503,4.1442,3.9503,3.9081,4.0088,3.9156,4.0118,,,-0.2361,-0.2286,0,0
+psma_83df8050261c44fd_2021-07-10_0000,psma,present,random,4.2187,3.4622,4.2262,3.4996,4.1049,3.5608,4.108,3.5076,,,-0.1138,-0.1183,0,0
+psma_8a33927f6bd135d0_2015-04-12_0000,psma,present,boundary,3.1999,3.3333,3.1999,3.3333,3.4099,3.8294,3.2574,4.246,,,0.21,0.0575,0,0
+psma_907f1345abedf4fa_2020-11-21_0000,psma,present,centerline,3.7329,4.5,3.7415,4.5,4.2656,5.0,2.0592,2.8333,,,0.5327,-1.6823,0,0
+psma_995fbaec49f131ce_2016-05-07_0000,psma,present,random,3.9279,2.6833,3.9275,2.6833,3.9382,3.5429,3.9401,3.6131,,,0.0104,0.0126,0,0
+psma_9b733a4106c0fe37_2019-11-22_0000,psma,absent,boundary,5.0,,5.0,,0.0,,0.0,,,,-5.0,-5.0,0,0
+psma_ada3f9f15facc495_2019-01-18_0000,psma,absent,centerline,5.0,,5.0,,0.0,,0.0,,,,-5.0,-5.0,0,0
+psma_b5a4134e681683c0_2018-10-05_0000,psma,present,random,4.1454,4.2094,4.1454,4.2094,4.0922,4.1588,4.091,4.0684,,,-0.0532,-0.0544,0,0
+psma_ba6433757dfc9d21_2021-06-04_0000,psma,present,boundary,4.132,3.9378,4.1439,4.0054,4.196,4.3099,4.2556,4.3891,,,0.0641,0.1116,0,0
+psma_ba6433757dfc9d21_2021-10-09_0000,psma,present,centerline,4.2498,4.3652,4.2503,4.4,4.2533,4.303,4.3018,4.3784,,,0.0035,0.0515,1,0
+psma_c265ec063df5602b_2019-12-27_0000,psma,present,random,2.7744,4.5,2.7744,4.5,1.5824,1.5,1.948,1.7,,,-1.192,-0.8263,1,0
+psma_ca36bd95b63289d0_2020-05-15_0000,psma,present,boundary,1.9638,1.7677,1.9936,2.0396,1.9401,2.0706,2.1524,2.342,,,-0.0237,0.1588,1,0
+psma_d5b636ea4da7638b_2019-03-15_0000,psma,present,centerline,2.631,4.5,3.2951,4.5,1.9832,3.0,2.9828,3.1667,,,-0.6477,-0.3124,0,0
+psma_da0ed9952645bbac_2016-08-06_0000,psma,present,random,4.1212,4.5952,4.1262,4.9286,3.9729,4.2222,4.0695,4.4444,,,-0.1482,-0.0567,0,0
+psma_e8f437bd8a964dd8_2019-08-09_0000,psma,present,boundary,2.3766,3.6667,2.3868,4.1667,2.2146,2.8333,2.3117,2.8333,,,-0.1621,-0.0752,0,0
+psma_ee0d631fa63961f2_2016-06-06_0000,psma,present,centerline,3.7201,3.8234,3.7201,3.8234,3.9959,3.9286,3.9973,3.9286,,,0.2758,0.2772,0,0
+psma_ee0d631fa63961f2_2016-12-16_0000,psma,present,random,3.4729,3.6149,3.4817,3.7239,2.4134,3.0303,2.5799,3.2636,,,-1.0595,-0.9018,0,0
+psma_ee0d631fa63961f2_2018-11-19_0000,psma,present,boundary,2.9468,3.8095,2.954,4.25,3.1836,3.75,2.6884,3.75,,,0.2368,-0.2657,0,0
+psma_f751ed4845fddae7_2016-04-30_0000,psma,absent,centerline,5.0,,5.0,,5.0,,5.0,,,,0.0,0.0,0,0

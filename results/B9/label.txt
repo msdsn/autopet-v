@@ -1,0 +1,1 @@
+B9  B3 + DMM cleanup rule v2 (second pass after compliance: drop components with SUVmax < 5 OR mean softmax < 0.8) on the fine-tuned model

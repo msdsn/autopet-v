@@ -1,0 +1,2 @@
+B10g9_ship
+Shipped configuration with prev_pred forced to zeros AND pass_cached_prev_pred=false, so the model never sees a previous mask; bounds the loss if /output persistence fails. Control is B10g9_ship restricted to the same 39 cases.

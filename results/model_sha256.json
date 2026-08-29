@@ -1,0 +1,27 @@
+{
+  "nnUNetTrainer_InteractiveB6__nnUNetPlans_interactive__3d_fullres/checkpoint_final.pth": {
+    "mtime": 1787927725.0,
+    "sha256": "a356c985616bfb81cc141d740113f6081770a03873a4d6b752f6d630fe3ba283",
+    "size": 246476445
+  },
+  "nnUNetTrainer_InteractiveV2_both__nnUNetPlans_interactive__3d_fullres/checkpoint_final.pth": {
+    "mtime": 1787943961.0,
+    "sha256": "619151d86165dddeb52900b51cf61d3bb98792cb1f19a73d0144ccdec73d27b5",
+    "size": 246476509
+  },
+  "nnUNetTrainer_InteractiveV2_negfp__nnUNetPlans_interactive__3d_fullres/checkpoint_final.pth": {
+    "mtime": 1787935847.0,
+    "sha256": "ed015e29025b5634e1803f58fb0230894042b523b6f087cb3316d905926ca1b7",
+    "size": 246476509
+  },
+  "nnUNetTrainer_Interactive__nnUNetPlans_interactive__3d_fullres/checkpoint_final.pth": {
+    "mtime": 1787761389.0,
+    "sha256": "daa6f150a28cfc778cd90173bb8b451c7cd6702b9c2520f00388e263df6fbefd",
+    "size": 246503005
+  },
+  "nnUNetTrainer__nnUNetPlans__3d_fullres/checkpoint_final.pth": {
+    "mtime": 1774562786.0,
+    "sha256": "4f47a4bbbbddc86575dc815a363f816891222fc40a550f882539784838ef9948",
+    "size": 246763997
+  }
+}

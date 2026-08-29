@@ -1,0 +1,2 @@
+B10g9_ship
+Softmax/logit-averaged 2-checkpoint ensemble of B10 (V2_negfp) and B6 final weights under the shipped post-processing configuration; control is B10g9_ship restricted to the same 30 cases.

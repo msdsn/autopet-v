@@ -1,0 +1,13 @@
+{
+  "B0b_interactive_best_sub30": "curated as subset row `B0b_sub30`",
+  "B10g9_ship_gate25": "curated as row `B10g9_gate25`",
+  "B10g_nostate_sub39": "**invalid** \u2014 `pass_cached_prev_pred` was still true, so zeroing `prev_pred` was a no-op; superseded by a corrected run. See the subset-row notes.",
+  "B10gbest_negfp_best_sub30": "curated as subset row `B10gbest_sub30`",
+  "B3b_interactive_cleanup_only": "running \u2014 no run.json yet",
+  "B3nostate_sub39": "curated as subset row `B3nostate_sub39`",
+  "B7B10_negfp_tta_sub30": "**cut** \u2014 the 8-axis TTA run was killed before finishing and will not be resumed.",
+  "B9_interactive_ens_sub30": "curated as subset row `B9ens_sub30`",
+  "E1_ens_b10_b6_sub30": "**partial** \u2014 the L4 box died mid-run; no run.json, no summary. Left untouched, to be re-run on the A100. Do not score the partial files.",
+  "X1B10_cat2_replay_sub30": "curated as subset row `X1B10_sub30`",
+  "X1_cat2_replay_sub30": "curated as subset row `X1_sub30`"
+}

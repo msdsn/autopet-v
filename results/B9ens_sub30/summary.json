@@ -1,0 +1,566 @@
+{
+    "n_cases": 30,
+    "max_iters": 6,
+    "strategies": {
+        "fdg_15cfa01130_02-24-2001-NA-PET-CT Ganzkoerper  primaer mit KM-49873_0000": "centerline",
+        "fdg_1a1712f7d0_02-16-2007-NA-PET-CT Ganzkoerper  primaer mit KM-50630_0000": "random",
+        "fdg_20a607649d_01-27-2007-NA-PET-CT Ganzkoerper  primaer mit KM-84908_0000": "boundary",
+        "fdg_21853fc15b_10-12-2002-NA-PET-CT Ganzkoerper  primaer mit KM-55807_0000": "centerline",
+        "fdg_23ed525e82_08-01-2003-NA-PET-CT Ganzkoerper  primaer mit KM-24219_0000": "random",
+        "fdg_2a41141775_09-24-2005-NA-PET-CT Ganzkoerper  primaer mit KM-94391_0000": "boundary",
+        "fdg_2b60c8135a_12-09-2005-NA-PET-CT Ganzkoerper  primaer mit KM-49696_0000": "centerline",
+        "fdg_30287f520f_11-23-2003-NA-PET-CT Ganzkoerper  primaer mit KM-15029_0000": "random",
+        "fdg_34aa521b46_03-30-2007-NA-PET-CT Ganzkoerper  primaer mit KM-44072_0000": "boundary",
+        "fdg_402c061122_08-25-2003-NA-PET-CT Ganzkoerper nativ-22953_0000": "centerline",
+        "fdg_44cfacfd6e_04-15-2007-NA-PET-CT Ganzkoerper  primaer mit KM-69456_0000": "random",
+        "fdg_4cc808d16f_06-11-2006-NA-PET-CT Ganzkoerper  primaer mit KM-36881_0000": "boundary",
+        "fdg_4ea806706c_10-30-2003-NA-PET-CT Ganzkoerper  primaer mit KM-87631_0000": "centerline",
+        "fdg_55d55902c6_05-11-2006-NA-PET-CT Ganzkoerper  primaer mit KM-26216_0000": "random",
+        "fdg_572fca6b44_05-23-2005-NA-PET-CT Ganzkoerper  primaer mit KM-19541_0000": "boundary",
+        "fdg_86e54ea60a_03-18-2002-NA-PET-CT Ganzkoerper  primaer mit KM-34788_0000": "centerline",
+        "fdg_91cfa804b0_09-22-2006-NA-PET-CT Ganzkoerper  primaer mit KM-30574_0000": "random",
+        "fdg_94cc0dac49_03-09-2007-NA-PET-CT Ganzkoerper  primaer mit KM-58245_0000": "boundary",
+        "psma_02826eb561d6e0c7_2016-11-04_0000": "centerline",
+        "psma_0ec0e718244b2a79_2015-06-19_0000": "random",
+        "psma_0fcbcd7dc52d5b82_2020-06-19_0000": "boundary",
+        "psma_14c16d0ce2b3229d_2020-02-22_0000": "centerline",
+        "psma_1d7ce562612262cb_2019-11-01_0000": "random",
+        "psma_28f9ecc106933531_2019-06-15_0000": "boundary",
+        "psma_4fc4664327ba8d0b_2014-06-06_0000": "centerline",
+        "psma_4fc4664327ba8d0b_2014-12-19_0000": "random",
+        "psma_5203bac8a9bfd9e2_2020-06-06_0000": "boundary",
+        "psma_ba6433757dfc9d21_2021-10-09_0000": "centerline",
+        "psma_c265ec063df5602b_2019-12-27_0000": "random",
+        "psma_ca36bd95b63289d0_2020-05-15_0000": "boundary"
+    },
+    "mean_dice_per_iteration": [
+        0.5110345397197785,
+        0.5498719069349078,
+        0.5479652261914336,
+        0.5476582181721822,
+        0.5460458665715091,
+        0.5450857070006067
+    ],
+    "mean_dmm_per_iteration": [
+        0.6294003056304835,
+        0.6868948866438644,
+        0.7049294540617119,
+        0.7031304765682517,
+        0.7066983633729156,
+        0.7064463847052527
+    ],
+    "mean_auc_dice": 2.7196013412302253,
+    "mean_auc_dmm": 3.469576525814611,
+    "mean_auc_dmm_nan_propagating": NaN,
+    "final_score_50_50": 3.0945889335224184,
+    "max_auc": 5.0,
+    "by_lesion_status": {
+        "lesion_present": {
+            "n": 20,
+            "auc_dice": 3.579402011845338,
+            "auc_dmm": 3.469576525814611
+        },
+        "lesion_absent": {
+            "n": 10,
+            "auc_dice": 1.0,
+            "auc_dmm": NaN
+        }
+    },
+    "by_tracer": {
+        "fdg": {
+            "all": {
+                "n": 18,
+                "auc_dice": 2.3819531601773303,
+                "auc_dmm": 3.4537373791164026
+            },
+            "lesion_present": {
+                "n": 9,
+                "auc_dice": 3.65279520924355,
+                "auc_dmm": 3.4537373791164026
+            },
+            "lesion_absent": {
+                "n": 9,
+                "auc_dice": 1.1111111111111112,
+                "auc_dmm": NaN
+            }
+        },
+        "psma": {
+            "all": {
+                "n": 12,
+                "auc_dice": 3.226073612809568,
+                "auc_dmm": 3.4825358276586003
+            },
+            "lesion_present": {
+                "n": 11,
+                "auc_dice": 3.5193530321558923,
+                "auc_dmm": 3.4825358276586003
+            },
+            "lesion_absent": {
+                "n": 1,
+                "auc_dice": 0.0,
+                "auc_dmm": NaN
+            }
+        }
+    },
+    "n_cases_with_nan_dmm": 10,
+    "cases_with_nan_dmm": [
+        "fdg_2a41141775_09-24-2005-NA-PET-CT Ganzkoerper  primaer mit KM-94391_0000",
+        "fdg_30287f520f_11-23-2003-NA-PET-CT Ganzkoerper  primaer mit KM-15029_0000",
+        "fdg_34aa521b46_03-30-2007-NA-PET-CT Ganzkoerper  primaer mit KM-44072_0000",
+        "fdg_402c061122_08-25-2003-NA-PET-CT Ganzkoerper nativ-22953_0000",
+        "fdg_44cfacfd6e_04-15-2007-NA-PET-CT Ganzkoerper  primaer mit KM-69456_0000",
+        "fdg_4cc808d16f_06-11-2006-NA-PET-CT Ganzkoerper  primaer mit KM-36881_0000",
+        "fdg_4ea806706c_10-30-2003-NA-PET-CT Ganzkoerper  primaer mit KM-87631_0000",
+        "fdg_55d55902c6_05-11-2006-NA-PET-CT Ganzkoerper  primaer mit KM-26216_0000",
+        "fdg_572fca6b44_05-23-2005-NA-PET-CT Ganzkoerper  primaer mit KM-19541_0000",
+        "psma_28f9ecc106933531_2019-06-15_0000"
+    ],
+    "empty_error_region_exposure": {
+        "n_iters_with_zero_fp": {
+            "fdg_15cfa01130_02-24-2001-NA-PET-CT Ganzkoerper  primaer mit KM-49873_0000": 0,
+            "fdg_1a1712f7d0_02-16-2007-NA-PET-CT Ganzkoerper  primaer mit KM-50630_0000": 0,
+            "fdg_20a607649d_01-27-2007-NA-PET-CT Ganzkoerper  primaer mit KM-84908_0000": 0,
+            "fdg_21853fc15b_10-12-2002-NA-PET-CT Ganzkoerper  primaer mit KM-55807_0000": 0,
+            "fdg_23ed525e82_08-01-2003-NA-PET-CT Ganzkoerper  primaer mit KM-24219_0000": 0,
+            "fdg_2a41141775_09-24-2005-NA-PET-CT Ganzkoerper  primaer mit KM-94391_0000": 6,
+            "fdg_2b60c8135a_12-09-2005-NA-PET-CT Ganzkoerper  primaer mit KM-49696_0000": 0,
+            "fdg_30287f520f_11-23-2003-NA-PET-CT Ganzkoerper  primaer mit KM-15029_0000": 0,
+            "fdg_34aa521b46_03-30-2007-NA-PET-CT Ganzkoerper  primaer mit KM-44072_0000": 0,
+            "fdg_402c061122_08-25-2003-NA-PET-CT Ganzkoerper nativ-22953_0000": 0,
+            "fdg_44cfacfd6e_04-15-2007-NA-PET-CT Ganzkoerper  primaer mit KM-69456_0000": 0,
+            "fdg_4cc808d16f_06-11-2006-NA-PET-CT Ganzkoerper  primaer mit KM-36881_0000": 6,
+            "fdg_4ea806706c_10-30-2003-NA-PET-CT Ganzkoerper  primaer mit KM-87631_0000": 0,
+            "fdg_55d55902c6_05-11-2006-NA-PET-CT Ganzkoerper  primaer mit KM-26216_0000": 0,
+            "fdg_572fca6b44_05-23-2005-NA-PET-CT Ganzkoerper  primaer mit KM-19541_0000": 0,
+            "fdg_86e54ea60a_03-18-2002-NA-PET-CT Ganzkoerper  primaer mit KM-34788_0000": 0,
+            "fdg_91cfa804b0_09-22-2006-NA-PET-CT Ganzkoerper  primaer mit KM-30574_0000": 2,
+            "fdg_94cc0dac49_03-09-2007-NA-PET-CT Ganzkoerper  primaer mit KM-58245_0000": 0,
+            "psma_02826eb561d6e0c7_2016-11-04_0000": 0,
+            "psma_0ec0e718244b2a79_2015-06-19_0000": 1,
+            "psma_0fcbcd7dc52d5b82_2020-06-19_0000": 0,
+            "psma_14c16d0ce2b3229d_2020-02-22_0000": 0,
+            "psma_1d7ce562612262cb_2019-11-01_0000": 0,
+            "psma_28f9ecc106933531_2019-06-15_0000": 0,
+            "psma_4fc4664327ba8d0b_2014-06-06_0000": 0,
+            "psma_4fc4664327ba8d0b_2014-12-19_0000": 0,
+            "psma_5203bac8a9bfd9e2_2020-06-06_0000": 0,
+            "psma_ba6433757dfc9d21_2021-10-09_0000": 0,
+            "psma_c265ec063df5602b_2019-12-27_0000": 0,
+            "psma_ca36bd95b63289d0_2020-05-15_0000": 0
+        },
+        "n_iters_with_zero_fn": {
+            "fdg_15cfa01130_02-24-2001-NA-PET-CT Ganzkoerper  primaer mit KM-49873_0000": 0,
+            "fdg_1a1712f7d0_02-16-2007-NA-PET-CT Ganzkoerper  primaer mit KM-50630_0000": 0,
+            "fdg_20a607649d_01-27-2007-NA-PET-CT Ganzkoerper  primaer mit KM-84908_0000": 0,
+            "fdg_21853fc15b_10-12-2002-NA-PET-CT Ganzkoerper  primaer mit KM-55807_0000": 0,
+            "fdg_23ed525e82_08-01-2003-NA-PET-CT Ganzkoerper  primaer mit KM-24219_0000": 0,
+            "fdg_2a41141775_09-24-2005-NA-PET-CT Ganzkoerper  primaer mit KM-94391_0000": 6,
+            "fdg_2b60c8135a_12-09-2005-NA-PET-CT Ganzkoerper  primaer mit KM-49696_0000": 0,
+            "fdg_30287f520f_11-23-2003-NA-PET-CT Ganzkoerper  primaer mit KM-15029_0000": 6,
+            "fdg_34aa521b46_03-30-2007-NA-PET-CT Ganzkoerper  primaer mit KM-44072_0000": 6,
+            "fdg_402c061122_08-25-2003-NA-PET-CT Ganzkoerper nativ-22953_0000": 6,
+            "fdg_44cfacfd6e_04-15-2007-NA-PET-CT Ganzkoerper  primaer mit KM-69456_0000": 6,
+            "fdg_4cc808d16f_06-11-2006-NA-PET-CT Ganzkoerper  primaer mit KM-36881_0000": 6,
+            "fdg_4ea806706c_10-30-2003-NA-PET-CT Ganzkoerper  primaer mit KM-87631_0000": 6,
+            "fdg_55d55902c6_05-11-2006-NA-PET-CT Ganzkoerper  primaer mit KM-26216_0000": 6,
+            "fdg_572fca6b44_05-23-2005-NA-PET-CT Ganzkoerper  primaer mit KM-19541_0000": 6,
+            "fdg_86e54ea60a_03-18-2002-NA-PET-CT Ganzkoerper  primaer mit KM-34788_0000": 0,
+            "fdg_91cfa804b0_09-22-2006-NA-PET-CT Ganzkoerper  primaer mit KM-30574_0000": 0,
+            "fdg_94cc0dac49_03-09-2007-NA-PET-CT Ganzkoerper  primaer mit KM-58245_0000": 0,
+            "psma_02826eb561d6e0c7_2016-11-04_0000": 0,
+            "psma_0ec0e718244b2a79_2015-06-19_0000": 0,
+            "psma_0fcbcd7dc52d5b82_2020-06-19_0000": 0,
+            "psma_14c16d0ce2b3229d_2020-02-22_0000": 0,
+            "psma_1d7ce562612262cb_2019-11-01_0000": 0,
+            "psma_28f9ecc106933531_2019-06-15_0000": 6,
+            "psma_4fc4664327ba8d0b_2014-06-06_0000": 0,
+            "psma_4fc4664327ba8d0b_2014-12-19_0000": 0,
+            "psma_5203bac8a9bfd9e2_2020-06-06_0000": 0,
+            "psma_ba6433757dfc9d21_2021-10-09_0000": 0,
+            "psma_c265ec063df5602b_2019-12-27_0000": 6,
+            "psma_ca36bd95b63289d0_2020-05-15_0000": 0
+        },
+        "total_iters_with_zero_fp": 15,
+        "total_iters_with_zero_fn": 66,
+        "cases_propagated": []
+    },
+    "determinism_iter0_mismatches": [],
+    "seconds_per_iteration": {
+        "fdg_15cfa01130_02-24-2001-NA-PET-CT Ganzkoerper  primaer mit KM-49873_0000": [
+            12.522,
+            11.55,
+            11.457,
+            11.446,
+            11.472,
+            11.48
+        ],
+        "fdg_1a1712f7d0_02-16-2007-NA-PET-CT Ganzkoerper  primaer mit KM-50630_0000": [
+            11.414,
+            11.503,
+            11.531,
+            11.485,
+            11.494,
+            11.474
+        ],
+        "fdg_20a607649d_01-27-2007-NA-PET-CT Ganzkoerper  primaer mit KM-84908_0000": [
+            21.989,
+            22.922,
+            23.086,
+            22.903,
+            23.219,
+            22.916
+        ],
+        "fdg_21853fc15b_10-12-2002-NA-PET-CT Ganzkoerper  primaer mit KM-55807_0000": [
+            11.634,
+            11.8,
+            11.702,
+            11.802,
+            11.743,
+            11.737
+        ],
+        "fdg_23ed525e82_08-01-2003-NA-PET-CT Ganzkoerper  primaer mit KM-24219_0000": [
+            21.84,
+            22.608,
+            22.675,
+            23.002,
+            20.735,
+            21.58
+        ],
+        "fdg_2a41141775_09-24-2005-NA-PET-CT Ganzkoerper  primaer mit KM-94391_0000": [
+            12.916,
+            0.551,
+            0.548,
+            0.546,
+            0.547,
+            0.544
+        ],
+        "fdg_2b60c8135a_12-09-2005-NA-PET-CT Ganzkoerper  primaer mit KM-49696_0000": [
+            13.111,
+            13.637,
+            13.632,
+            13.726,
+            13.597,
+            13.534
+        ],
+        "fdg_30287f520f_11-23-2003-NA-PET-CT Ganzkoerper  primaer mit KM-15029_0000": [
+            23.518,
+            21.694,
+            21.797,
+            21.738,
+            21.786,
+            21.74
+        ],
+        "fdg_34aa521b46_03-30-2007-NA-PET-CT Ganzkoerper  primaer mit KM-44072_0000": [
+            13.011,
+            11.983,
+            11.996,
+            11.255,
+            0.691,
+            0.688
+        ],
+        "fdg_402c061122_08-25-2003-NA-PET-CT Ganzkoerper nativ-22953_0000": [
+            10.821,
+            9.997,
+            9.934,
+            10.15,
+            10.023,
+            13.388
+        ],
+        "fdg_44cfacfd6e_04-15-2007-NA-PET-CT Ganzkoerper  primaer mit KM-69456_0000": [
+            25.443,
+            20.884,
+            19.869,
+            20.117,
+            18.665,
+            1.198
+        ],
+        "fdg_4cc808d16f_06-11-2006-NA-PET-CT Ganzkoerper  primaer mit KM-36881_0000": [
+            13.27,
+            0.593,
+            0.582,
+            0.588,
+            0.586,
+            0.587
+        ],
+        "fdg_4ea806706c_10-30-2003-NA-PET-CT Ganzkoerper  primaer mit KM-87631_0000": [
+            11.453,
+            10.47,
+            10.463,
+            10.454,
+            10.476,
+            10.547
+        ],
+        "fdg_55d55902c6_05-11-2006-NA-PET-CT Ganzkoerper  primaer mit KM-26216_0000": [
+            21.53,
+            19.906,
+            19.889,
+            19.852,
+            19.808,
+            18.61
+        ],
+        "fdg_572fca6b44_05-23-2005-NA-PET-CT Ganzkoerper  primaer mit KM-19541_0000": [
+            11.251,
+            10.312,
+            10.315,
+            10.295,
+            10.291,
+            9.621
+        ],
+        "fdg_86e54ea60a_03-18-2002-NA-PET-CT Ganzkoerper  primaer mit KM-34788_0000": [
+            10.929,
+            11.031,
+            11.034,
+            11.615,
+            14.97,
+            11.096
+        ],
+        "fdg_91cfa804b0_09-22-2006-NA-PET-CT Ganzkoerper  primaer mit KM-30574_0000": [
+            11.142,
+            14.571,
+            10.83,
+            14.6,
+            11.158,
+            11.182
+        ],
+        "fdg_94cc0dac49_03-09-2007-NA-PET-CT Ganzkoerper  primaer mit KM-58245_0000": [
+            24.115,
+            24.983,
+            25.386,
+            24.608,
+            25.017,
+            24.965
+        ],
+        "psma_02826eb561d6e0c7_2016-11-04_0000": [
+            22.507,
+            12.393,
+            12.398,
+            12.34,
+            12.366,
+            12.347
+        ],
+        "psma_0ec0e718244b2a79_2015-06-19_0000": [
+            22.196,
+            11.658,
+            11.632,
+            11.586,
+            11.514,
+            11.494
+        ],
+        "psma_0fcbcd7dc52d5b82_2020-06-19_0000": [
+            29.91,
+            16.915,
+            16.922,
+            16.875,
+            16.903,
+            16.871
+        ],
+        "psma_14c16d0ce2b3229d_2020-02-22_0000": [
+            27.976,
+            15.41,
+            15.318,
+            15.353,
+            15.35,
+            15.379
+        ],
+        "psma_1d7ce562612262cb_2019-11-01_0000": [
+            30.065,
+            17.674,
+            17.521,
+            18.344,
+            17.556,
+            17.561
+        ],
+        "psma_28f9ecc106933531_2019-06-15_0000": [
+            22.441,
+            12.035,
+            12.025,
+            11.982,
+            12.006,
+            11.991
+        ],
+        "psma_4fc4664327ba8d0b_2014-06-06_0000": [
+            22.397,
+            12.032,
+            11.996,
+            11.988,
+            11.952,
+            11.984
+        ],
+        "psma_4fc4664327ba8d0b_2014-12-19_0000": [
+            22.221,
+            11.846,
+            11.873,
+            11.852,
+            11.853,
+            11.815
+        ],
+        "psma_5203bac8a9bfd9e2_2020-06-06_0000": [
+            26.215,
+            13.454,
+            13.501,
+            13.489,
+            13.492,
+            13.524
+        ],
+        "psma_ba6433757dfc9d21_2021-10-09_0000": [
+            29.222,
+            15.661,
+            15.642,
+            15.67,
+            15.654,
+            15.626
+        ],
+        "psma_c265ec063df5602b_2019-12-27_0000": [
+            28.929,
+            15.206,
+            15.212,
+            15.205,
+            15.168,
+            15.303
+        ],
+        "psma_ca36bd95b63289d0_2020-05-15_0000": [
+            30.129,
+            16.988,
+            15.81,
+            16.192,
+            15.859,
+            15.828
+        ]
+    },
+    "repo": "/content/autoPETV",
+    "predictor": "interactive_nnunet",
+    "args": {
+        "input_cases": "/content/work/evalset",
+        "image_dir": "/content/work/evalset/imagesTr",
+        "label_dir": "/content/work/evalset/labelsTr",
+        "out_dir": "/content/work/runs/B9_interactive_ens_sub30",
+        "repo": "/content/autoPETV",
+        "strategy": "all",
+        "strategy_order": "centerline,random,boundary",
+        "max_iters": 6,
+        "cases": [
+            "fdg_15cfa01130_02-24-2001-NA-PET-CT Ganzkoerper  primaer mit KM-49873_0000",
+            "fdg_1a1712f7d0_02-16-2007-NA-PET-CT Ganzkoerper  primaer mit KM-50630_0000",
+            "fdg_20a607649d_01-27-2007-NA-PET-CT Ganzkoerper  primaer mit KM-84908_0000",
+            "fdg_21853fc15b_10-12-2002-NA-PET-CT Ganzkoerper  primaer mit KM-55807_0000",
+            "fdg_23ed525e82_08-01-2003-NA-PET-CT Ganzkoerper  primaer mit KM-24219_0000",
+            "fdg_2a41141775_09-24-2005-NA-PET-CT Ganzkoerper  primaer mit KM-94391_0000",
+            "fdg_2b60c8135a_12-09-2005-NA-PET-CT Ganzkoerper  primaer mit KM-49696_0000",
+            "fdg_30287f520f_11-23-2003-NA-PET-CT Ganzkoerper  primaer mit KM-15029_0000",
+            "fdg_34aa521b46_03-30-2007-NA-PET-CT Ganzkoerper  primaer mit KM-44072_0000",
+            "fdg_402c061122_08-25-2003-NA-PET-CT Ganzkoerper nativ-22953_0000",
+            "fdg_44cfacfd6e_04-15-2007-NA-PET-CT Ganzkoerper  primaer mit KM-69456_0000",
+            "fdg_4cc808d16f_06-11-2006-NA-PET-CT Ganzkoerper  primaer mit KM-36881_0000",
+            "fdg_4ea806706c_10-30-2003-NA-PET-CT Ganzkoerper  primaer mit KM-87631_0000",
+            "fdg_55d55902c6_05-11-2006-NA-PET-CT Ganzkoerper  primaer mit KM-26216_0000",
+            "fdg_572fca6b44_05-23-2005-NA-PET-CT Ganzkoerper  primaer mit KM-19541_0000",
+            "fdg_86e54ea60a_03-18-2002-NA-PET-CT Ganzkoerper  primaer mit KM-34788_0000",
+            "fdg_91cfa804b0_09-22-2006-NA-PET-CT Ganzkoerper  primaer mit KM-30574_0000",
+            "fdg_94cc0dac49_03-09-2007-NA-PET-CT Ganzkoerper  primaer mit KM-58245_0000",
+            "psma_02826eb561d6e0c7_2016-11-04_0000",
+            "psma_0ec0e718244b2a79_2015-06-19_0000",
+            "psma_0fcbcd7dc52d5b82_2020-06-19_0000",
+            "psma_14c16d0ce2b3229d_2020-02-22_0000",
+            "psma_1d7ce562612262cb_2019-11-01_0000",
+            "psma_28f9ecc106933531_2019-06-15_0000",
+            "psma_4fc4664327ba8d0b_2014-06-06_0000",
+            "psma_4fc4664327ba8d0b_2014-12-19_0000",
+            "psma_5203bac8a9bfd9e2_2020-06-06_0000",
+            "psma_ba6433757dfc9d21_2021-10-09_0000",
+            "psma_c265ec063df5602b_2019-12-27_0000",
+            "psma_ca36bd95b63289d0_2020-05-15_0000"
+        ],
+        "limit": null,
+        "prev_pred_dir": null,
+        "save_predictions": "all",
+        "official_case_skip": false,
+        "strict_pairing": true,
+        "eval_mode": "fixed",
+        "determinism_check": false,
+        "iter_budget_s": 600.0,
+        "official_empty_error_crash": false,
+        "replay_scribbles_dir": null,
+        "cache_dir": "/content/work/cache",
+        "cache_probabilities": false,
+        "cache_prob_dtype": "uint8",
+        "dmm_empty_gt": "official",
+        "stop_on_case_error": false,
+        "quiet": false,
+        "predictor": "interactive_nnunet",
+        "base_predictor": "fast_baseline_nnunet",
+        "postproc_config": null,
+        "postproc_set": null,
+        "check_guarantees": "auto",
+        "strict_guarantees": false,
+        "keep_state": false,
+        "model_folder": "/content/work/models/interactive_998_ens/nnUNetTrainer_Interactive__nnUNetPlans_interactive__3d_fullres",
+        "folds": [
+            0,
+            1
+        ],
+        "checkpoint": "checkpoint_final.pth",
+        "device": "cuda",
+        "enable_tta": false,
+        "tile_step_size": 0.5,
+        "npp": 3,
+        "nps": 3,
+        "verbose_nnunet": false,
+        "resample_channels": "scipy",
+        "resample_logits": "torch",
+        "resample_threads": 4,
+        "guidance_radius": null,
+        "interactive_state_dir": false,
+        "no_cudnn_deterministic": false,
+        "mirror_axes": null,
+        "threshold": 2.5,
+        "min_component_voxels": 0
+    },
+    "total_seconds": 2728.58,
+    "cache": {
+        "root": "/content/work/cache/interactive_nnunet_8f4f2b2aae",
+        "hits": 13,
+        "misses": 167,
+        "prob_upgrades": 0,
+        "store_probabilities": false,
+        "prob_dtype": "uint8",
+        "level": "loop",
+        "model_calls": null,
+        "cache_calls": null
+    },
+    "postproc_config": null,
+    "guarantees": {
+        "checked": false
+    },
+    "seconds_per_case": {
+        "fdg_15cfa01130_02-24-2001-NA-PET-CT Ganzkoerper  primaer mit KM-49873_0000": 72.35,
+        "fdg_1a1712f7d0_02-16-2007-NA-PET-CT Ganzkoerper  primaer mit KM-50630_0000": 71.7,
+        "fdg_20a607649d_01-27-2007-NA-PET-CT Ganzkoerper  primaer mit KM-84908_0000": 141.89,
+        "fdg_21853fc15b_10-12-2002-NA-PET-CT Ganzkoerper  primaer mit KM-55807_0000": 73.21,
+        "fdg_23ed525e82_08-01-2003-NA-PET-CT Ganzkoerper  primaer mit KM-24219_0000": 137.23,
+        "fdg_2a41141775_09-24-2005-NA-PET-CT Ganzkoerper  primaer mit KM-94391_0000": 18.12,
+        "fdg_2b60c8135a_12-09-2005-NA-PET-CT Ganzkoerper  primaer mit KM-49696_0000": 84.11,
+        "fdg_30287f520f_11-23-2003-NA-PET-CT Ganzkoerper  primaer mit KM-15029_0000": 137.44,
+        "fdg_34aa521b46_03-30-2007-NA-PET-CT Ganzkoerper  primaer mit KM-44072_0000": 52.75,
+        "fdg_402c061122_08-25-2003-NA-PET-CT Ganzkoerper nativ-22953_0000": 66.86,
+        "fdg_44cfacfd6e_04-15-2007-NA-PET-CT Ganzkoerper  primaer mit KM-69456_0000": 111.08,
+        "fdg_4cc808d16f_06-11-2006-NA-PET-CT Ganzkoerper  primaer mit KM-36881_0000": 18.86,
+        "fdg_4ea806706c_10-30-2003-NA-PET-CT Ganzkoerper  primaer mit KM-87631_0000": 66.71,
+        "fdg_55d55902c6_05-11-2006-NA-PET-CT Ganzkoerper  primaer mit KM-26216_0000": 124.6,
+        "fdg_572fca6b44_05-23-2005-NA-PET-CT Ganzkoerper  primaer mit KM-19541_0000": 64.87,
+        "fdg_86e54ea60a_03-18-2002-NA-PET-CT Ganzkoerper  primaer mit KM-34788_0000": 73.13,
+        "fdg_91cfa804b0_09-22-2006-NA-PET-CT Ganzkoerper  primaer mit KM-30574_0000": 76.15,
+        "fdg_94cc0dac49_03-09-2007-NA-PET-CT Ganzkoerper  primaer mit KM-58245_0000": 154.5,
+        "psma_02826eb561d6e0c7_2016-11-04_0000": 85.37,
+        "psma_0ec0e718244b2a79_2015-06-19_0000": 80.35,
+        "psma_0fcbcd7dc52d5b82_2020-06-19_0000": 115.26,
+        "psma_14c16d0ce2b3229d_2020-02-22_0000": 105.62,
+        "psma_1d7ce562612262cb_2019-11-01_0000": 119.55,
+        "psma_28f9ecc106933531_2019-06-15_0000": 83.54,
+        "psma_4fc4664327ba8d0b_2014-06-06_0000": 82.63,
+        "psma_4fc4664327ba8d0b_2014-12-19_0000": 81.73,
+        "psma_5203bac8a9bfd9e2_2020-06-06_0000": 94.44,
+        "psma_ba6433757dfc9d21_2021-10-09_0000": 108.36,
+        "psma_c265ec063df5602b_2019-12-27_0000": 105.9,
+        "psma_ca36bd95b63289d0_2020-05-15_0000": 111.69
+    }
+}
