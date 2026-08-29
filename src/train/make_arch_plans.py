@@ -18,7 +18,7 @@ from typing import Dict, List, Sequence
 
 DEFAULT_EDIT_FEATURES: List[int] = [16, 16, 24, 24, 32, 32]
 DEFAULT_EVA_IMG_SIZE: List[int] = [224, 182]      # 16 x 13 tokens at patch 14
-DEFAULT_EVA_FUSE_STAGES: List[int] = [4, 5]       # (320, 7, 10, 8) and (320, 7, 5, 4)
+DEFAULT_EVA_FUSE_STAGES: List[int] = [3]          # (256, 14, 20, 16) at the plans patch
 
 
 def bottleneck_grid(patch_size: Sequence[int], strides: Sequence[Sequence[int]],
@@ -53,8 +53,11 @@ def variant_architecture(base_arch: dict, variant: str, patch_size: Sequence[int
         kw["context_heads"] = int(context_heads)
         kw["context_dim"] = int(context_dim)
         kw["context_mlp_ratio"] = float(context_mlp_ratio)
-        # "grid": one theta per axis, equal to that axis's extent at the plans patch,
-        # so the slowest rotary band spans the axis exactly once
+        # "grid": one theta per axis, equal to that axis's extent at the plans patch.
+        # lambda_i = 2*pi*theta^(i/n), so on the 7-voxel z axis the six bands sweep
+        # 6.00 down to 1.19 rad across the axis -- a usable ladder, all of it within
+        # one cycle. A single theta = 10000 gives 6.00 / 0.28 / 0.013 rad instead, i.e.
+        # two of three bands carry no position at all.
         kw["context_rope_theta"] = (
             [float(g) for g in bottleneck_grid(patch_size, kw["strides"], -1)]
             if context_rope_theta == "grid" else context_rope_theta)
@@ -69,7 +72,11 @@ def variant_architecture(base_arch: dict, variant: str, patch_size: Sequence[int
         kw["eva_freeze_blocks"] = int(eva_freeze_blocks)
         kw["eva_chunk"] = int(eva_chunk)
         kw["eva_grad_checkpointing"] = bool(eva_grad_checkpointing)
-        kw["eva_pretrained"] = True
+        # false on purpose: these plans ship next to fold_0/ and the predictor rebuilds
+        # the class from them inside a container started with --network=none. The
+        # pretrained weights are loaded once at surgery time by the B17 trainer and
+        # travel in our own checkpoint from then on.
+        kw["eva_pretrained"] = False
     elif variant == "b14":
         arch["network_class_name"] = "train.networks.EditBranchUNet"
         ef = list(edit_features) if edit_features else list(DEFAULT_EDIT_FEATURES)

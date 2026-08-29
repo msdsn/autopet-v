@@ -145,15 +145,29 @@ def main():
           f"{ {k: v for k, v in arch['arch_kwargs'].items() if k.startswith('eva_')} }")
     net = build(arch, in_ch, n_classes, True)
 
-    # the pretrained weights must have survived network.apply(network.initialize)
+    # The shipped plans build the backbone WITHOUT pretrained weights, so the
+    # constructor never reaches the network inside a --network=none container. The
+    # trainer loads them at surgery time; do the same here and check the loader.
+    assert arch["arch_kwargs"].get("eva_pretrained") is False, \
+        "the plans must ship eva_pretrained=false (the container has no network)"
     import timm
-    fresh = timm.create_model(arch["arch_kwargs"].get("eva_model_name",
-                              "eva02_base_patch14_448.mim_in22k_ft_in22k_in1k"),
-                              pretrained=True, num_classes=0, dynamic_img_size=True)
-    fsd, nsd = fresh.state_dict(), net.eva.state_dict()
+    fresh = timm.create_model(net.eva_model_name, pretrained=True, num_classes=0,
+                              dynamic_img_size=True)
+    fsd = fresh.state_dict()
+    nsd = net.eva.state_dict()
+    pre = max((nsd[k].float() - v.float()).abs().max().item() for k, v in fsd.items()
+              if k in nsd and v.dtype.is_floating_point)
+    print(f"  before load_pretrained  max |diff| vs timm {pre:.3e} "
+          f"({'OK -- built randomly, no download' if pre > 0 else 'FAIL'})")
+    assert pre > 0, "the plans appear to have downloaded pretrained weights already"
+
+    net.load_pretrained_eva()
+    # and they must survive a re-run of nnU-Net's initializer
+    net.apply(net.initialize)
+    nsd = net.eva.state_dict()
     dmax = max((nsd[k].float() - v.float()).abs().max().item() for k, v in fsd.items()
                if k in nsd and v.dtype.is_floating_point)
-    print(f"  pretrained preserved  max |diff| vs a fresh timm model {dmax:.3e} "
+    print(f"  after  load_pretrained  max |diff| vs timm {dmax:.3e} "
           f"({'OK' if dmax == 0.0 else 'FAIL -- initialize() overwrote EVA'})")
     assert dmax == 0.0, "network.apply(initialize) clobbered the pretrained EVA weights"
     del fresh, fsd
@@ -166,7 +180,7 @@ def main():
     print(f"    EVA-02-B          {n_eva / 1e6:.2f} M "
           f"({n_eva_train / 1e6:.2f} M trainable, {(n_eva - n_eva_train) / 1e6:.2f} M frozen)")
     print(f"    fusion 1x1x1      {n_fuse / 1e6:.3f} M "
-          f"(stages {net.eva_fuse_stages}, zero-init)")
+          f"(stages {net.eva_fuse_stages}, zero-init, no bias)")
 
     missing, unexpected = graft_state_dict(net, sd, verbose=False)
     assert not unexpected, f"source tensors not consumed: {unexpected[:5]}"
@@ -184,6 +198,21 @@ def main():
     assert tuple(tok.shape) == want
     del tok
     torch.cuda.empty_cache() if device.type == "cuda" else None
+
+    # every axial slice must reach the fused stage: a bare trilinear 112 -> 14 resize
+    # is an 8-neighbour blend and would drop 7 of every 8 slices on the floor
+    zt_in, z_out = zt, int(ref[3].shape[2]) if len(ref) > 3 else 14
+    probe = torch.zeros(1, net.eva_dim, zt_in, *net.eva_token_grid, device=device)
+    live = 0
+    for z in range(zt_in):
+        probe.zero_()
+        probe[0, :, z] = 1.0
+        red = torch.nn.functional.adaptive_avg_pool3d(probe, (z_out, *net.eva_token_grid))
+        if red.abs().sum() > 0:
+            live += 1
+    print(f"  z-slices reaching fusion  {live}/{zt_in}  "
+          f"({'OK' if live == zt_in else 'FAIL -- slices are discarded'})")
+    assert live == zt_in
 
     with torch.no_grad():
         out = net(x.to(device))

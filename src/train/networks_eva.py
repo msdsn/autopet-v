@@ -11,9 +11,9 @@ and decoder) untouched and adds a second, *pretrained* view of the same patch:
    one ``(B*Z, 3, 224, 182)`` batch (timm, ``dynamic_img_size=True``, so RoPE and
    the absolute position table are resampled to the 16x13 token grid);
 3. the resulting token grid is reshaped back into a **volume of tokens**
-   ``(B, 768, Z, 16, 13)``, trilinearly resized to an encoder stage's grid and added
-   to that stage's skip through a 1x1x1 projection whose weight *and* bias are
-   **zero**.
+   ``(B, 768, Z, 16, 13)``, **area-averaged along z** to the target stage's z extent,
+   resized in-plane, and added to that stage's skip through a 1x1x1 projection whose
+   weight is **zero** (and which carries no bias).
 
 The zero-initialised projections make the fused network numerically identical to
 B10 at initialisation, which the trainer asserts (``nnUNetTrainer_InteractiveArch.
@@ -39,6 +39,17 @@ spans 0.44-1.14). This makes the PET channel a fixed monotone function of the
 z-score rather than of true SUV -- which is what actually matters, because the
 *same* function is applied at training and at inference, and the backbone is
 trained through it.
+
+**Every slice has to count.** ``F.interpolate(..., "trilinear")`` is an 8-neighbour
+blend, not an area average: resizing z from 112 straight to a stage's 14 samples only
+the two planes nearest each output centre, so 7 of every 8 slices would be multiplied
+by zero -- the branch would run EVA forward *and backward* on 112 slices and use 14.
+``adaptive_avg_pool3d`` reduces z first, so every slice contributes; only the in-plane
+16x13 -> 20x16 step is interpolated.
+
+**Where it fuses.** Stage 3, ``(256, 14, 20, 16)``. Deeper stages have z = 7, which is
+half the z-resolution for the same EVA cost; stage 3 is the deepest stage whose z
+extent still resolves the slab structure the MIP channel encodes.
 
 **Gradient budget.** ``patch_embed`` and the first ``eva_freeze_blocks`` blocks run
 inside ``torch.no_grad()``. The rendering is a function of the network *input*, not
@@ -113,9 +124,16 @@ def render_eva_channels(x: torch.Tensor) -> torch.Tensor:
 class EVAFusionUNet(PlainConvUNet):
     """B10's ``PlainConvUNet`` with a trainable 2.5D EVA-02-B branch fused into it.
 
-    ``eva_fuse_stages`` are encoder stage indices; at the plans patch stage 4 is
-    ``(320, 7, 10, 8)`` and stage 5 ``(320, 7, 5, 4)``. Each gets its own zero-init
-    ``1x1x1`` projection from the 768-d token volume, added residually to the skip.
+    ``eva_fuse_stages`` are encoder stage indices; at the plans patch stage 3 is
+    ``(256, 14, 20, 16)``, stage 4 ``(320, 7, 10, 8)`` and stage 5 ``(320, 7, 5, 4)``.
+    Each gets its own zero-init ``1x1x1`` projection from the 768-d token volume,
+    added residually to the skip.
+
+    ``eva_pretrained`` defaults to **False** so that merely constructing the class --
+    which the predictor does, from the shipped ``plans.json``, inside a container with
+    no network -- never reaches the HF hub. The pretrained weights are loaded once, at
+    weight-surgery time, by ``load_pretrained_eva()``; from then on they travel in our
+    own checkpoint.
     """
 
     def __init__(self, input_channels: int, n_stages: int, features_per_stage, conv_op: Type[_ConvNd],
@@ -124,10 +142,10 @@ class EVAFusionUNet(PlainConvUNet):
                  norm_op_kwargs: dict = None, dropout_op: Union[None, Type[_DropoutNd]] = None,
                  dropout_op_kwargs: dict = None, nonlin: Union[None, Type[nn.Module]] = None,
                  nonlin_kwargs: dict = None, deep_supervision: bool = False, nonlin_first: bool = False,
-                 eva_model_name: str = EVA_MODEL_NAME, eva_pretrained: bool = True,
+                 eva_model_name: str = EVA_MODEL_NAME, eva_pretrained: bool = False,
                  eva_img_size: Sequence[int] = (224, 182), eva_z_stride: int = 1,
                  eva_freeze_blocks: int = 4, eva_grad_checkpointing: bool = True,
-                 eva_fuse_stages: Sequence[int] = (4, 5), eva_chunk: int = 0,
+                 eva_fuse_stages: Sequence[int] = (3,), eva_chunk: int = 0,
                  eva_drop_path_rate: float = 0.0):
         super().__init__(input_channels, n_stages, features_per_stage, conv_op, kernel_sizes, strides,
                          n_conv_per_stage, num_classes, n_conv_per_stage_decoder, conv_bias, norm_op,
@@ -143,31 +161,41 @@ class EVAFusionUNet(PlainConvUNet):
         self.eva_grad_checkpointing = bool(eva_grad_checkpointing)
         self.eva_chunk = int(eva_chunk)
         self.eva_fuse_stages = [int(s) % int(n_stages) for s in eva_fuse_stages]
+        self.eva_model_name = str(eva_model_name)
 
         self.eva = self._build_eva(eva_model_name, eva_pretrained, eva_drop_path_rate)
         self.eva_dim = int(self.eva.embed_dim)
         self.eva_num_prefix = int(getattr(self.eva, "num_prefix_tokens", 1))
 
         enc_ch = [int(c) for c in self.encoder.output_channels]
+        # bias=False on purpose: a zero-init bias still trains, and a learned constant
+        # per channel is not EVA information -- it would confound the row's delta.
         self.eva_fuse = nn.ModuleList(
-            [_zero_(conv_op(self.eva_dim, enc_ch[s], 1, 1, 0, bias=True))
+            [_zero_(conv_op(self.eva_dim, enc_ch[s], 1, 1, 0, bias=False))
              for s in self.eva_fuse_stages])
 
+        # the checkpoint's own normalisation (OpenAI-CLIP statistics for EVA-02, NOT
+        # ImageNet); read from timm's pretrained_cfg so it cannot drift from the weights
+        pcfg = getattr(self.eva, "pretrained_cfg", None) or {}
+        mean = tuple(pcfg.get("mean", EVA_MEAN))
+        std = tuple(pcfg.get("std", EVA_STD))
         # constants, not state: kept out of the checkpoint so the graft stays strict
-        self.register_buffer("eva_img_mean", torch.tensor(EVA_MEAN).view(1, 3, 1, 1),
+        self.register_buffer("eva_img_mean", torch.tensor(mean).view(1, 3, 1, 1),
                              persistent=False)
-        self.register_buffer("eva_img_std", torch.tensor(EVA_STD).view(1, 3, 1, 1),
+        self.register_buffer("eva_img_std", torch.tensor(std).view(1, 3, 1, 1),
                              persistent=False)
 
     # -- construction --------------------------------------------------
     def _build_eva(self, name: str, pretrained: bool, drop_path_rate: float) -> nn.Module:
         """Build the timm backbone and freeze its stem and first blocks.
 
-        ``pretrained`` is what makes B17 a pretrained-encoder experiment, but the
-        constructor also runs at *inference*, where the weights arrive from our own
-        checkpoint and the box may be offline (the challenge container runs with
-        ``--network=none``). A failed download is therefore a warning, not an error;
-        ``AUTOPET_EVA_PRETRAINED=0`` skips the attempt outright.
+        The constructor runs at *inference* too -- the predictor rebuilds this class
+        from the shipped ``plans.json`` inside a container started with
+        ``--network=none`` -- so it must never reach the network on its own. With
+        ``eva_pretrained`` false (the shipped default) nothing is downloaded and the
+        weights arrive from our checkpoint; ``AUTOPET_EVA_PRETRAINED`` can force either
+        way. A failed download is a warning, not an error, so a stale cache cannot take
+        the container down.
         """
         import timm
 
@@ -175,13 +203,15 @@ class EVAFusionUNet(PlainConvUNet):
         if env is not None:
             pretrained = env.lower() in ("1", "true", "t", "yes")
         kwargs = dict(num_classes=0, dynamic_img_size=True, drop_path_rate=float(drop_path_rate))
-        try:
-            model = timm.create_model(name, pretrained=pretrained, **kwargs)
-            if pretrained:
+        if pretrained:
+            try:
+                model = timm.create_model(name, pretrained=True, **kwargs)
                 print(f"[eva] built {name} with pretrained ImageNet-22k/1k weights")
-        except Exception as e:                       # offline / no cache
-            print(f"[eva] WARNING: pretrained load failed ({type(e).__name__}: {e}); "
-                  f"building {name} randomly -- the weights must come from a checkpoint")
+            except Exception as e:                   # offline / no cache
+                print(f"[eva] WARNING: pretrained load failed ({type(e).__name__}: {e}); "
+                      f"building {name} randomly -- weights must come from a checkpoint")
+                model = timm.create_model(name, pretrained=False, **kwargs)
+        else:
             model = timm.create_model(name, pretrained=False, **kwargs)
 
         n_frozen = self.eva_freeze_blocks
@@ -198,6 +228,29 @@ class EVAFusionUNet(PlainConvUNet):
         # this the pretrained weights would be overwritten with Kaiming noise.
         _freeze_init(model)
         return model
+
+    def load_pretrained_eva(self) -> bool:
+        """Load the timm ImageNet-22k/1k weights into the backbone. Surgery-time only.
+
+        Called once by the trainer, while the network is being built for *training*,
+        so the pretrained tensors are in place before the arch trainer snapshots the
+        added parameters -- which is what makes its ``|w-w0|/|w0|`` diagnostic measure
+        drift away from *pretraining* rather than away from noise. Never called at
+        inference: there the weights come from our own checkpoint.
+        """
+        import timm
+
+        ref = timm.create_model(self.eva_model_name, pretrained=True, num_classes=0,
+                                dynamic_img_size=True)
+        missing, unexpected = self.eva.load_state_dict(ref.state_dict(), strict=False)
+        stray = [k for k in missing if not k.startswith("head.")]
+        if stray or unexpected:
+            raise RuntimeError(f"[eva] pretrained load mismatch: missing={stray[:5]} "
+                               f"unexpected={list(unexpected)[:5]}")
+        del ref
+        print(f"[eva] loaded pretrained {self.eva_model_name} into the branch "
+              f"({sum(p.numel() for p in self.eva.parameters()) / 1e6:.2f} M parameters)")
+        return True
 
     # -- the 2.5D branch -----------------------------------------------
     def _eva_blocks(self, img: torch.Tensor) -> torch.Tensor:
@@ -242,10 +295,19 @@ class EVAFusionUNet(PlainConvUNet):
         tok = self.eva_tokens(x)
         for i, s in enumerate(self.eva_fuse_stages):
             skip = skips[s]
-            # resize the token volume *first*: projecting 768 -> C at 112x16x13 would
-            # cost 40x the FLOPs of projecting at the stage's own 7x10x8 grid
-            t = F.interpolate(tok.to(skip.dtype), size=tuple(skip.shape[2:]),
-                              mode="trilinear", align_corners=False)
+            t = tok.to(skip.dtype)
+            zs = int(skip.shape[2])
+            if int(t.shape[2]) != zs:
+                # Area-average along z FIRST. A trilinear 112 -> 14 resize is an
+                # 8-neighbour blend, so only the two planes nearest each output centre
+                # contribute and 7 of every 8 slices are multiplied by zero -- the
+                # branch would compute 112 slices and use 14.
+                t = F.adaptive_avg_pool3d(t, (zs, *self.eva_token_grid))
+            if tuple(t.shape[2:]) != tuple(skip.shape[2:]):
+                # in-plane only, and *before* the projection: projecting 768 -> C at the
+                # full token grid would cost many times more FLOPs for the same result
+                t = F.interpolate(t, size=tuple(skip.shape[2:]), mode="trilinear",
+                                  align_corners=False)
             skips[s] = skip + self.eva_fuse[i](t)
         return self.decoder(skips)
 
@@ -282,5 +344,6 @@ class EVAFusionUNet(PlainConvUNet):
         for layer in sorted(buckets):
             scale = layer_decay ** (depth + 1 - layer)
             params = [p for _, p in buckets[layer]]
-            out.append({"layer": layer, "lr": base_lr * scale, "scale": scale, "params": params})
+            out.append({"layer": layer, "lr": base_lr * scale, "base_lr": base_lr * scale,
+                        "scale": scale, "params": params})
         return out

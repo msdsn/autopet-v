@@ -120,10 +120,12 @@ def _as_int_tuple(x, n: int) -> Tuple[int, ...]:
 class _EVAStyleBottleneckBlock(nn.Module):
     """EVA-02 style transformer stack over the flattened bottleneck feature map.
 
-    Follows EVA-02 (arXiv:2303.11331): pre-norm blocks with **sub-LN** (an extra
-    LayerNorm on the attention and FFN outputs before their last projection), a
-    **SwiGLU** feed-forward of hidden width 2/3 * 4d, and **3D rotary position
-    embeddings** on the queries and keys instead of a learned positional table.
+    Follows EVA-02 (arXiv:2303.11331) in the parts that matter here: pre-norm blocks,
+    a **SwiGLU** feed-forward of hidden width 2/3 * 4d with **sub-LN** on its hidden
+    activations before the last projection, and **3D rotary position embeddings** on
+    the queries and keys instead of a learned positional table. The extra LayerNorm on
+    the attention output (``attn_subln``) is *not* EVA-02-B/L, which drops it; it is
+    512 parameters kept here so the two variants stay comparable.
 
     The stack runs at a reduced width ``dim`` (default 128 against the 320 encoder
     features), so it stays under half a million parameters. The output 1x1
@@ -140,10 +142,11 @@ class _EVAStyleBottleneckBlock(nn.Module):
         self.head_dim = self.dim // self.n_heads
         assert self.head_dim % 2 == 0, "head_dim must be even for rotary embeddings"
         self.n_pairs = self.head_dim // 2
-        # scalar, or one theta per axis. A single theta over a 7x5x4 grid with 2-3
-        # bands per axis puts every band's wavelength either far below or far above the
-        # axis extent, which is barely a position code at all; per-axis theta = extent
-        # makes the slowest band span the axis exactly once.
+        # Scalar, or one theta per axis. lambda_i = 2*pi*theta^(i/n): a single
+        # theta = 10000 over a 7x5x4 grid with 2-3 bands per axis leaves all but the
+        # fastest band constant across the whole grid (phase swept along z: 6.00, 0.28,
+        # 0.013 rad), which is barely a position code. Per-axis theta = axis extent
+        # spreads the phases into a usable ladder (6.00 ... 1.19 rad over 6 bands).
         self.rope_theta = (float(rope_theta) if np.isscalar(rope_theta)
                            else tuple(float(t) for t in rope_theta))
         self._rope_cache: dict = {}
