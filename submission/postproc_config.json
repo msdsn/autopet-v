@@ -1,0 +1,30 @@
+{
+  "_description": "PostProcConfig for the v0.2 submission container -- the single source of truth for the shipped thresholds. Both the container (AUTOPETV_POSTPROC_CONFIG) and the offline harness (interactive_eval.py --postproc_config) read THIS file, so a number measured offline is a number the container reproduces; submission/tests/run_v02_suite.py asserts that by comparing the masks bitwise. Keys starting with '_' are stripped before PostProcConfig.from_dict, which rejects every other unknown key. Anything not listed here keeps the default in src/postproc/config.py.",
+  "_variant": "B3 lineage (5-channel interactive model + the post-processing ladder), with the cleanup and negative-gate thresholds moved on by the ablation sweep -- see configs/ablations.json for the original rung.",
+  "enable_bg_compliance": true,
+  "enable_fg_compliance": true,
+  "enable_cleanup": true,
+  "cleanup": {
+    "suv_floor_mode": "component",
+    "rule_v2": true,
+    "v2_rules": [
+      {
+        "suv_gate": 5.0
+      },
+      {
+        "prob_gate": 0.8
+      }
+    ]
+  },
+  "cleanup_after_compliance": true,
+  "skip_inference_if_satisfied": false,
+  "negative_gate": {
+    "enabled": true,
+    "max_total_volume_ml": 6.0,
+    "max_prob": null
+  },
+  "monotone": {
+    "mode": "minmax"
+  },
+  "pass_cached_prev_pred": true
+}

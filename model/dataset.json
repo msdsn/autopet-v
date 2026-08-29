@@ -1,0 +1,28 @@
+{
+    "channel_names": {
+        "0": "CT",
+        "1": "PET",
+        "2": "noNorm",
+        "3": "noNorm",
+        "4": "noNorm"
+    },
+    "labels": {
+        "background": 0,
+        "tumor": 1
+    },
+    "numTraining": 1611,
+    "file_ending": ".nii.gz",
+    "licence": "Whoever converted this dataset was lazy and didn't look it up!",
+    "converted_by": "Please enter your name, especially when sharing datasets with others in a common infrastructure!",
+    "name": "AutoPETV",
+    "reference": " Coming Soon",
+    "release": "release",
+    "description": "autoPET V interactive fine-tune: CT, PET, tumor guidance (clipped EDT), background guidance (clipped EDT), previous prediction. Channels 2-4 are generated on the fly by nnUNetTrainer_Interactive and are NOT on disk.",
+    "channel_semantics": {
+        "0": "CT",
+        "1": "PET_SUV",
+        "2": "tumor_scribble_guidance_clippedEDT",
+        "3": "background_scribble_guidance_clippedEDT",
+        "4": "previous_prediction_binary"
+    }
+}
