@@ -30,6 +30,7 @@ except ImportError:  # flat import (folder on sys.path, e.g. nnUNet_extTrainer)
 __all__ = [
     "nnUNetTrainer_InteractiveArch",
     "nnUNetTrainer_InteractiveB13",
+    "nnUNetTrainer_InteractiveB13b",
     "nnUNetTrainer_InteractiveB14",
     "nnUNetTrainer_InteractiveB13_2epochs",
     "nnUNetTrainer_InteractiveB14_2epochs",
@@ -176,6 +177,16 @@ class nnUNetTrainer_InteractiveB13(nnUNetTrainer_InteractiveArch):
     """B13 -- residual global-context block on the deepest encoder stage."""
 
     NEW_PARAM_PREFIXES = ("context.",)
+
+
+class nnUNetTrainer_InteractiveB13b(nnUNetTrainer_InteractiveB13):
+    """B13b -- B13 with a rotary code that actually resolves position.
+
+    Same block and the same parameter count; 4 heads instead of 8, so the head
+    dimension is 32 and each axis gets 5-6 rotary bands instead of 2-3, and one theta
+    per axis equal to that axis's extent on the 7x5x4 bottleneck grid, so the slowest
+    band spans the axis once instead of sitting at 2917 voxels.
+    """
 
 
 class nnUNetTrainer_InteractiveB14(nnUNetTrainer_InteractiveArch):

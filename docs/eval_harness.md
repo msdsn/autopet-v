@@ -13,6 +13,7 @@ therefore a single command rather than 6600 container calls.
 | `src/smoke_test.py` | synthetic end-to-end tests (CPU), nnU-Net equivalence test (GPU), replay of the organizers' reference run |
 | `src/profile_predictor.py` | per-stage profiler behind the numbers below |
 | `src/ablate.py`, `configs/ablations.json` | the ablation ladder |
+| `scripts/eval_variant.sh` | one trained model -> `summary.json` + `run.json`, the shipped pipeline |
 
 Scribble simulation and metrics are **imported from the challenge repo** (`--repo`), never
 re-implemented, so scribble generation matches the official code including the `seed=42` defaults and the
@@ -33,6 +34,12 @@ PET, `DIR/labels/<case>.nii.gz`); `--image_dir` / `--label_dir` override it, whi
 interactive_nnunet` runs our full method. The flags that change the protocol rather than the plumbing are
 `--max_iters` (6), `--strategy {centerline,random,boundary,all}`, `--eval {fixed,buggy}` and
 `--replay_scribbles_dir`; the rest are in `--help`.
+
+`scripts/eval_variant.sh` wraps the two commands a results row needs — the loop under the shipped
+post-processing configuration and `finalize_run.py` — behind `TAG` and `MODEL_FOLDER`, and copies the
+model description files (`plans.json`, `dataset.json`, `dataset_fingerprint.json`) next to `fold_0/` if
+the trainer did not. `EXTRA` passes flags that change the base model, e.g.
+`EXTRA="--foveal_crop --foveal_fuse max"`.
 
 `src/ablate.py` runs a named subset of `configs/ablations.json` sequentially on the same case list,
 strategy assignment, seed and cache, and writes a markdown results table.
@@ -111,6 +118,38 @@ with `save_prev_mask`; the predictor never writes that file itself, because unde
 the mask it returns is not final. Since the output depends on `prev_pred`, `Predictor.cache_state_key`
 returns a hash of the previous mask and both cache layers fold it into the key — otherwise iteration 1's
 answer would be served at iteration 3.
+
+### Foveal re-inference (`--foveal_crop`)
+
+The sliding window sees a scribble only in whatever tiles happen to cover it, at whatever offset the
+tiling grid gives; a scribble can therefore sit near a tile border, far from the receptive-field centre
+of the voxels it is meant to correct. `--foveal_crop` adds one deliberate window: at every iteration
+that carries a scribble, a patch-sized region (`patch_size` of the plans, 112×160×128 at the plans
+spacing) is cut from the already-assembled 5-channel array, centred on the **newest scribble's
+centroid** and clamped to the volume, and pushed through the network a second time. The two logit
+fields are fused inside that window — `--foveal_fuse max` (default) or `mean` — and everything
+downstream, post-processing included, is unchanged.
+
+The window is fed back through `predict_logits_from_preprocessed_data`, so it is a single tile whose
+Gaussian weighting divides out: one plain forward pass through the same code path as the full
+prediction, with the same padding rules and the same mirroring setting. Cost is one forward pass
+(~1 s) per iteration that fires.
+
+*The newest scribble.* The loop appends one stroke per iteration to one of the two lists, so the newest
+stroke is the tail of whichever list grew since the previous call on that case; the predictor remembers
+the two counts per case. Where there is no memory — the first call of a case, which is the state after
+iteration 0 was served from the prediction cache — exactly one list can be non-empty at iteration 1, so
+its tail is the newest stroke and the fallback is exact where it is used. `predictor.last_foveal_info`
+records the window, the stroke it came from, which of the two rules picked the centre, the wall time and
+the mean absolute logit change; `last_timings["foveal_fired"]` is the flag.
+
+At iteration 0 there is no scribble, the pass does not fire, and the output is **bitwise identical** to
+the plain model — asserted on two cases before the row was run.
+
+The option changes what the network computes, so it is folded into `base_predictor_identity` and a
+foveal run gets its own cache namespace. It is added to the identity **only when the option is on**, so
+every existing row keeps its namespace and its cached predictions; the price is that a foveal run
+recomputes iteration 0 rather than reading the plain model's copy of it.
 
 ## Deliberate discrepancies vs. the published loop
 

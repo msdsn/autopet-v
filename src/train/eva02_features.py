@@ -123,8 +123,10 @@ def render_slices(ct: np.ndarray, suv: np.ndarray) -> torch.Tensor:
     pet_log = np.log1p(pet) / np.log1p(PET_SUV_CLIP)
 
     t = torch.from_numpy(pet_log)[None, None]              # (1, 1, Z, Y, X)
+    if torch.cuda.is_available():                          # the slab is the CPU hot spot
+        t = t.cuda()
     mip = F.max_pool3d(t, kernel_size=(2 * MIP_HALF + 1, 1, 1),
-                       stride=1, padding=(MIP_HALF, 0, 0))[0, 0].numpy()
+                       stride=1, padding=(MIP_HALF, 0, 0))[0, 0].cpu().numpy()
 
     out = np.stack([ct_w, pet_log, mip], axis=1)           # (Z, 3, Y, X)
     return torch.from_numpy(np.ascontiguousarray(out))

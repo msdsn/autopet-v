@@ -1041,17 +1041,20 @@ class InteractiveNNUNetPredictor(FastBaselineNNUNetPredictor):
 
         t0 = time.perf_counter()
         sub = np.ascontiguousarray(data[(slice(None), *window)])
-        sub_logits = p.predict_logits_from_preprocessed_data(torch.from_numpy(sub)).cpu()
-        if self.device.startswith("cuda"):
-            torch.cuda.synchronize()
-        info["foveal_s"] = round(time.perf_counter() - t0, 3)
-
-        cur = logits[(slice(None), *window)]
-        sub_logits = sub_logits.to(cur.dtype)
-        fused = torch.maximum(cur, sub_logits) if self.foveal_fuse == "max" \
-            else 0.5 * (cur + sub_logits)
-        info["mean_abs_change"] = round(float((fused - cur).abs().mean()), 5)
-        logits[(slice(None), *window)] = fused
+        # nnU-Net predicts under torch.inference_mode(), so its logits are inference
+        # tensors and writing into them outside that mode raises; do the whole fusion
+        # inside it rather than paying for a clone of a full-volume logit field.
+        with torch.inference_mode():
+            sub_logits = p.predict_logits_from_preprocessed_data(torch.from_numpy(sub)).cpu()
+            if self.device.startswith("cuda"):
+                torch.cuda.synchronize()
+            info["foveal_s"] = round(time.perf_counter() - t0, 3)
+            cur = logits[(slice(None), *window)]
+            sub_logits = sub_logits.to(cur.dtype)
+            fused = torch.maximum(cur, sub_logits) if self.foveal_fuse == "max" \
+                else 0.5 * (cur + sub_logits)
+            info["mean_abs_change"] = round(float((fused - cur).abs().mean()), 5)
+            logits[(slice(None), *window)] = fused
         del sub, sub_logits, cur, fused
         self.last_foveal_info = info
         self._warn_foveal(info)

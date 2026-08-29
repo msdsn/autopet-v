@@ -26,6 +26,7 @@ from __future__ import annotations
 import math
 from typing import List, Sequence, Tuple, Type, Union
 
+import numpy as np
 import torch
 import torch.nn.functional as F
 from torch import nn
@@ -132,14 +133,19 @@ class _EVAStyleBottleneckBlock(nn.Module):
     """
 
     def __init__(self, channels: int, dim: int = 128, n_layers: int = 2, n_heads: int = 8,
-                 mlp_ratio: float = 4.0, rope_theta: float = 10000.0, conv_op=nn.Conv3d):
+                 mlp_ratio: float = 4.0, rope_theta=10000.0, conv_op=nn.Conv3d):
         super().__init__()
         assert dim % n_heads == 0, f"dim {dim} must be divisible by n_heads {n_heads}"
         self.dim, self.n_heads = int(dim), int(n_heads)
         self.head_dim = self.dim // self.n_heads
         assert self.head_dim % 2 == 0, "head_dim must be even for rotary embeddings"
         self.n_pairs = self.head_dim // 2
-        self.rope_theta = float(rope_theta)
+        # scalar, or one theta per axis. A single theta over a 7x5x4 grid with 2-3
+        # bands per axis puts every band's wavelength either far below or far above the
+        # axis extent, which is barely a position code at all; per-axis theta = extent
+        # makes the slowest band span the axis exactly once.
+        self.rope_theta = (float(rope_theta) if np.isscalar(rope_theta)
+                           else tuple(float(t) for t in rope_theta))
         self._rope_cache: dict = {}
 
         hidden = int(round(mlp_ratio * dim * 2 / 3 / 8)) * 8      # SwiGLU: 2/3 * 4d
@@ -173,7 +179,9 @@ class _EVAStyleBottleneckBlock(nn.Module):
         for axis, n in enumerate(sizes):
             if n == 0:
                 continue
-            inv = self.rope_theta ** (-torch.arange(n, device=device, dtype=torch.float32) / n)
+            theta = (self.rope_theta if isinstance(self.rope_theta, float)
+                     else self.rope_theta[axis])
+            inv = theta ** (-torch.arange(n, device=device, dtype=torch.float32) / n)
             angles.append(coords[axis].reshape(-1, 1) * inv[None, :])
         ang = torch.cat(angles, dim=1)                            # (N, n_pairs)
         out = (ang.cos().to(dtype), ang.sin().to(dtype))
@@ -263,7 +271,7 @@ class GlobalContextUNet(PlainConvUNet):
                  nonlin_kwargs: dict = None, deep_supervision: bool = False, nonlin_first: bool = False,
                  context_type: str = "attention", context_stage: int = -1, context_layers: int = 2,
                  context_heads: int = 8, context_dim: int = 128, context_mlp_ratio: float = 4.0,
-                 context_rope_theta: float = 10000.0, context_d_state: int = 16,
+                 context_rope_theta=10000.0, context_d_state: int = 16,
                  context_d_conv: int = 4, context_expand: int = 2):
         super().__init__(input_channels, n_stages, features_per_stage, conv_op, kernel_sizes, strides,
                          n_conv_per_stage, num_classes, n_conv_per_stage_decoder, conv_bias, norm_op,

@@ -461,6 +461,7 @@ variant is a plans file plus a class, not a fork of the trainer.
 | | class | plans | trainer | added parameters |
 |---|---|---|---|---|
 | B13 | `train.networks.GlobalContextUNet` | `nnUNetPlans_b13` | `nnUNetTrainer_InteractiveB13` | **+0.48 M (+1.6 %)** |
+| B13b | same class, rotary code retuned | `nnUNetPlans_b13b` | `nnUNetTrainer_InteractiveB13b` | +0.48 M (identical) |
 | B14 | `train.networks.EditBranchUNet` | `nnUNetPlans_b14` | `nnUNetTrainer_InteractiveB14` | **+0.28 M (+0.9 %)** |
 | C0 | `PlainConvUNet` (unchanged) | `nnUNetPlans_interactive` | `nnUNetTrainer_InteractiveC0` | 0 |
 
@@ -489,6 +490,17 @@ own voxel coordinate. The stack runs at a reduced width (`context_dim = 128` aga
 behind a 1×1 convolution, which is what keeps it under half a million parameters; a second 1×1
 convolution projects back and is **zero-initialised**, making the whole block an exact identity at
 initialisation while still receiving a non-zero gradient on the first step.
+
+**The rotary code has to be tuned to a 7x5x4 grid.** With `context_dim = 128` over 8 heads the head
+dimension is 16, so there are 8 rotation pairs to spread over three axes — 3/3/2 bands — and a single
+base `theta = 10000` puts their wavelengths at 6.3, 135 and 2917 voxels on an axis 7 voxels long: one
+band oscillates roughly per voxel and the other two are all but constant across the whole grid, which
+is close to no position code at all. **B13b** keeps the block and its parameter count exactly and
+changes two numbers: 4 heads, so the head dimension is 32 and each axis gets 5-6 bands, and one theta
+per axis equal to that axis's extent (`context_rope_theta = [7, 5, 4]`, written by
+`make_arch_plans --context-rope-theta grid`), which lands the wavelengths at 6.3-31.8 voxels — the
+slowest band spanning the axis about once. B13 is kept as the weak-rotary control, so the pair
+measures what the position code is worth.
 
 `context_type = "mamba"` swaps in a bidirectional selective state-space block (two `mamba_ssm` scans
 over the forward and reversed token sequence, shared zero-initialised output projection) where
@@ -557,6 +569,153 @@ Forward + backward at the plans configuration (batch 2, patch 112×160×128, fp1
 
 Against the measured 59.3 s steady-state epoch of the batch-2 configuration — which is
 **dataloader-bound**, not GPU-bound — B13 is free and B14 costs at most the 15 s of GPU time it adds.
+
+## Sampling and gating variants (S1, N1)
+
+Two more continuations of the B10 checkpoint against the same `C0` control. Neither touches the store,
+the interaction distribution, the loss weights of B10, the predictor or the submission contract.
+
+| | what changes | files | plans | trainer | added parameters |
+|---|---|---|---|---|---|
+| S1 | **which patch** a forced-foreground draw is centred on | `s1_sampler.py` | `nnUNetPlans_interactive` | `nnUNetTrainer_InteractiveS1` | **0** |
+| N1 | a coarse learned presence prior added to the foreground logit | `networks_n1.py`, `make_n1_plans.py` | `nnUNetPlans_n1` | `nnUNetTrainer_InteractiveN1` | **+257 (+0.0008 %)** |
+
+### S1 — component-balanced foreground sampling
+
+`nnUNetDataLoader.get_bbox(force_fg=True)` picks a foreground **voxel** uniformly from
+`properties['class_locations']`, so a lesion is chosen with probability proportional to its *volume*.
+At the measured lesion-size distribution that is a 500 : 1 bias against a 0.2 mL lesion versus a 100 mL
+one, and only ~0.2 % of training patches end up centred on a sub-1-mL FDG lesion. S1 replaces that draw
+with
+
+```
+component c with probability  p(c) ∝ |c| ** S1_GAMMA      # gamma 0 = uniform over components
+voxel uniformly inside c                                  # gamma 1 = stock nnU-Net
+```
+
+`S1_GAMMA` defaults to **0.0**. The foreground/background ratio (`oversample_foreground_percent`, 0.33)
+is untouched, background patches go through the stock code path, and a lesion-free case falls back to it
+as well.
+
+The per-case component table (`cc3d`, 18-connected, matching the challenge metric) is built lazily on
+first use from the stored `_seg.b2nd`, keeping the true voxel count per component plus up to 256 voxels
+sampled uniformly inside it, and is cached in memory and on disk under
+`<preprocessed>/<Dataset>/s1_components/` — deliberately a *sibling* of `nnUNetPlans_3d_fullres/`,
+which the launcher verifies byte-for-byte against Drive and into which nothing may be written. The
+first epoch pays the labelling (~365 s against a ~90 s steady state); afterwards the workers read the
+cache.
+
+nnU-Net's dataloader calls `self._data.load_case(i)` and then `self.get_bbox(...)` without passing the
+identifier or the label, so the sampler would have no way to know which case it is placing a patch in.
+`S1RecordingDatasetBlosc2` / `…Numpy` record both on the dataset instance the loader already holds;
+they are module-level classes, not built with `type()`, so a dataloader that has to be pickled to a
+worker still works. `get_dataloaders` is overridden (rather than the class monkey-patched) because the
+training and the validation loader are built in one call and **only the training one is rebalanced** —
+validation keeps nnU-Net's sampler so its curve stays comparable with the other rows.
+
+`test_s1_sampler.py` is the before/after, drawn through the real code path on real cases:
+
+```bash
+python -m train.test_s1_sampler --preprocessed $PREP/$DS --cases 3 --draws 3000 --min-components 6
+```
+
+| bucket | <0.25 mL | 0.25–0.5 | 0.5–1 | 1–3 | 3–10 | >10 |
+|---|---:|---:|---:|---:|---:|---:|
+| stock (volume-proportional) | 0.1 % | 0.1 % | 0.8 % | 4.0 % | 17.3 % | 77.8 % |
+| S1, γ = 0 | 36.2 % | 0.9 % | 9.4 % | 19.7 % | 21.8 % | 12.0 % |
+
+Pooled over three multi-lesion cases: patches built around a sub-1-mL lesion **0.94 % → 46.5 %**, mean
+volume of the chosen lesion **234 mL → 26 mL**, and the S1 row reproduces the case's own
+component-count histogram, which is what "uniform over components" means.
+
+### N1 — presence-prior gate
+
+`train.networks_n1.PresenceGateUNet` is the interactive `PlainConvUNet` plus a single `Conv3d(C, 1, 1)`
+on **encoder stage 3**. Its output is a coarse per-cell log-odds map of "is there a lesion in this
+region", trilinearly upsampled and **added to the foreground logit** of the final output and of every
+deep-supervision output at its own scale.
+
+Stage 3, not the bottleneck: for the 112×160×128 plans patch the stage-3 map is 14×20×16, one cell =
+8×8×8 voxels = **6.37 mL**, while a bottleneck cell is 16×32×32 voxels = 204 mL and cannot resolve the
+0.5–3 mL false-positive components the gate is meant to suppress.
+
+Both the weight and the bias are zero at initialisation, so the added log-odds is exactly 0 and epoch 0
+reproduces B10 bit for bit, while the convolution still has a non-zero gradient on the first step.
+nnU-Net calls `network.apply(network.initialize)` after construction; `initialize` is overridden to skip
+the tagged module so the zeros survive.
+
+With deep supervision on, `forward` returns `[seg_0 … seg_n, gate]` — the coarse map is appended
+**after** the segmentation outputs. `DeepSupervisionWrapper` zips outputs against targets and therefore
+ignores it, `validation_step` still reads `output[0]`, and `PresenceGateAuxLoss` strips it off the end.
+With deep supervision off — the inference path — the return value is the single fused logit tensor,
+exactly the stock contract, so the predictor, the post-processing config and `submission/process.py` are
+untouched.
+
+The auxiliary term is `BCEWithLogits(gate, max_pool3d(label))` at weight `N1_AUX_W = 0.5`. Its second
+job is a gradient: on a label-empty patch the configured Dice+CE has exactly zero Dice gradient
+(`test_v2_loss.py`) and about half of all training patches are label-empty, so the BCE is the only
+*localised* signal that state produces.
+
+`pos_weight` is measured, not guessed. `train.measure_n1_prior` draws patches through the real
+dataloader at the configured oversampling and max-pools the label onto the gate grid:
+
+```
+positive cells 7711 / 716800 = 1.076 %     label-empty patches 44.4 %
+N1_AUX_POS_WEIGHT = (1 - p) / p = 91.96
+```
+
+which is the value that makes the positive and the negative half of the BCE contribute equally. The
+value actually used is logged at startup.
+
+### The epoch-0 gate, in process
+
+The file-based version of the "epoch 0 is B10" assertion — cache one forward pass of stock B10 to disk,
+assert `< 1e-5` against it in the trainer — does not survive contact with cuDNN. `run_training` sets
+`cudnn.benchmark = True`, so the convolution algorithm is autotuned per process against the free VRAM at
+that moment. Measured on this box, the **zero-change control C0** failed the 1e-5 assertion against a
+cached reference at **8.7e-3** on logits whose magnitude is 23 (4e-4 relative); forcing
+`cudnn.deterministic` in the emitting process moves the same forward pass by 9.5e-3. The file-based gate
+is a float-noise detector, not an architecture check.
+
+`identity_gate.SourceIdentityGateMixin` removes the noise instead of tolerating it: it rebuilds the
+*source* network from `nnUNetPlans_interactive.json` **inside the training process**, loads the same
+checkpoint into it, and compares the two forward passes there. Identical convolutions of identical shape
+then get the identical autotuned algorithm. Both rows score exactly `0.000e+00`:
+
+```
+[gate] identity assertion PASS: max |logit diff| 0.000e+00 < 1e-05 on (1, 5, 112, 160, 128),
+       in-process against b10_final.pth built from nnUNetPlans_interactive.json
+```
+
+The strict-graft half of the gate is unchanged and still comes from `nnUNetTrainer_InteractiveArch`:
+every source tensor must be consumed with a matching shape, and the tensors left at their
+initialisation must be exactly those under the row's declared prefixes (`presence_gate.` for N1, none
+for S1).
+
+### Running them
+
+```bash
+python -m train.make_n1_plans --base-plans $PREP/$DS/nnUNetPlans_interactive.json \
+    --out $PREP/$DS/nnUNetPlans_n1.json
+python -m train.measure_n1_prior --preprocessed $PREP/$DS --batches 80   # -> N1_AUX_POS_WEIGHT
+
+INIT=<B10 checkpoint_final.pth> TAG=s1 TRAINER=nnUNetTrainer_InteractiveS1 S1_GAMMA=0.0 \
+    ALLOW_BUSY_GPU=1 ALLOW_CONCURRENT_TRAIN=1 NICE=5 bash scripts/env/train_b6.sh
+
+INIT=<B10 checkpoint_final.pth> TAG=n1 TRAINER=nnUNetTrainer_InteractiveN1 PLANS=nnUNetPlans_n1 \
+    N1_AUX_W=0.5 N1_AUX_POS_WEIGHT=91.96 \
+    ALLOW_BUSY_GPU=1 ALLOW_CONCURRENT_TRAIN=1 NICE=5 bash scripts/env/train_b6.sh
+```
+
+`train_b6.sh` passes `S1_*` and `N1_*` through to the generated launcher, as it already did for
+`nnUNet_arch_refbatch` and `nnUNet_n_proc_DA`.
+
+### Cost
+
+S1 adds one `np.random.choice` over a few hundred components per patch (**≈ 0 s/epoch** in steady
+state) plus the one-off `cc3d` pass, and **exactly 0** at inference. N1 adds a 1×1×1 convolution on a
+14×20×16 map, one max-pool and one BCE; the +257 parameters are 0.0008 % of the network and the extra
+work is below the noise of a dataloader-bound epoch.
 
 ## Known limitations
 
