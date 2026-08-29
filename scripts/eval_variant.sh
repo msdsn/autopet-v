@@ -10,7 +10,11 @@
 #       bash scripts/eval_variant.sh          # an option that changes the base model
 #
 # Environment: TAG (required), MODEL_FOLDER (required), CKPT, EVALSET, CACHE, OUT_ROOT,
-# REPO_CODE, REPO, PREP, POSTPROC, EXTRA, LABEL, DRIVE, CASES_FILE.
+# REPO_CODE, REPO, PREP, POSTPROC, EXTRA, LABEL, DRIVE, RESULTS_DIR, CASES_FILE.
+#
+# On success the four decision-relevant files land in three places: the run directory,
+# `$DRIVE/$TAG` and `$RESULTS_DIR/$TAG` (the repo's results/ folder, which
+# results_index.py reads). Set RESULTS_DIR=none to skip the repo copy.
 set -uo pipefail
 
 TAG=${TAG:?set TAG, the run id (e.g. B13g9)}
@@ -24,6 +28,7 @@ OUT_ROOT=${OUT_ROOT:-/content/work/runs}
 PREP=${PREP:-/content/nnUNet/prep_local/Dataset998_AutoPETV}
 POSTPROC=${POSTPROC:-$REPO_CODE/submission/postproc_config.json}
 DRIVE=${DRIVE:-/content/drive/MyDrive/autoPET/runs}
+RESULTS_DIR=${RESULTS_DIR:-$REPO_CODE/results}
 EXTRA=${EXTRA:-}
 OUT=$OUT_ROOT/$TAG
 
@@ -72,4 +77,12 @@ python3 interactive_eval.py \
 LABEL=${LABEL:-"$TAG: $(basename "$MODEL_FOLDER") $CKPT + the shipped post-processing configuration${EXTRA:+ ($EXTRA)}, 6 iters, strategy=all, 100 cases"}
 python3 finalize_run.py --run_dir "$OUT" --run_id "$TAG" --label "$LABEL" --drive "$DRIVE" \
   || die "finalize_run failed"
+
+if [ "$RESULTS_DIR" != "none" ]; then
+  mkdir -p "$RESULTS_DIR/$TAG"
+  for f in run.json summary.json metric_scores.json case_info.json; do
+    [ -s "$OUT/$f" ] && cp "$OUT/$f" "$RESULTS_DIR/$TAG/$f"
+  done
+  say "copied the row to $RESULTS_DIR/$TAG"
+fi
 say "EVAL_DONE $TAG -> $OUT"
