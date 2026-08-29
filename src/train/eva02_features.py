@@ -26,14 +26,27 @@ The store keeps CT and PET *normalised*, so both are inverted back to physical
 units first: CT with the fixed fingerprint statistics from ``plans.json``, PET with
 the per-case ``pet_norm_correction`` written by ``src/data/build_store.py``.
 
+Two ways to get from 768 dimensions to K:
+
+* ``--proj pca`` -- unsupervised, label-free, but wasteful: on a 48-case token-level
+  probe of the decision this feature is *for* (is a hot token tumour or physiological
+  uptake?), ``logSUV + position`` scores AUC 0.682, ``+ PCA-8`` 0.820, ``+ PCA-128``
+  0.857, ``+ the full 768-d`` 0.864.
+* ``--proj supervised`` (default) -- K logistic directions found by greedy deflation
+  against the tumour label, **fitted on training-split cases only**. Eight of them
+  score 0.866, i.e. they recover the whole 768-d signal at 1/16 of the PCA-128 cost.
+  Pass ``--cases`` with the fold-0 *training* list; fitting on validation cases would
+  leak.
+
 Usage (on the GPU box, ``source /content/env.sh``)::
 
-    python src/train/eva02_features.py smoke  --store <store> --out <dir> --n 3
-    python src/train/eva02_features.py fit-pca --store <store> --out <dir> --n 50
-    python src/train/eva02_features.py extract --store <store> --out <dir>
+    python src/train/eva02_features.py smoke    --store <store> --out <dir> --n 3
+    python src/train/eva02_features.py fit-proj --store <store> --out <dir> --n 50 \
+        --cases docs/trainset_fold0.txt
+    python src/train/eva02_features.py extract  --store <store> --out <dir>
 
-``smoke`` fits a PCA on the same handful of cases it extracts, so it is
-self-contained; a real run does ``fit-pca`` once and then ``extract``.
+``smoke`` fits the projection on the same handful of cases it extracts, so it is
+self-contained; a real run does ``fit-proj`` once and then ``extract``.
 """
 
 from __future__ import annotations
@@ -88,6 +101,13 @@ def load_case(store: Path, case: str) -> Tuple[np.ndarray, np.ndarray, dict]:
     corr = props["pet_norm_correction"]
     suv = data[1] * float(corr["sd_full"]) + float(corr["mu_full"])
     return ct, suv, props
+
+
+def load_seg(store: Path, case: str) -> np.ndarray:
+    import blosc2
+
+    return np.asarray(blosc2.open(str(store / f"{case}_seg.b2nd"), mode="r")[0],
+                      dtype=np.float32)
 
 
 # ---------------------------------------------------------------------------
@@ -184,6 +204,30 @@ class PCAAccumulator:
         return mu.float().cpu().numpy(), comps.float().cpu().numpy(), ratio
 
 
+def supervised_directions(x: np.ndarray, y: np.ndarray, k: int,
+                          C: float = 0.01) -> np.ndarray:
+    """K orthogonal logistic directions by greedy deflation. x is already centred.
+
+    Fit a logistic regression, keep its (normalised) coefficient vector, project it
+    out of the data, repeat. Direction 1 is the best linear tumour/uptake separator;
+    each later one is the best separator among what the earlier ones cannot express.
+    """
+    from sklearn.linear_model import LogisticRegression
+
+    resid, dirs = x.copy(), []
+    for _ in range(k):
+        w = LogisticRegression(max_iter=4000, C=C).fit(resid, y).coef_[0]
+        n = np.linalg.norm(w)
+        if not np.isfinite(n) or n < 1e-12:
+            break
+        w = w / n
+        dirs.append(w)
+        resid -= np.outer(resid @ w, w)
+    while len(dirs) < k:                                   # degenerate: pad with PCA
+        dirs.append(np.zeros(x.shape[1], dtype=np.float64))
+    return np.stack(dirs).astype(np.float32)               # (k, dim)
+
+
 def project(tokens: torch.Tensor, mu: torch.Tensor, comps: torch.Tensor,
             scale: torch.Tensor) -> torch.Tensor:
     """(Z, N, D) -> (K, Z, 32, 32) float16, unit-variance per component."""
@@ -198,42 +242,72 @@ def project(tokens: torch.Tensor, mu: torch.Tensor, comps: torch.Tensor,
 # driver
 # ---------------------------------------------------------------------------
 
-def run_pca(store: Path, cases: Sequence[str], out: Path, k: int, batch_size: int,
-            max_slices: int, device: str, dtype: torch.dtype) -> Path:
+def run_fit(store: Path, cases: Sequence[str], out: Path, k: int, batch_size: int,
+            max_slices: int, device: str, dtype: torch.dtype, proj: str,
+            hot_suv: float, cold_keep: int) -> Path:
+    """Fit the 768 -> k projection. ``proj`` is "pca" or "supervised"."""
     model, mean, std, n_prefix = build_model(device, dtype)
     acc = PCAAccumulator(768, device)
+    sup_x: List[np.ndarray] = []
+    sup_y: List[np.ndarray] = []
     t0 = time.time()
     for i, case in enumerate(cases):
         ct, suv, _ = load_case(store, case)
         sl = render_slices(ct, suv)
-        if sl.shape[0] > max_slices:                       # every n-th slice
+        idx = np.arange(sl.shape[0])
+        if sl.shape[0] > max_slices:
             idx = np.linspace(0, sl.shape[0] - 1, max_slices).round().astype(int)
             sl = sl[idx]
         tok = tokens_for_case(model, mean, std, n_prefix, sl, batch_size, device, dtype)
         acc.add(tok[:, ::7])                               # 1 token in 7 is plenty
-        print(f"[pca {i + 1}/{len(cases)}] {case[:40]} slices={sl.shape[0]} "
-              f"n={acc.n} {time.time() - t0:.1f}s", flush=True)
-    mu, comps, ratio = acc.fit(k)
+        n_sup = 0
+        if proj == "supervised":
+            seg = load_seg(store, case)[idx]
+            segg = F.adaptive_max_pool2d(torch.from_numpy(seg)[:, None],
+                                         (TOKEN_GRID, TOKEN_GRID))[:, 0].reshape(-1)
+            suvg = F.adaptive_max_pool2d(torch.from_numpy(suv[idx])[:, None],
+                                         (TOKEN_GRID, TOKEN_GRID))[:, 0].reshape(-1)
+            keep = (suvg >= hot_suv).numpy()
+            cold = np.flatnonzero(~keep)
+            if cold.size > cold_keep:                      # a few cold tokens as ballast
+                cold = np.random.default_rng(i).choice(cold, cold_keep, replace=False)
+            sel = np.union1d(np.flatnonzero(keep), cold)
+            sup_x.append(tok.reshape(-1, 768).float().cpu().numpy()[sel])
+            sup_y.append((segg.numpy()[sel] > 0.5).astype(np.int8))
+            n_sup = sel.size
+        print(f"[fit {i + 1}/{len(cases)}] {case[:40]} slices={sl.shape[0]} "
+              f"n_pca={acc.n} n_sup={n_sup} {time.time() - t0:.1f}s", flush=True)
 
-    z = (torch.from_numpy(comps).to(device).double() @
-         (acc.s2 / acc.n - torch.outer(acc.s1 / acc.n, acc.s1 / acc.n)) @
-         torch.from_numpy(comps).to(device).double().T)
-    scale = torch.sqrt(torch.diagonal(z).clamp_min(1e-12)).float().cpu().numpy()
+    mu, comps, ratio = acc.fit(k)
+    cov = (acc.s2 / acc.n - torch.outer(acc.s1 / acc.n, acc.s1 / acc.n))
+    if proj == "supervised":
+        x = np.concatenate(sup_x) - mu
+        y = np.concatenate(sup_y)
+        print(f"[fit] supervised on {x.shape[0]} tokens, positives {int(y.sum())} "
+              f"({y.mean():.4f})")
+        if y.sum() >= 50 and (1 - y).sum() >= 50:
+            comps = supervised_directions(x.astype(np.float64), y, k)
+            ratio = np.zeros(k, dtype=np.float32)
+        else:
+            print("[fit] too few positives for a supervised fit -- falling back to PCA")
+            proj = "pca"
+    cd = torch.from_numpy(comps).to(device).double()
+    scale = torch.sqrt(torch.diagonal(cd @ cov @ cd.T).clamp_min(1e-12)).float().cpu().numpy()
 
     out.mkdir(parents=True, exist_ok=True)
-    path = out / "eva02_pca.npz"
+    path = out / "eva02_proj.npz"
     np.savez(path, mean=mu, components=comps, scale=scale,
-             explained_variance_ratio=ratio, k=k, model=MODEL_NAME,
+             explained_variance_ratio=ratio, k=k, model=MODEL_NAME, proj=proj,
              n_tokens=acc.n, cases=np.array(list(cases)))
-    print(f"[pca] k={k} explained={ratio.sum():.3f} per-comp={np.round(ratio, 4)}")
-    print(f"[pca] wrote {path}")
+    print(f"[fit] proj={proj} k={k} pca_explained={ratio.sum():.3f}")
+    print(f"[fit] wrote {path}")
     return path
 
 
-def run_extract(store: Path, cases: Sequence[str], out: Path, pca_path: Path,
+def run_extract(store: Path, cases: Sequence[str], out: Path, proj_path: Path,
                 batch_size: int, device: str, dtype: torch.dtype) -> None:
     model, mean, std, n_prefix = build_model(device, dtype)
-    p = np.load(pca_path, allow_pickle=True)
+    p = np.load(proj_path, allow_pickle=True)
     mu = torch.from_numpy(p["mean"]).to(device)
     comps = torch.from_numpy(p["components"]).to(device)
     scale = torch.from_numpy(p["scale"]).to(device)
@@ -264,16 +338,23 @@ def run_extract(store: Path, cases: Sequence[str], out: Path, pca_path: Path,
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("mode", choices=["smoke", "fit-pca", "extract"])
+    ap.add_argument("mode", choices=["smoke", "fit-proj", "extract"])
     ap.add_argument("--store", required=True, type=Path,
                     help="<...>/Dataset998_AutoPETV/nnUNetPlans_3d_fullres")
     ap.add_argument("--out", required=True, type=Path)
-    ap.add_argument("--pca", type=Path, default=None)
-    ap.add_argument("--cases", type=Path, default=None, help="file with one case id per line")
+    ap.add_argument("--proj-file", type=Path, default=None)
+    ap.add_argument("--proj", choices=["supervised", "pca"], default="supervised")
+    ap.add_argument("--cases", type=Path, default=None,
+                    help="file with one case id per line; for fit-proj this MUST be "
+                         "the training split -- a supervised fit on validation cases leaks")
     ap.add_argument("--n", type=int, default=0, help="use only the first n cases (0 = all)")
     ap.add_argument("--k", type=int, default=8)
     ap.add_argument("--batch-size", type=int, default=16)
-    ap.add_argument("--max-pca-slices", type=int, default=64)
+    ap.add_argument("--max-fit-slices", type=int, default=64)
+    ap.add_argument("--hot-suv", type=float, default=4.0,
+                    help="supervised fit is trained on tokens at or above this SUVmax")
+    ap.add_argument("--cold-keep", type=int, default=2000,
+                    help="cold tokens kept per case as ballast for the supervised fit")
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--device", default="cuda")
     ap.add_argument("--fp32", action="store_true")
@@ -282,27 +363,32 @@ def main() -> None:
     dtype = torch.float32 if args.fp32 else torch.float16
     cases = ([c.strip() for c in args.cases.read_text().splitlines() if c.strip()]
              if args.cases else list_cases(args.store))
-    if args.mode in ("smoke", "fit-pca") and not args.cases:
+    if args.mode in ("smoke", "fit-proj") and not args.cases:
         random.Random(args.seed).shuffle(cases)
     if args.n:
         cases = cases[:args.n]
-    print(f"[eva02] mode={args.mode} cases={len(cases)} dtype={dtype} store={args.store}")
+    print(f"[eva02] mode={args.mode} proj={args.proj} cases={len(cases)} "
+          f"dtype={dtype} store={args.store}")
 
     args.out.mkdir(parents=True, exist_ok=True)
     (args.out / "run_args.json").write_text(json.dumps(
         {k: str(v) for k, v in vars(args).items()}, indent=2))
 
-    if args.mode == "fit-pca":
-        run_pca(args.store, cases, args.out, args.k, args.batch_size,
-                args.max_pca_slices, args.device, dtype)
+    def fit() -> Path:
+        return run_fit(args.store, cases, args.out, args.k, args.batch_size,
+                       args.max_fit_slices, args.device, dtype, args.proj,
+                       args.hot_suv, args.cold_keep)
+
+    if args.mode == "fit-proj":
+        fit()
     elif args.mode == "extract":
-        pca = args.pca or (args.out / "eva02_pca.npz")
-        run_extract(args.store, cases, args.out, pca, args.batch_size, args.device, dtype)
+        run_extract(args.store, cases, args.out,
+                    args.proj_file or (args.out / "eva02_proj.npz"),
+                    args.batch_size, args.device, dtype)
     else:
         t0 = time.time()
-        pca = run_pca(args.store, cases, args.out, args.k, args.batch_size,
-                      args.max_pca_slices, args.device, dtype)
-        run_extract(args.store, cases, args.out, pca, args.batch_size, args.device, dtype)
+        run_extract(args.store, cases, args.out, fit(), args.batch_size,
+                    args.device, dtype)
         print(f"[smoke] total {time.time() - t0:.1f}s")
 
 

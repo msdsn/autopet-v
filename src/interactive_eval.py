@@ -381,6 +381,11 @@ def predictor_key(args) -> str:
         ident["guidance_radius"] = resolve_guidance_radius(args)
         ident["mirror_axes"] = (list(args.mirror_axes)
                                 if getattr(args, "mirror_axes", None) else None)
+        # Added only when the option is on, so every existing row keeps its namespace
+        # and its cache; a foveal run gets one of its own, because its answer differs
+        # from the plain model's at every iteration that carries a scribble.
+        if getattr(args, "foveal_crop", False):
+            ident["foveal"] = {"fuse": getattr(args, "foveal_fuse", "max")}
     h = hashlib.sha1(json.dumps(ident, sort_keys=True).encode()).hexdigest()[:10]
     return f"{base_predictor_name(args)}_{h}"
 
@@ -1042,6 +1047,8 @@ def build_base_predictor(args) -> Predictor:
             num_resample_threads=args.resample_threads,
             guidance_radius=resolve_guidance_radius(args),
             use_state_dir=args.interactive_state_dir,
+            foveal_crop=getattr(args, "foveal_crop", False),
+            foveal_fuse=getattr(args, "foveal_fuse", "max"),
             deterministic=not args.no_cudnn_deterministic,
             force_mirror_axes=(tuple(args.mirror_axes) if args.mirror_axes else None),
             **common,
@@ -1179,6 +1186,12 @@ def make_parser() -> argparse.ArgumentParser:
     p.add_argument("--guidance_radius", type=float, default=None,
                    help="radius of the clipped-EDT guidance encoding, in voxels of the "
                         "preprocessed grid; must match the trainer's GUIDANCE_RADIUS")
+    p.add_argument("--foveal_crop", action="store_true",
+                   help="interactive model only: at every iteration that carries a "
+                        "scribble, run one extra forward pass on a patch-sized window "
+                        "centred on the newest scribble and fuse it into the logits")
+    p.add_argument("--foveal_fuse", choices=["max", "mean"], default="max",
+                   help="how the foveal window's logits meet the sliding window's")
     p.add_argument("--interactive_state_dir", action="store_true",
                    help="let interactive_nnunet read the previous mask from the per-case "
                         "state dir when the caller passes no prev_pred (for the container)")

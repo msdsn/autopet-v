@@ -548,6 +548,10 @@ class FastBaselineNNUNetPredictor(BaselineNNUNetPredictor):
                                 "ct_r": ct_r, "pet_r": pet_r}
         return ct_r, pet_r
 
+    def _refine_logits(self, logits, data, p, pm, cm):
+        """Hook for a second, targeted forward pass. The base predictor does nothing."""
+        return logits
+
     def _infer_and_export(self, data, geom, return_probabilities, p, pm, cm):
         """Sliding window + resample back + argmax; returns arrays in nibabel axis order."""
         import torch
@@ -558,6 +562,7 @@ class FastBaselineNNUNetPredictor(BaselineNNUNetPredictor):
         logits = p.predict_logits_from_preprocessed_data(torch.from_numpy(data)).cpu()
         if self.device.startswith("cuda"):
             torch.cuda.synchronize()
+        logits = self._refine_logits(logits, data, p, pm, cm)
         t_net = time.perf_counter() - t0
 
         t0 = time.perf_counter()
@@ -712,6 +717,7 @@ class InteractiveNNUNetPredictor(FastBaselineNNUNetPredictor):
     def __init__(self, *args, guidance_radius: Optional[float] = None,
                  use_state_dir: bool = False, prev_mask_filename: str = "prev_final_mask.npy",
                  deterministic: bool = True, force_mirror_axes: Optional[Sequence[int]] = None,
+                 foveal_crop: bool = False, foveal_fuse: str = "max",
                  **kwargs):
         kwargs.setdefault("model_folder", os.environ.get("AUTOPETV_INTERACTIVE_MODEL_FOLDER")
                           or self.DEFAULT_MODEL_FOLDER)
@@ -726,6 +732,17 @@ class InteractiveNNUNetPredictor(FastBaselineNNUNetPredictor):
         self.deterministic = bool(deterministic)
         self.force_mirror_axes = tuple(force_mirror_axes) if force_mirror_axes else None
         self.last_guidance_info: Dict[str, object] = {}
+        # foveal re-inference (B15): a second forward pass on one patch-sized window
+        # centred on the newest scribble, fused into the sliding-window logits
+        self.foveal_crop = bool(foveal_crop)
+        if foveal_fuse not in ("max", "mean"):
+            raise ValueError(f"foveal_fuse must be 'max' or 'mean', got {foveal_fuse!r}")
+        self.foveal_fuse = foveal_fuse
+        #: set by the evaluation loop through `_set_iteration`; only used for logging
+        self.current_iteration = 0
+        self._foveal_center: Optional[Sequence[int]] = None
+        self._foveal_seen: Dict[str, tuple] = {}
+        self.last_foveal_info: Dict[str, object] = {}
 
     # -- validation --------------------------------------------------------
     def _ensure_predictor(self):
@@ -882,11 +899,12 @@ class InteractiveNNUNetPredictor(FastBaselineNNUNetPredictor):
         # ---- channels 2 and 3: clipped EDT on the preprocessed grid -------
         t0 = time.perf_counter()
         info = {"radius_voxels": self.guidance_radius}
-        chans = {}
+        chans, mapped_by_name = {}, {}
         for idx, name in ((2, "tumor"), (3, "background")):
             pts = scribbles.get(name, [])
             mapped, dropped = self.map_coords_to_grid(pts, geom["bbox"],
                                                       geom["shape_after_crop"], new_shape)
+            mapped_by_name[name] = mapped
             info[f"n_{name}"] = len(pts)
             info[f"n_{name}_mapped"] = int(len(mapped))
             info[f"n_{name}_dropped"] = dropped
@@ -895,6 +913,8 @@ class InteractiveNNUNetPredictor(FastBaselineNNUNetPredictor):
                            f"or the resampled grid and were dropped")
             chans[idx] = (guidance_map_from_coords(new_shape, mapped, self.guidance_radius)
                           if len(mapped) else np.zeros(new_shape, dtype=np.float32))
+        self._foveal_center = (self._newest_scribble_center(case_name, scribbles, mapped_by_name)
+                               if self.foveal_crop else None)
         t_guid = time.perf_counter() - t0
 
         # ---- channel 4: the previous FINAL mask, on the same grid ---------
@@ -937,7 +957,114 @@ class InteractiveNNUNetPredictor(FastBaselineNNUNetPredictor):
             "export_s": round(t_export, 3), "total_s": round(time.perf_counter() - t_all, 3),
             "ct_pet_cached": cached,
         }
+        if self.foveal_crop:
+            self.last_timings["foveal_fired"] = bool(self.last_foveal_info.get("fired"))
         return (mask, probs) if return_probabilities else mask
+
+    # ------------------------------------------------------------------
+    # foveal re-inference (B15)
+    # ------------------------------------------------------------------
+    def _newest_scribble_center(self, case_name, scribbles, mapped_by_name):
+        """Centroid, on the preprocessed grid, of the stroke that arrived last.
+
+        The evaluation loop appends one stroke per iteration to one of the two lists,
+        so the newest stroke is the tail of whichever list grew since the previous call
+        on this case. The counts are remembered per case; when there is no memory --
+        the first call of a case, which is the state after iteration 0 was served from
+        the prediction cache -- exactly one list can be non-empty at iteration 1, so its
+        tail is the newest stroke and the fallback is exact where it is used.
+        """
+        n_t, n_b = len(scribbles.get("tumor", [])), len(scribbles.get("background", []))
+        if n_t + n_b == 0:
+            return None
+        prev = self._foveal_seen.get(case_name)
+        self._foveal_seen = {case_name: (n_t, n_b)}      # one case at a time
+        if prev is not None and (n_t > prev[0] or n_b > prev[1]):
+            name = "tumor" if n_t > prev[0] else "background"
+            start = prev[0] if name == "tumor" else prev[1]
+            source = "grown"
+        else:
+            name = "tumor" if n_t else "background"
+            start = max(0, (n_t if name == "tumor" else n_b) - 1)
+            source = "tail"
+        pts = np.asarray(mapped_by_name.get(name, []), dtype=np.int64)
+        if pts.size == 0:
+            other = "background" if name == "tumor" else "tumor"
+            pts = np.asarray(mapped_by_name.get(other, []), dtype=np.int64)
+            start, name = 0, other
+        if pts.size == 0:
+            return None                                   # every voxel fell outside the box
+        stroke = pts[min(start, len(pts) - 1):]
+        center = np.rint(stroke.mean(axis=0)).astype(int)
+        self.last_foveal_info = {"center": [int(c) for c in center], "stroke_name": name,
+                                 "stroke_voxels": int(len(stroke)), "center_source": source}
+        return center
+
+    def _refine_logits(self, logits, data, p, pm, cm):
+        """Fuse a patch-sized forward pass centred on the newest scribble into `logits`.
+
+        The sliding window sees a scribble only in whatever tiles happen to cover it, at
+        whatever offset the tiling gives; this puts one window on it deliberately, at the
+        patch size the network was trained at, and fuses the two logit fields inside that
+        window. Feeding a volume of exactly the patch size back through
+        `predict_logits_from_preprocessed_data` makes the window a single tile whose
+        Gaussian weighting divides out, so it is one plain forward pass through the same
+        code path as the full prediction -- same padding rules, same mirroring setting.
+        """
+        if not self.foveal_crop:
+            return logits
+        center = self._foveal_center
+        info = dict(self.last_foveal_info) if center is not None else {}
+        info["iteration"] = int(self.current_iteration)
+        info["fuse"] = self.foveal_fuse
+        if center is None:
+            info["fired"] = False
+            info["reason"] = "no scribbles"
+            self.last_foveal_info = info
+            return logits
+
+        import torch
+
+        shape = tuple(int(v) for v in data.shape[1:])
+        patch = [int(v) for v in cm.patch_size]
+        lo, hi = [], []
+        for d in range(3):
+            size = min(patch[d], shape[d])
+            start = int(center[d]) - size // 2
+            start = max(0, min(start, shape[d] - size))
+            lo.append(start)
+            hi.append(start + size)
+        window = tuple(slice(a, b) for a, b in zip(lo, hi))
+        info.update({"fired": True, "window_lo": lo, "window_hi": hi,
+                     "window_shape": [b - a for a, b in zip(lo, hi)],
+                     "volume_shape": list(shape)})
+
+        t0 = time.perf_counter()
+        sub = np.ascontiguousarray(data[(slice(None), *window)])
+        sub_logits = p.predict_logits_from_preprocessed_data(torch.from_numpy(sub)).cpu()
+        if self.device.startswith("cuda"):
+            torch.cuda.synchronize()
+        info["foveal_s"] = round(time.perf_counter() - t0, 3)
+
+        cur = logits[(slice(None), *window)]
+        sub_logits = sub_logits.to(cur.dtype)
+        fused = torch.maximum(cur, sub_logits) if self.foveal_fuse == "max" \
+            else 0.5 * (cur + sub_logits)
+        info["mean_abs_change"] = round(float((fused - cur).abs().mean()), 5)
+        logits[(slice(None), *window)] = fused
+        del sub, sub_logits, cur, fused
+        self.last_foveal_info = info
+        self._warn_foveal(info)
+        return logits
+
+    def _warn_foveal(self, info):
+        if not self.verbose:
+            return
+        print(f"[{self.name}] foveal pass at iteration {info.get('iteration')}: "
+              f"window {info.get('window_lo')}..{info.get('window_hi')} of "
+              f"{info.get('volume_shape')}, {info.get('stroke_voxels')} "
+              f"{info.get('stroke_name')} voxels, fuse={info.get('fuse')}, "
+              f"{info.get('foveal_s')} s, mean |Δlogit| {info.get('mean_abs_change')}")
 
     def _warn(self, msg):
         import warnings
