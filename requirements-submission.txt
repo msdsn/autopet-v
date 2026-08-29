@@ -1,0 +1,35 @@
+# ---------------------------------------------------------------------------
+# autoPET V -- SUBMISSION environment (the image Grand Challenge builds).
+#
+# Base image: pytorch/pytorch:2.6.0-cuda12.4-cudnn9-runtime
+#             -> python 3.11, torch 2.6.0+cu124, CUDA 12.4 runtime.
+#             cu124 wheels run on the evaluation A10G (sm_86) and on the L4 (sm_89).
+#
+# `torch` is deliberately NOT listed: the base image already provides a CUDA build.
+# Listing it would make pip re-resolve a multi-GB wheel during the build and risks
+# swapping in a CPU-only or mismatched-CUDA torch.
+#
+# Versions mirror the development environment exactly, so that "works in the harness"
+# implies "works in the container".  See docs/submission.md.
+# ---------------------------------------------------------------------------
+nnunetv2==2.8.1
+SimpleITK==2.5.6
+nibabel==5.4.2
+connected-components-3d==4.0.0
+scipy==1.16.3
+scikit-image==0.25.2
+networkx==3.6.1
+numpy==2.1.3
+
+# Transitive deps of nnunetv2 (acvl-utils, batchgenerators, batchgeneratorsv2, blosc2,
+# dynamic-network-architectures, einops, graphviz, imagecodecs, matplotlib, pandas,
+# requests, scikit-learn, seaborn, tifffile, tqdm, yacs) are resolved by pip.  They are
+# intentionally left unpinned: pinning them adds build-failure surface without changing
+# numerics, and nnunetv2==2.8.1 already constrains the ones that matter.
+#
+# NOT installed on purpose:
+#   cupy-cuda12x, cucim  -- the organizers' requirements.txt pulls these in only for
+#                           `utils.simulate_clicks`, which is *training-time* click
+#                           simulation and never runs inside our container.  They add
+#                           ~1.5 GB and a hard CUDA-version coupling.
+#   pynvml               -- unused.

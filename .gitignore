@@ -1,0 +1,32 @@
+# big artifacts: never in git
+*.nii.gz
+*.mha
+*.npz
+*.npy
+*.b2nd
+*.pth
+*.pt
+*.zip
+*.tar
+*.pkl
+# anchored dirs (repo root only)
+/data/
+/weights/
+/runs/
+/scratch/
+/autoPETV/
+/.colab_host
+/.env
+__pycache__/
+*.pyc
+.DS_Store
+.ipynb_checkpoints/
+# internal working notes — not part of the public repository
+/internal/
+docs/reviews/
+docs/research_strategy.md
+docs/forum_questions.md
+docs/ablation_plan.md
+docs/system.md
+docs/protocol_facts.md
+/.colab_hosts

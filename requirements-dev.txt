@@ -1,0 +1,11 @@
+# Development environment. Loose lower bounds; requirements-submission.txt pins the container.
+nnunetv2>=2.8.1
+SimpleITK>=2.4
+nibabel>=5.3
+connected-components-3d>=3.12
+scikit-image>=0.25
+networkx>=3.3
+scipy>=1.14
+numpy>=2.1,<3
+blosc2>=3.0
+gdown
