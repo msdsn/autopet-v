@@ -17,6 +17,8 @@ from copy import deepcopy
 from typing import Dict, List, Sequence
 
 DEFAULT_EDIT_FEATURES: List[int] = [16, 16, 24, 24, 32, 32]
+DEFAULT_EVA_IMG_SIZE: List[int] = [224, 182]      # 16 x 13 tokens at patch 14
+DEFAULT_EVA_FUSE_STAGES: List[int] = [4, 5]       # (320, 7, 10, 8) and (320, 7, 5, 4)
 
 
 def bottleneck_grid(patch_size: Sequence[int], strides: Sequence[Sequence[int]],
@@ -36,7 +38,11 @@ def variant_architecture(base_arch: dict, variant: str, patch_size: Sequence[int
                          context_dim: int = 128, context_mlp_ratio: float = 4.0,
                          context_type: str = "attention", context_rope_theta=10000.0,
                          edit_features: Sequence[int] = None,
-                         n_guidance_channels: int = 3) -> dict:
+                         n_guidance_channels: int = 3,
+                         eva_img_size: Sequence[int] = None,
+                         eva_fuse_stages: Sequence[int] = None,
+                         eva_z_stride: int = 1, eva_freeze_blocks: int = 4,
+                         eva_chunk: int = 0, eva_grad_checkpointing: bool = True) -> dict:
     arch = deepcopy(base_arch)
     kw = arch["arch_kwargs"]
     if variant in ("b13", "b13b"):
@@ -52,6 +58,18 @@ def variant_architecture(base_arch: dict, variant: str, patch_size: Sequence[int
         kw["context_rope_theta"] = (
             [float(g) for g in bottleneck_grid(patch_size, kw["strides"], -1)]
             if context_rope_theta == "grid" else context_rope_theta)
+    elif variant == "b17":
+        # B17: the trainable 2.5D EVA-02-B branch. The token volume is resized to the
+        # fused stages' grids, so the only geometry the plans have to carry is the
+        # per-slice input size (a multiple of 14 in both directions).
+        arch["network_class_name"] = "train.networks_eva.EVAFusionUNet"
+        kw["eva_img_size"] = [int(v) for v in (eva_img_size or DEFAULT_EVA_IMG_SIZE)]
+        kw["eva_fuse_stages"] = [int(v) for v in (eva_fuse_stages or DEFAULT_EVA_FUSE_STAGES)]
+        kw["eva_z_stride"] = int(eva_z_stride)
+        kw["eva_freeze_blocks"] = int(eva_freeze_blocks)
+        kw["eva_chunk"] = int(eva_chunk)
+        kw["eva_grad_checkpointing"] = bool(eva_grad_checkpointing)
+        kw["eva_pretrained"] = True
     elif variant == "b14":
         arch["network_class_name"] = "train.networks.EditBranchUNet"
         ef = list(edit_features) if edit_features else list(DEFAULT_EDIT_FEATURES)
@@ -79,7 +97,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--base-plans", required=True, help="nnUNetPlans_interactive.json")
-    ap.add_argument("--variant", required=True, choices=["b13", "b13b", "b14"])
+    ap.add_argument("--variant", required=True, choices=["b13", "b13b", "b14", "b17"])
     ap.add_argument("--out", required=True, help="path of the plans file to write")
     ap.add_argument("--configuration", default="3d_fullres")
     ap.add_argument("--plans-name", default=None, help="default: basename of --out without .json")
@@ -92,6 +110,13 @@ def main():
                     help="rotary base: a number, or 'grid' for one theta per axis equal "
                          "to that axis's extent on the bottleneck grid")
     ap.add_argument("--edit-features", nargs="+", type=int, default=None)
+    ap.add_argument("--eva-img-size", nargs=2, type=int, default=None,
+                    help="per-slice input size, a multiple of 14 (default 224 182 = 16x13 tokens)")
+    ap.add_argument("--eva-fuse-stages", nargs="+", type=int, default=None)
+    ap.add_argument("--eva-z-stride", type=int, default=1)
+    ap.add_argument("--eva-freeze-blocks", type=int, default=4)
+    ap.add_argument("--eva-chunk", type=int, default=0,
+                    help="slices per EVA forward chunk (0 = the whole batch at once)")
     args = ap.parse_args()
 
     with open(args.base_plans) as f:
@@ -105,6 +130,10 @@ def main():
         extra = dict(context_type=args.context_type, context_layers=args.context_layers,
                      context_heads=args.context_heads, context_dim=args.context_dim,
                      context_mlp_ratio=args.context_mlp_ratio, context_rope_theta=theta)
+    elif args.variant == "b17":
+        extra = dict(eva_img_size=args.eva_img_size, eva_fuse_stages=args.eva_fuse_stages,
+                     eva_z_stride=args.eva_z_stride, eva_freeze_blocks=args.eva_freeze_blocks,
+                     eva_chunk=args.eva_chunk)
     else:
         extra = dict(edit_features=args.edit_features)
     plans = build_plans(base, args.variant, name, args.configuration, **extra)
@@ -118,7 +147,9 @@ def main():
     print(f"  network_class_name {arch['network_class_name']}")
     for k in ("context_type", "context_stage", "context_layers", "context_dim",
               "context_heads", "context_rope_theta",
-              "edit_features_per_stage", "n_guidance_channels"):
+              "edit_features_per_stage", "n_guidance_channels",
+              "eva_img_size", "eva_fuse_stages", "eva_z_stride", "eva_freeze_blocks",
+              "eva_chunk", "eva_grad_checkpointing", "eva_pretrained"):
         if k in arch["arch_kwargs"]:
             print(f"  {k:<22} {arch['arch_kwargs'][k]}")
 
