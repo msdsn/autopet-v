@@ -583,86 +583,126 @@ Against the measured 59.3 s steady-state epoch of the batch-2 configuration — 
 B13 and B14 add capacity; B17 adds **pretraining**. It keeps the whole B10 network as
 is and runs a second, ImageNet-22k/1k-pretrained view of the same patch alongside it:
 every axial slice is rendered into three channels, pushed through EVA-02-B, and the
-resulting tokens are folded back into the 3D encoder as a volume.
+resulting tokens are folded back into the 3D encoder as a volume of tokens.
 
 **Geometry.** The plans patch is `112 x 160 x 128` at `3 x 2.04 x 2.04` mm, and the
 preprocessed axis order is `(axial, y, x)`, so an axial slice is the `160 x 128`
 in-plane grid = 326 x 261 mm of body. It is squash-resized to **224 x 182** px, which
 is that aspect ratio to 1.4 % and a whole number of 14-px patches in both directions:
-**16 x 13 = 208 tokens** per slice, plus one prefix token. timm's
+**16 x 13 = 208** tokens per slice, plus one prefix token. timm's
 `dynamic_img_size=True` resamples the absolute position table and rebuilds the 2D RoPE
 for that grid, so no weight is tied to the 448-px 32 x 32 grid the checkpoint was
 trained at. The 112 slices of a batch of 2 go through as **one 224-image EVA batch**;
 the tokens come back as a volume `(B, 768, 112, 16, 13)`.
 
-**Fusion.** The token volume is trilinearly resized to an encoder stage's grid and
-added to that stage's skip through a `1x1x1` convolution whose weight *and* bias are
-zero-initialised. Two stages are fused, both 320-channel: stage 4 `(7, 10, 8)` and
-stage 5 `(7, 5, 4)`. Resizing *before* projecting is deliberate -- projecting 768 -> 320
-at the full `112 x 16 x 13` token grid would cost about 40x the FLOPs of projecting at
-the stage's own grid, for the same result.
+**Fusion, and the resize that would have thrown most of it away.** The token volume is
+fused into encoder **stage 3**, `(256, 14, 20, 16)`. The reduction is done in two steps
+and the order matters:
+
+```python
+t = F.adaptive_avg_pool3d(t, (14, 16, 13))          # z: area average over all 112
+t = F.interpolate(t, size=(14, 20, 16), mode="trilinear")   # in-plane only
+skips[3] = skips[3] + self.eva_fuse[0](t)           # zero-init 1x1x1, no bias
+```
+
+`F.interpolate(..., "trilinear")` is an 8-neighbour blend, not an area average: taking
+z from 112 straight to 14 samples only the two planes nearest each output centre, so
+**14 of 112 slices** would have any influence and the branch would run EVA forward
+*and backward* on 112 slices to use 14. Pooling z first makes every slice contribute;
+`test_networks_eva.py` asserts `112/112`. Reducing before projecting is also what keeps
+the projection cheap -- 768 -> 256 at the stage's own grid rather than at the full
+token grid.
+
+The projection is zero-initialised and carries **no bias**: a zero-init bias still
+trains, and a learned constant per channel is not EVA information -- it would confound
+the row's delta with a plain learned offset.
 
 **Rendering, and the one approximation in it.** The three channels are the ones
 `eva02_features.py` established: CT in a soft-tissue window `[-160, 240]` HU, PET as
 `log1p(SUV)/log1p(60)`, and the same log-SUV through a +/-4-slice (+/-12 mm)
 maximum-intensity slab, so a 2D backbone can see out of plane. All three are computed
-on the GPU inside `forward`. CT inverts exactly, because `CTNormalization` uses the
-global fingerprint constants. **PET does not**: the store z-scores it per case, and a
-training patch carries no per-case correction, so the inverse uses the cohort medians
-of `pet_norm_correction` (`mu` 0.109, `sd` 0.625; the per-case `sd` spans 0.44-1.14).
-The PET channel is therefore a fixed monotone function of the z-score rather than of
-true SUV. That is acceptable precisely because the *same* function is applied at
-training and at inference and the backbone is trained through it -- but it is an
-approximation, and it is the reason the branch has to be trainable rather than frozen.
+on the GPU inside `forward`, and normalised with the **OpenAI-CLIP** mean/std that this
+checkpoint was trained with (read from timm's `pretrained_cfg`, not ImageNet's).
+
+CT inverts exactly, because `CTNormalization` uses the global fingerprint constants.
+**PET does not**: the store z-scores it per case, and a training patch carries no
+per-case correction, so the inverse uses the cohort medians of `pet_norm_correction`
+(`mu` 0.109, `sd` 0.625; the per-case `sd` spans 0.44-1.14). The PET channel is
+therefore a fixed monotone function of the z-score rather than of true SUV. That is
+acceptable precisely because the *same* function is applied at training and at
+inference and the backbone is trained through it -- but it is an approximation, and it
+is part of why the branch has to be trainable rather than frozen.
 
 **What trains, and at what rate.** `patch_embed` and the first four blocks are frozen
 and run inside `torch.no_grad()`; the rendering is a function of the network input, not
 of any parameter, so nothing downstream needs a gradient through them, and skipping the
-graph there is what makes a 224-slice EVA batch fit in memory. The remaining eight
-blocks are gradient-checkpointed and trained with **layer-wise lr decay 0.7** off a base
-lr of **1e-4** -- the published EVA-02 448-px fine-tuning recipe -- giving 5.8e-6 at
-block 4 up to 7.0e-5 at block 11. They also run at SGD momentum **0.9** rather than
-nnU-Net's 0.99, which multiplies the effective step by 100 and is not something a
-pretrained ViT survives. The U-Net half and the two fusion projections keep B10's
-lr 5e-4 at momentum 0.99; the projections sit in the fast group on purpose, because
-they start at zero and nothing reaches the EVA blocks until they have grown.
+graph there is what makes a 224-slice EVA batch fit. The remaining eight blocks are
+gradient-checkpointed.
 
-nnU-Net's `PolyLRScheduler` writes a single lr into *every* param group, which would
-erase that ladder on the first epoch; `_PolyLRPerGroup` decays each group from its own
-base instead. `torch.compile` is disabled for this network (`_do_i_compile`): the branch
-mixes a `no_grad` prefix, gradient checkpointing and a `forward` that dispatches on
+The optimizer is the one place B17 cannot simply inherit B10's recipe. nnU-Net's
+default is `SGD(lr=5e-4, momentum=0.99, nesterov, wd=3e-5)` over the whole network.
+Momentum 0.99 amplifies the steady-state step by `1/(1-m) = 100x` -- an effective ~5e-2
+against ViT weights whose std is ~0.02 -- and it decays every LayerNorm gain and bias,
+where EVA-02's own recipe gives them none. Making the *whole* network AdamW would fix
+the ViT and confound the row against the SGD-trained C0 control. So `_DualOptimizer`
+presents one `torch.optim.Optimizer` face over two real optimizers with disjoint
+parameters:
+
+| | parameters | optimizer |
+|---|---:|---|
+| U-Net + fusion projection | 30.99 M | `SGD(lr 5e-4, momentum 0.99, nesterov, wd 3e-5)` -- **identical to C0** |
+| EVA blocks 4-11 + final norm | 56.74 M | `AdamW(base lr 5e-5, betas (0.9, 0.98), eps 1e-6, wd 0.05, none on 1-D)` |
+| EVA stem + blocks 0-3 | 29.61 M | frozen, never handed to an optimizer |
+
+with **layer-wise lr decay 0.7** over the AdamW groups (5e-5 at the final norm down to
+2.9e-6 at block 4). nnU-Net's `PolyLRScheduler` writes one lr into *every* group and
+would erase that ladder at epoch 0, so each group carries an `lr_scale` and
+`GroupScaledPolyLRScheduler` decays them together while keeping the ratios.
+
+`torch.compile` is disabled for this network (`_do_i_compile`): the branch mixes a
+`no_grad` prefix, gradient checkpointing and a `forward` that dispatches on
 `self.training`, and dynamo either graph-breaks through all of it or recompiles per
 shape.
 
-**Epoch 0 is B10, exactly.** The zero-init projections make the fused logits the
-baseline logits, and the same strict graft plus `nnUNet_arch_refbatch` gate as B13/B14
-asserts it: `max |logit diff| 0.000e+00` against a freshly built `PlainConvUNet` under
-the same weights, deep supervision on and off. `network.apply(network.initialize)`
-would otherwise overwrite the pretrained EVA weights with Kaiming noise, so the whole
-backbone is tagged with the same `_freeze_init` flag the zeroed convolutions use;
-`test_networks_eva.py` checks the backbone against a fresh `timm.create_model` and
-requires bit-equality.
+**Epoch 0 is B10, exactly**, and the branch demonstrably trains. The zero-init
+projection makes the fused logits the baseline logits, and the same strict graft plus
+`nnUNet_arch_refbatch` gate as B13/B14 asserts it: `max |logit diff| 0.000e+00` against
+a freshly built `PlainConvUNet` under the same weights, deep supervision on and off.
+The arch trainer's per-epoch diagnostic then shows the branch is not merely present but
+moving -- after one epoch, `|grad| = 7.5e-1` and `|w-w0|/|w0| = 0.0039` over the added
+tensors, against B13's interior, which never left its initialisation.
+
+**Pretrained weights never ship as a download.** The plans write
+`eva_pretrained: false`, so constructing the class -- which the predictor does, from the
+shipped `plans.json`, inside a container started with `--network=none` -- builds the
+backbone randomly and touches no network. The trainer sets `AUTOPET_EVA_PRETRAINED=1`
+for the duration of its own `initialize()`, so the timm weights are fetched exactly
+once, at weight-surgery time, before the arch trainer snapshots the added parameters;
+from then on they travel in our own checkpoint (`network_weights` contains all 86.35 M
+EVA tensors -- verified).
 
 **Cost.** `test_networks_eva.py --bench`, batch 2 at the plans patch, fp16 autocast,
-A100-80GB **sharing the GPU with an evaluation job** (so both rows are inflated -- B10
-benches at 125.1 ms idle):
+A100-80GB, **sharing the GPU with other trainings and evaluations** (both rows are
+inflated; B10 benches at 125.1 ms on an idle box):
 
 | network | parameters | ms / optimizer step | peak VRAM |
-|---|---:|---:|---:|
-| B10 (`PlainConvUNet`) | 30.79 M | 363.5 | 5.18 GiB |
-| B17 (`EVAFusionUNet`) | **117.63 M** (86.35 M EVA, of which 56.74 M trainable; 0.49 M fusion) | 1038.1 | 6.81 GiB |
+|---|---|---:|---:|
+| B10 (`PlainConvUNet`) | 30.79 M | 328.3 | 5.62 GiB |
+| B17 (`EVAFusionUNet`) | **117.33 M** (86.35 M EVA, 56.74 M of it trainable; 0.20 M fusion) | 871.3 | 6.90 GiB |
 
-In the real run the steady epoch is **174 s** (against B10's 59 s) at **9.7 GiB**, so
-120 epochs is ~5.8 h. The branch turns a dataloader-bound run into a GPU-bound one; it
-is the one variant here whose cost is not free.
+Measured steady epoch: **174 s** with one evaluation co-resident, **~300-380 s** on a box
+also running two other trainings, against B10's 59 s (80 epochs ~= 7-8 h there). The branch turns a
+dataloader-bound run into a GPU-bound one; it is the one variant here whose cost is not
+free. `eva_z_stride` (2 or 8) halves or eighths the slice count if a slot demands it --
+the fused stage only has 14 z-bins to fill.
 
-**Container.** The trained checkpoint carries the full 86.35 M EVA tensors (823 MB
-total), so evaluation needs no download -- but the *constructor* still calls
-`timm.create_model(..., pretrained=True)`, so an image must ship `timm==1.0.22` **and**
-the `eva02_base_patch14_448.mim_in22k_ft_in22k_in1k` weights in the HF cache. A failed
-download is a warning rather than an error and the checkpoint then supplies the weights;
-`AUTOPET_EVA_PRETRAINED=0` skips the attempt outright. The weights are MIT
-(BAAI-Vision `EVA/LICENSE`; the timm mirror is tagged `license: mit`).
+**Container.** The trained checkpoint carries the full 86.35 M EVA tensors (~1.05 GB
+per checkpoint including optimizer state), so evaluation needs no download -- but the
+class is still built with `timm`, so **`timm==1.0.22` is now in
+`requirements-submission.txt`** and the image must contain it. Belt and braces for the
+network-less container: set `ENV HF_HUB_OFFLINE=1` and `ENV AUTOPET_EVA_PRETRAINED=0`
+in the `Dockerfile`. The weights are MIT (BAAI-Vision `EVA/LICENSE`; the timm mirror is
+tagged `license: mit`).
 
 ```bash
 python -m train.make_arch_plans --base-plans $PREP/$DS/nnUNetPlans_interactive.json \
@@ -671,8 +711,8 @@ python -m train.test_networks_eva --plans $PREP/$DS/nnUNetPlans_interactive.json
     --checkpoint <B10 checkpoint_final.pth> --cuda --bench
 
 nnUNet_arch_refbatch=<work>/b10_ref_batch.pt INIT=<B10 checkpoint_final.pth> \
-TAG=b17 TRAINER=nnUNetTrainer_InteractiveB17 PLANS=nnUNetPlans_b17 EPOCHS=120 \
-    bash scripts/env/train_b6.sh
+TAG=b17 TRAINER=nnUNetTrainer_InteractiveB17_80epochs PLANS=nnUNetPlans_b17 EPOCHS=80 \
+ALLOW_CONCURRENT_TRAIN=1 NICE=5 bash scripts/env/train_b6.sh
 ```
 
 ## Sampling and gating variants (S1, N1)

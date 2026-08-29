@@ -19,7 +19,10 @@ as C0 does, and the row still measures the branch.
 
 **A scheduler that preserves the ladder.** nnU-Net's ``PolyLRScheduler`` writes one
 ``new_lr`` into *every* param group, so layer-wise decay would be erased at epoch 0.
-``LayerDecayPolyLR`` decays each group from its own ``base_lr`` instead.
+Each group therefore carries an ``lr_scale`` and the shared
+``GroupScaledPolyLRScheduler`` (``nnUNetTrainer_InteractiveArch``) multiplies the
+poly-decayed base rate by it, so the whole ladder decays together and keeps its
+ratios.
 
 **Pretrained weights enter at surgery time.** The network is constructed with
 ``eva_pretrained: false`` (so the predictor never reaches the network inside a
@@ -35,26 +38,19 @@ import os
 
 import torch
 
-from nnunetv2.training.lr_scheduler.polylr import PolyLRScheduler
-
 try:  # package import (src/train is a package)
-    from .nnUNetTrainer_InteractiveArch import nnUNetTrainer_InteractiveArch
+    from .nnUNetTrainer_InteractiveArch import (nnUNetTrainer_InteractiveArch,
+                                                GroupScaledPolyLRScheduler)
 except ImportError:  # flat import (folder on sys.path, e.g. nnUNet_extTrainer)
-    from nnUNetTrainer_InteractiveArch import nnUNetTrainer_InteractiveArch  # type: ignore
+    from nnUNetTrainer_InteractiveArch import (  # type: ignore
+        nnUNetTrainer_InteractiveArch, GroupScaledPolyLRScheduler)
 
 
 __all__ = [
-    "LayerDecayPolyLR",
     "nnUNetTrainer_InteractiveB17",
     "nnUNetTrainer_InteractiveB17_80epochs",
     "nnUNetTrainer_InteractiveB17_2epochs",
 ]
-
-#: set only while this trainer is building its network, so that *training* loads the
-#: timm weights and *inference* -- which constructs the same class from the shipped
-#: plans, offline -- never does
-_LOAD_PRETRAINED_EVA = False
-
 
 def _env_float(name: str, default: float) -> float:
     v = os.environ.get(name)
@@ -64,23 +60,6 @@ def _env_float(name: str, default: float) -> float:
 def _env_flag(name: str, default: bool) -> bool:
     v = os.environ.get(name)
     return default if v is None or v == "" else v.lower() in ("1", "true", "t", "yes")
-
-
-class LayerDecayPolyLR(PolyLRScheduler):
-    """PolyLR that decays every param group from its **own** ``base_lr``.
-
-    nnU-Net's version assigns a single ``new_lr`` to all groups, which is right for a
-    one-group optimizer and silently erases a layer-wise decay ladder otherwise.
-    """
-
-    def step(self, current_step=None):
-        if current_step is None or current_step == -1:
-            current_step = self.ctr
-            self.ctr += 1
-        factor = (1 - current_step / self.max_steps) ** self.exponent
-        for group in self.optimizer.param_groups:
-            group["lr"] = group.get("base_lr", self.initial_lr) * factor
-        self._last_lr = [group["lr"] for group in self.optimizer.param_groups]
 
 
 class _DualOptimizer(torch.optim.Optimizer):
@@ -96,10 +75,13 @@ class _DualOptimizer(torch.optim.Optimizer):
     def __init__(self, *optimizers: torch.optim.Optimizer):
         assert optimizers, "need at least one optimizer"
         self._opts = list(optimizers)
+        self._sealed = False
         params = [p for o in self._opts for g in o.param_groups for p in g["params"]]
+        # Optimizer.__init__ calls add_param_group, so the seal goes on afterwards
         super().__init__(params, {"lr": self._opts[0].param_groups[0]["lr"]})
         # adopt the children's dicts; edits by a scheduler now land on the children
         self.param_groups = [g for o in self._opts for g in o.param_groups]
+        self._sealed = True
 
     @property
     def state(self):                      # nnU-Net never writes it; GradScaler reads
@@ -131,7 +113,10 @@ class _DualOptimizer(torch.optim.Optimizer):
         self.param_groups = [g for o in self._opts for g in o.param_groups]
 
     def add_param_group(self, param_group):
-        raise NotImplementedError("_DualOptimizer has fixed groups")
+        if getattr(self, "_sealed", False):
+            raise NotImplementedError(
+                "_DualOptimizer has fixed groups; add to the child optimizer instead")
+        return super().add_param_group(param_group)
 
 
 class nnUNetTrainer_InteractiveB17(nnUNetTrainer_InteractiveArch):
@@ -149,23 +134,33 @@ class nnUNetTrainer_InteractiveB17(nnUNetTrainer_InteractiveArch):
     # ------------------------------------------------------------------
     # network construction: the one place the timm weights are fetched
     # ------------------------------------------------------------------
-    @staticmethod
-    def build_network_architecture(*args, **kwargs):
-        from nnunetv2.training.nnUNetTrainer.nnUNetTrainer import nnUNetTrainer as _Base
-        net = _Base.build_network_architecture(*args, **kwargs)
-        if _LOAD_PRETRAINED_EVA and hasattr(net, "load_pretrained_eva"):
-            net.load_pretrained_eva()
-        return net
-
     def initialize(self):
-        global _LOAD_PRETRAINED_EVA
+        """Build the network with the pretrained backbone, then graft and gate.
+
+        ``EVAFusionUNet`` honours ``AUTOPET_EVA_PRETRAINED`` and is otherwise built
+        with a random backbone, so the predictor -- which constructs the same class
+        from the shipped ``plans.json`` inside a ``--network=none`` container -- never
+        reaches the hub. Setting the flag *here*, for the duration of this call only,
+        is what makes "pretrained at training, checkpoint at inference" a property of
+        the trainer rather than of the plans.
+
+        Doing it inside the constructor also puts the pretrained tensors in place
+        before ``nnUNetTrainer_InteractiveArch`` snapshots the added parameters, so its
+        ``|w-w0|/|w0|`` diagnostic measures drift away from *pretraining*.
+        """
         want = _env_flag("AUTOPET_EVA_INIT_PRETRAINED",
                          not getattr(self, "_continue_training", False))
-        prev, _LOAD_PRETRAINED_EVA = _LOAD_PRETRAINED_EVA, want
+        key = "AUTOPET_EVA_PRETRAINED"
+        prev = os.environ.get(key)
+        if want:
+            os.environ[key] = "1"
         try:
             super().initialize()
         finally:
-            _LOAD_PRETRAINED_EVA = prev
+            if prev is None:
+                os.environ.pop(key, None)
+            else:
+                os.environ[key] = prev
 
     def _do_i_compile(self) -> bool:
         """Never ``torch.compile`` this network.
@@ -203,12 +198,13 @@ class nnUNetTrainer_InteractiveB17(nnUNetTrainer_InteractiveArch):
         for g in ladder:
             decay_p = [p for p in g["params"] if p.ndim > 1]
             nodecay_p = [p for p in g["params"] if p.ndim <= 1]
+            scale = g["lr"] / self.initial_lr      # GroupScaledPolyLR multiplies by this
             if decay_p:
                 adam_groups.append({"params": decay_p, "lr": g["lr"],
-                                    "base_lr": g["lr"], "weight_decay": eva_wd})
+                                    "lr_scale": scale, "weight_decay": eva_wd})
             if nodecay_p:
                 adam_groups.append({"params": nodecay_p, "lr": g["lr"],
-                                    "base_lr": g["lr"], "weight_decay": 0.0})
+                                    "lr_scale": scale, "weight_decay": 0.0})
         adamw = torch.optim.AdamW(adam_groups, lr=eva_lr, betas=tuple(self.EVA_BETAS),
                                   eps=self.EVA_EPS)
 
@@ -216,13 +212,13 @@ class nnUNetTrainer_InteractiveB17(nnUNetTrainer_InteractiveArch):
         eva_ids = {id(p) for p in net.eva.parameters()}
         rest = [p for p in net.parameters() if p.requires_grad and id(p) not in eva_ids]
         sgd = torch.optim.SGD([{"params": rest, "lr": self.initial_lr,
-                                "base_lr": self.initial_lr}],
+                                "lr_scale": 1.0}],
                               self.initial_lr, weight_decay=self.weight_decay,
                               momentum=0.99, nesterov=True)
 
         # SGD first: nnU-Net logs param_groups[0]['lr'], which should stay B10's number
         optimizer = _DualOptimizer(sgd, adamw)
-        lr_scheduler = LayerDecayPolyLR(optimizer, self.initial_lr, self.num_epochs)
+        lr_scheduler = GroupScaledPolyLRScheduler(optimizer, self.initial_lr, self.num_epochs)
 
         n_rest = sum(p.numel() for p in rest)
         n_eva = sum(p.numel() for g in ladder for p in g["params"])

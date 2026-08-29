@@ -33,3 +33,6 @@ numpy==2.1.3
 #                           simulation and never runs inside our container.  They add
 #                           ~1.5 GB and a hard CUDA-version coupling.
 #   pynvml               -- unused.
+# B17: the EVA-02-B branch of train.networks_eva.EVAFusionUNet is built with timm.
+# The weights travel in our checkpoint; timm must still be importable to construct it.
+timm==1.0.22
