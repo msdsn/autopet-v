@@ -227,7 +227,10 @@ def is_probably_negative(
             veto("scribbles_present")
         if p.only_iteration_zero and iteration != 0:
             veto("not_iteration_zero")
-        if p.max_total_volume_ml is not None and feats["total_volume_ml"] >= p.max_total_volume_ml:
+        vol_limit = p.max_total_volume_ml
+        if p.max_total_volume_ml_by_tracer:
+            vol_limit = p.max_total_volume_ml_by_tracer.get(tracer or "unknown", vol_limit)
+        if vol_limit is not None and feats["total_volume_ml"] >= vol_limit:
             veto("volume")
         if (p.max_component_volume_ml is not None
                 and feats["largest_component_ml"] >= p.max_component_volume_ml):

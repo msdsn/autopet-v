@@ -19,6 +19,7 @@ from .compliance import _as_slices
 from .utils import as_points_array, points_in_bounds, unique_points, voxel_volume_ml
 
 __all__ = [
+    "split_large_components",
     "remove_small_components",
     "remove_components_v2",
     "recruit_components",
@@ -603,6 +604,125 @@ def fill_small_holes(
     return m.astype(np.uint8)
 
 
+def split_large_components(
+    mask: np.ndarray,
+    pet: np.ndarray,
+    spacing: Sequence[float],
+    *,
+    min_volume_ml: float = 10.0,
+    h_depth_suv: float = 1.0,
+    peak_min_distance_mm: float = 10.0,
+    min_fragment_ml: float = 0.5,
+    max_fragments: int = 8,
+    connectivity: int = 18,
+    protect_points=None,
+    return_info: bool = False,
+):
+    """Cut an oversized component along the watershed line between its PET maxima.
+
+    A small lesion swallowed by a much larger predicted component is scored as a miss on
+    *both* sides: the union's IoU against the small lesion falls below 0.1, so the lesion
+    counts as a false negative and the component, matching nothing else, counts as a
+    false positive.  The remedy needs no extra sensitivity -- the voxels are already
+    predicted -- only a cut.
+
+    A component qualifies when it is at least ``min_volume_ml`` and contains two or more
+    maxima of the ~1 mL-smoothed SUV that stand at least ``h_depth_suv`` above the saddle
+    joining them (``skimage.morphology.h_maxima``) and lie at least
+    ``peak_min_distance_mm`` apart.  The cut is the watershed line between those maxima,
+    removed from the mask so the fragments are genuinely disconnected under
+    ``connectivity``; if removing the line does not separate them the line is thickened
+    once, and if it still does not the split is abandoned and the component restored.
+
+    Splitting a component that is already matched costs nothing (the matcher does not
+    punish splits), so the only real risk is a fragment that matches nothing, which
+    ``min_fragment_ml`` bounds.  A component holding a tumor scribble is never split --
+    the scribble is a statement about one lesion, and a cut could put its voxels in a
+    fragment we would then have to grow back.
+    """
+    from scipy import ndimage
+    from skimage.morphology import h_maxima
+    from skimage.segmentation import watershed
+
+    m = np.ascontiguousarray(np.asarray(mask) > 0)
+    info: Dict[str, Any] = {
+        "n_candidates": 0, "n_split": 0, "n_fragments_added": 0, "removed_ml": 0.0,
+    }
+    if not m.any() or min_volume_ml <= 0:
+        return (m.astype(np.uint8), info) if return_info else m.astype(np.uint8)
+
+    vox_ml = voxel_volume_ml(spacing)
+    labels = cc3d.connected_components(m.view(np.uint8), connectivity=connectivity)
+    stats = cc3d.statistics(labels)
+    counts, boxes = stats["voxel_counts"], stats["bounding_boxes"]
+    protected = set(_protected_labels(labels, protect_points).tolist())
+    box_mm = [max(1, int(2 * int(6.2 // float(sp)) + 1)) for sp in spacing]
+    pet = np.asarray(pet)
+
+    for lab in range(1, len(counts)):
+        if counts[lab] == 0 or lab in protected:
+            continue
+        if counts[lab] * vox_ml < min_volume_ml:
+            continue
+        info["n_candidates"] += 1
+        sl = _as_slices(boxes[lab])
+        comp = labels[sl] == lab
+        pet_c = np.asarray(pet[sl], dtype=np.float32)
+        smooth = ndimage.uniform_filter(pet_c, size=box_mm, mode="nearest")
+
+        field = np.where(comp, smooth, 0.0).astype(np.float32)
+        peaks = (h_maxima(field, float(h_depth_suv)) > 0) & comp
+        if not peaks.any():
+            continue
+        plateaus = cc3d.connected_components(
+            np.ascontiguousarray(peaks).view(np.uint8), connectivity=26)
+        ids = [i for i in range(1, int(plateaus.max()) + 1) if (plateaus == i).any()]
+        if len(ids) < 2:
+            continue
+        # drop maxima that sit on top of each other
+        cents = np.array([np.argwhere(plateaus == i).mean(axis=0) for i in ids])
+        keep, sp = [], np.asarray(spacing, dtype=float)
+        for idx, c in enumerate(cents):
+            if all(np.linalg.norm((c - cents[j]) * sp) >= peak_min_distance_mm for j in keep):
+                keep.append(idx)
+        if len(keep) < 2:
+            continue
+        markers = np.zeros(comp.shape, dtype=np.int32)
+        for new_id, idx in enumerate(keep[:max_fragments], start=1):
+            markers[plateaus == ids[idx]] = new_id
+
+        ws = watershed(-smooth, markers, mask=comp, watershed_line=True)
+        cut = comp & (ws == 0)
+        if not cut.any():
+            continue
+        kept = comp & ~cut
+        if not kept.any():
+            continue
+        frag = cc3d.connected_components(
+            np.ascontiguousarray(kept).view(np.uint8), connectivity=connectivity)
+        n_frag = int(frag.max())
+        if n_frag < 2:
+            # the line was face-connected only; thicken it once and retry
+            cut = ndimage.binary_dilation(cut, structure=np.ones((3, 3, 3), bool)) & comp
+            kept = comp & ~cut
+            if not kept.any():
+                continue
+            frag = cc3d.connected_components(
+                np.ascontiguousarray(kept).view(np.uint8), connectivity=connectivity)
+            n_frag = int(frag.max())
+            if n_frag < 2:
+                continue
+        fc = np.bincount(frag.ravel())[1:]
+        if len(fc) == 0 or (fc.min() * vox_ml) < min_fragment_ml:
+            continue
+        m[sl] &= ~cut
+        info["n_split"] += 1
+        info["n_fragments_added"] += n_frag - 1
+        info["removed_ml"] += float(int(cut.sum()) * vox_ml)
+
+    return (m.astype(np.uint8), info) if return_info else m.astype(np.uint8)
+
+
 def cleanup_mask(
     mask: np.ndarray,
     pet: np.ndarray,
@@ -676,6 +796,21 @@ def cleanup_mask(
             min_volume_ml=cfg.recruit_min_volume_ml,
             max_components=cfg.recruit_max_components,
             connectivity=cfg.connectivity,
+            return_info=True,
+        )
+
+    if cfg.split_large_components:
+        mask, info["split"] = split_large_components(
+            mask,
+            pet,
+            spacing,
+            min_volume_ml=cfg.split_min_volume_ml,
+            h_depth_suv=cfg.split_h_depth_suv,
+            peak_min_distance_mm=cfg.split_peak_min_distance_mm,
+            min_fragment_ml=cfg.split_min_fragment_ml,
+            max_fragments=cfg.split_max_fragments,
+            connectivity=cfg.connectivity,
+            protect_points=protect_points,
             return_info=True,
         )
     if cfg.fill_holes:

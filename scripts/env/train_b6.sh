@@ -11,6 +11,8 @@
 #
 #   TRAINER=<class> TAG=<name>            # another trainer of the same family; TAG names
 #                                         # the log, progress file and tmux sessions
+#   PLANS=<plans-name>                    # a variant plans file (architecture variants)
+#   ALLOW_CONCURRENT_TRAIN=1              # a second trainer on the same GPU (pair with NICE)
 #   ALLOW_BUSY_GPU=1 NICE=5               # co-resident with another GPU job
 #
 # The B6 knobs live in the trainer class, so this script unsets the matching
@@ -19,7 +21,7 @@ set -uo pipefail
 
 DRIVE=/content/drive/MyDrive/autoPET
 DATASET=Dataset998_AutoPETV
-PLANS=nnUNetPlans_interactive
+PLANS=${PLANS:-nnUNetPlans_interactive}
 TRAINER=${TRAINER:-nnUNetTrainer_InteractiveB6}
 SRC_TRAINER=nnUNetTrainer_Interactive          # the run B6 continues from
 PREP=/content/nnUNet/prep_local
@@ -50,7 +52,11 @@ die() { echo "[$(date -u +%H:%M:%S)] ERROR: $*" >&2; exit 1; }
 
 # ------------------------------------------------------------------ 0. guards
 tmux has-session -t train_$TAG 2>/dev/null && die "tmux session train_$TAG already exists"
-pgrep -f "nnUNetv2_train 998 " >/dev/null 2>&1 && die "an nnUNetv2_train 998 process is already running"
+if pgrep -f "nnUNetv2_train 998 " >/dev/null 2>&1; then
+  [ "${ALLOW_CONCURRENT_TRAIN:-0}" = "1" ] \
+    || die "an nnUNetv2_train 998 process is already running"
+  say "ALLOW_CONCURRENT_TRAIN=1: a second trainer will share the GPU"
+fi
 CONT=""
 if [ "$MODE" = "--resume" ]; then
   mkdir -p "$RESDIR"
@@ -167,6 +173,15 @@ export AUTOPETV_REPO=$AUTOPETV_REPO
 # continuation: load the weights, start a fresh optimizer and a fresh PolyLR
 export nnUNet_interactive_pretrained=$INIT
 export nnUNet_interactive_save_every=5
+export nnUNet_arch_refbatch=${nnUNet_arch_refbatch:-}
+${nnUNet_n_proc_DA:+export nnUNet_n_proc_DA=$nnUNet_n_proc_DA}
+# variant knobs (S1 sampler, N1 presence gate); only the ones set here are baked in
+${S1_GAMMA:+export S1_GAMMA=$S1_GAMMA}
+${S1_CONNECTIVITY:+export S1_CONNECTIVITY=$S1_CONNECTIVITY}
+${S1_MAX_SAMPLES:+export S1_MAX_SAMPLES=$S1_MAX_SAMPLES}
+${S1_CACHE_DIR:+export S1_CACHE_DIR=$S1_CACHE_DIR}
+${N1_AUX_W:+export N1_AUX_W=$N1_AUX_W}
+${N1_AUX_POS_WEIGHT:+export N1_AUX_POS_WEIGHT=$N1_AUX_POS_WEIGHT}
 # the B6 knobs live in the trainer class -- never let a stale export win
 unset nnUNet_interactive_k_probs nnUNet_interactive_p_independent \\
       nnUNet_interactive_epochs nnUNet_interactive_lr \\

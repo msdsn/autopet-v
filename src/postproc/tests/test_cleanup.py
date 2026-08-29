@@ -18,7 +18,7 @@ from postproc.cleanup import (
 )
 from postproc.config import CleanupConfig
 
-from conftest import SPACING, make_phantom
+from conftest import SPACING, Blob, make_phantom, sphere_mask
 
 
 def _speck(mask, pet, centre, n=3, suv=1.0):
@@ -495,3 +495,88 @@ def test_v2_union_still_protects_a_tumor_scribble_and_never_empties():
     assert kept[10:14, 10, 10].sum() == 4
     kept = remove_components_v2(mask, pet, SPACING, prob=prob, rules=rules)
     assert kept.sum() == 4        # the "never empty" guard
+
+
+# ---------------------------------------------------------------------------
+# splitting an oversized component (A12)
+# ---------------------------------------------------------------------------
+def test_split_frees_a_small_lesion_swallowed_by_a_big_one():
+    """A small lesion inside a much larger predicted component scores as a miss on both
+    sides: the union's IoU against it is < 0.1, so it is a false negative and the
+    component matches nothing.  Cutting the union fixes both without new sensitivity."""
+    import cc3d
+    from postproc.cleanup import split_large_components
+
+    shape = (110, 70, 60)
+    ct, pet, gt, bm = make_phantom(
+        shape=shape,
+        blobs=[Blob(centre=(35, 35, 30), radius_mm=22.0, suv=9.0, name="big"),
+               Blob(centre=(80, 35, 30), radius_mm=7.0, suv=10.0, name="small")],
+        background_suv=0.6, seed=-1,
+    )
+    bridge = np.zeros(shape, dtype=bool)
+    bridge[45:79, 33:38, 28:33] = True
+    pet[bridge & (pet < 2.5)] = 2.5
+    mask = (gt.astype(bool) | bridge).astype(np.uint8)
+    assert cc3d.connected_components(np.ascontiguousarray(mask), connectivity=18).max() == 1
+
+    out, info = split_large_components(
+        mask, pet, SPACING, min_volume_ml=5.0, h_depth_suv=1.0, return_info=True
+    )
+    assert info["n_split"] == 1, info
+    n = cc3d.connected_components(np.ascontiguousarray(out), connectivity=18).max()
+    assert n >= 2, "the component was not actually disconnected"
+
+    # the small lesion must now have a fragment of its own that clears IoU 0.1
+    lab = cc3d.connected_components(np.ascontiguousarray(out), connectivity=18)
+    small = bm["small"]
+    best = 0.0
+    for i in range(1, int(lab.max()) + 1):
+        f = lab == i
+        inter = int((f & small).sum())
+        if inter:
+            best = max(best, inter / int((f | small).sum()))
+    assert best > 0.1, f"best IoU against the swallowed lesion is only {best:.3f}"
+
+
+def test_split_leaves_a_single_focus_component_alone(phantom):
+    from postproc.cleanup import split_large_components
+
+    pet, gt, blobs = phantom["pet"], phantom["gt"], phantom["blobs"]
+    out, info = split_large_components(
+        gt, pet, SPACING, min_volume_ml=0.05, h_depth_suv=1.0, return_info=True
+    )
+    assert info["n_split"] == 0, info
+    assert np.array_equal(out.astype(bool), gt.astype(bool))
+
+
+def test_split_never_touches_a_scribbled_component(phantom):
+    from postproc.cleanup import split_large_components
+
+    pet, gt, blobs = phantom["pet"], phantom["gt"], phantom["blobs"]
+    out, info = split_large_components(
+        gt, pet, SPACING, min_volume_ml=0.01, h_depth_suv=0.01,
+        protect_points=[[24, 24, 20]], return_info=True
+    )
+    assert out[24, 24, 20] == 1
+    assert (gt.astype(bool) & blobs["hot"]).sum() == (out.astype(bool) & blobs["hot"]).sum()
+
+
+def test_split_rejects_a_cut_that_would_leave_a_speck():
+    from postproc.cleanup import split_large_components
+
+    shape = (80, 60, 50)
+    ct, pet, gt, bm = make_phantom(
+        shape=shape,
+        blobs=[Blob(centre=(30, 30, 25), radius_mm=18.0, suv=9.0, name="big")],
+        background_suv=0.6, seed=-1,
+    )
+    nub = np.zeros(shape, dtype=bool)
+    nub[47:50, 29:32, 24:27] = True
+    pet[nub] = 8.0
+    mask = (gt.astype(bool) | nub).astype(np.uint8)
+    out, info = split_large_components(
+        mask, pet, SPACING, min_volume_ml=1.0, h_depth_suv=1.0,
+        min_fragment_ml=5.0, return_info=True
+    )
+    assert info["n_split"] == 0, "a cut leaving a sub-threshold fragment was accepted"

@@ -16,6 +16,10 @@ stock `nnUNetv2_train` — no fork of nnU-Net, no changes to the preprocessed st
 | `make_synthetic_dataset.py` | tiny fake preprocessed dataset for end-to-end tests |
 | `bench_transform.py` | per-sample cost and correctness checks of the simulation |
 | `viz.py` | sanity-check figures straight out of the real dataloader |
+| `networks.py` | the B13/B14 network classes and the weight surgery onto them |
+| `nnUNetTrainer_InteractiveArch.py` | the B13/B14/C0 trainers and the epoch-0 identity gate |
+| `make_arch_plans.py` | writes the variant plans (`nnUNetPlans_b13/b14.json`) |
+| `test_networks.py` | shapes, epoch-0 equivalence, parameter counts, speed and VRAM |
 
 ## Model input
 
@@ -445,6 +449,114 @@ false-positive component.*
 
 ![lesion-free patch with a hallucinated component](img/train_interaction_negative_patch.png)
 *Negative-case state: no lesion in the patch, one hallucinated component on physiological uptake.*
+
+## Architecture variants
+
+Two continuations of the B10 checkpoint (`nnUNetTrainer_InteractiveV2_negfp`) that change the
+**network** and nothing else: same store, same interaction distribution, same loss, same 120-epoch
+schedule at lr 5e-4. nnU-Net builds the network from `configurations.<cfg>.architecture` —
+`network_class_name` resolved with `pydoc.locate`, `arch_kwargs` handed to the constructor — so a
+variant is a plans file plus a class, not a fork of the trainer.
+
+| | class | plans | trainer | added parameters |
+|---|---|---|---|---|
+| B13 | `train.networks.GlobalContextUNet` | `nnUNetPlans_b13` | `nnUNetTrainer_InteractiveB13` | **+0.48 M (+1.6 %)** |
+| B14 | `train.networks.EditBranchUNet` | `nnUNetPlans_b14` | `nnUNetTrainer_InteractiveB14` | **+0.28 M (+0.9 %)** |
+| C0 | `PlainConvUNet` (unchanged) | `nnUNetPlans_interactive` | `nnUNetTrainer_InteractiveC0` | 0 |
+
+C0 is the control: the same continuation with no architectural change, so a variant's delta measures
+the block rather than the extra epochs.
+
+`train.networks` resolves because `src` is on `PYTHONPATH` both on the training box and inside the
+container (`PYTHONPATH=/opt/algorithm:/opt/algorithm/src`, `src/` is copied into the image), and the
+trainer writes its `plans.json` next to `fold_0/`, so the predictor rebuilds the same class from the
+model folder with no extra wiring.
+
+### B13 — global-context bottleneck
+
+A residual transformer block on the **deepest** encoder feature map. At the plans patch the
+bottleneck is `7×5×4 = 140` tokens of 320 features (the last stage's stride is `[1, 2, 2]`, not
+`[2, 2, 2]`), so whole-patch context costs a few hundred microseconds. The rationale is the pair of
+decisions a purely convolutional receptive field cannot make locally: physiological uptake versus
+lesion, and "this patch contains nothing".
+
+The block follows EVA-02 (arXiv:2303.11331): pre-norm layers with **sub-LN** — an extra `LayerNorm`
+on the attention and feed-forward outputs before their last projection — a **SwiGLU** feed-forward of
+hidden width `2/3 · 4d`, and **3D rotary position embeddings** on the queries and keys instead of a
+learned positional table, so the block carries no size-dependent parameter and transfers to any patch
+shape. The `n_head_dim/2` rotation pairs are split across the three axes, and each axis rotates by its
+own voxel coordinate. The stack runs at a reduced width (`context_dim = 128` against 320 features)
+behind a 1×1 convolution, which is what keeps it under half a million parameters; a second 1×1
+convolution projects back and is **zero-initialised**, making the whole block an exact identity at
+initialisation while still receiving a non-zero gradient on the first step.
+
+`context_type = "mamba"` swaps in a bidirectional selective state-space block (two `mamba_ssm` scans
+over the forward and reversed token sequence, shared zero-initialised output projection) where
+`mamba_ssm` is installed. It is not part of the shipped configuration.
+
+### B14 — edit branch
+
+The interaction currently enters only at the input, five convolutions away from the deepest features
+and 32 upsamplings away from the output. B14 keeps the pretrained encoder and decoder as the
+*automatic* branch and adds a second, lightweight decoder branch (16–32 features per stage) that sees
+the guidance at **every** scale. At each decoder stage it concatenates its own upsampled state, a 1×1
+projection of the encoder skip, and the three interaction channels max-pooled to that stage's grid,
+then emits an **edit logit** that is added to the automatic logit. Deep supervision is applied to the
+sum only; the branch is never supervised on its own.
+
+Max pooling rather than averaging carries the guidance down: a scribble is a thin structure whose
+*presence* must survive a 32× downsampling, and the clipped-EDT encoding is non-negative, so the
+maximum over a pooling window is the value at the stroke.
+
+The five edit segmentation heads are zero-initialised, so the fused logits are the automatic logits at
+initialisation.
+
+### Weight surgery and the epoch-0 gate
+
+`networks.graft_state_dict` loads the source checkpoint into the variant with `strict=False` and then
+raises unless **every** source tensor was consumed with a matching shape; the trainer additionally
+requires that the tensors left at their initialisation are exactly those under the variant's declared
+prefixes (`context.` for B13, `edit_*` for B14, none for C0). nnU-Net calls
+`network.apply(network.initialize)` after construction, which would re-initialise the zeroed
+convolutions with Kaiming; both classes override `initialize` to skip modules tagged during
+construction.
+
+That makes "epoch 0 is B10" checkable rather than assumed. `nnUNet_arch_refbatch` points at a file
+holding one fixed input batch and stock B10's deep-supervision outputs for it (written by
+`test_networks.py --emit-ref`); the trainer runs the grafted network on it at startup and aborts
+unless the maximum absolute logit difference is below 1e-5. Measured on the real checkpoint at the
+plans patch and batch, both variants reproduce B10 **exactly** (max |diff| `0.000e+00` at every deep
+supervision scale, deep supervision on and off).
+
+```bash
+python -m train.make_arch_plans --base-plans $PREP/$DS/nnUNetPlans_interactive.json \
+    --variant b13 --out $PREP/$DS/nnUNetPlans_b13.json
+python -m train.test_networks --plans $PREP/$DS/nnUNetPlans_interactive.json \
+    --checkpoint <B10 checkpoint_final.pth> \
+    --emit-ref <work>/b10_ref_batch.pt --cuda --bench
+
+nnUNet_arch_refbatch=<work>/b10_ref_batch.pt INIT=<B10 checkpoint_final.pth> \
+TAG=b13 TRAINER=nnUNetTrainer_InteractiveB13 PLANS=nnUNetPlans_b13 \
+    bash scripts/env/train_b6.sh
+```
+
+`train_b6.sh` gained `PLANS=` (a variant plans file) and `ALLOW_CONCURRENT_TRAIN=1` (a second trainer
+on the same GPU; pair it with `NICE` and a reduced `nnUNet_n_proc_DA`, because the runs contend for
+CPU, not for VRAM).
+
+### Cost of the two blocks
+
+Forward + backward at the plans configuration (batch 2, patch 112×160×128, fp16 autocast, A100-80GB),
+`test_networks.py --bench`:
+
+| network | parameters | ms / optimizer step | peak VRAM | GPU share of a 250-step epoch |
+|---|---:|---:|---:|---:|
+| B10 (`PlainConvUNet`) | 30.79 M | 125.1 | 5.18 GiB | 31.3 s |
+| B13 | 31.27 M | 130.8 | 5.18 GiB | 32.7 s |
+| B14 | 31.07 M | 186.1 | 5.93 GiB | 46.5 s |
+
+Against the measured 59.3 s steady-state epoch of the batch-2 configuration — which is
+**dataloader-bound**, not GPU-bound — B13 is free and B14 costs at most the 15 s of GPU time it adds.
 
 ## Known limitations
 

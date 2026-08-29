@@ -207,6 +207,28 @@ class CleanupConfig:
     #: cannot flood a case with false positives.
     recruit_max_components: int = 5
 
+    # --- split oversized components (off by default) ------------------------
+    #: A small lesion swallowed by a much larger predicted component is scored as a miss
+    #: on both sides: the union's IoU with the small lesion is below 0.1, so the lesion
+    #: is a false negative and the component matches nothing.  When enabled, a component
+    #: at least ``split_min_volume_ml`` large that contains two or more PET maxima
+    #: separated by a saddle at least ``split_h_depth_suv`` deep is cut along the
+    #: watershed line between those maxima, so the fragments are separate components for
+    #: an 18-connected matcher.  Splitting a component that *is* matched is free -- the
+    #: matcher does not punish splits -- so the only risk is a fragment that matches
+    #: nothing, which ``split_min_fragment_ml`` bounds.
+    split_large_components: bool = False
+    split_min_volume_ml: float = 10.0
+    #: Depth (in SUV) a second maximum must stand above the saddle joining it to the
+    #: first.  This is what distinguishes two lesions from one heterogeneous one.
+    split_h_depth_suv: float = 1.0
+    #: Maxima closer together than this are one focus.
+    split_peak_min_distance_mm: float = 10.0
+    #: Reject the split if it would leave a fragment smaller than this.
+    split_min_fragment_ml: float = 0.5
+    #: Never cut one component into more than this many fragments.
+    split_max_fragments: int = 8
+
 
 @dataclass
 class NegativeGateConfig:
@@ -240,6 +262,11 @@ class NegativeGateConfig:
     max_suv: float | None = None
     #: Per-tracer override of ``max_suv``, e.g. ``{"fdg": 5.0, "psma": 8.0}``.
     max_suv_by_tracer: Dict[str, float] | None = None
+    #: Per-tracer override of ``max_total_volume_ml``.  The lesion-free cases are not
+    #: split evenly between tracers -- most are FDG -- while most positives are PSMA, so
+    #: one global volume threshold buys negatives on one tracer with positives' Dice@0
+    #: and DMM@0 on the other.  ``{"fdg": 6.0, "psma": 0.0}`` disables the gate on PSMA.
+    max_total_volume_ml_by_tracer: Dict[str, float] | None = None
     #: Fire only while no scribble of either kind has been seen.  True for all six
     #: iterations of a lesion-free case, false forever once one arrives.
     require_no_scribbles: bool = True
