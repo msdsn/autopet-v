@@ -1,0 +1,39 @@
+fdg_0168f65af8_04-04-2003-NA-PET-CT Ganzkoerper  primaer mit KM-82224
+fdg_07fec0d985_05-04-2006-NA-PET-CT Ganzkoerper  primaer mit KM-11312
+fdg_0e9a98ecda_02-20-2003-NA-PET-CT Ganzkoerper  primaer mit KM-36915
+fdg_15cfa01130_02-24-2001-NA-PET-CT Ganzkoerper  primaer mit KM-49873
+fdg_1a1712f7d0_02-16-2007-NA-PET-CT Ganzkoerper  primaer mit KM-50630
+fdg_20a607649d_01-27-2007-NA-PET-CT Ganzkoerper  primaer mit KM-84908
+fdg_21853fc15b_10-12-2002-NA-PET-CT Ganzkoerper  primaer mit KM-55807
+fdg_23ed525e82_08-01-2003-NA-PET-CT Ganzkoerper  primaer mit KM-24219
+fdg_2a41141775_09-24-2005-NA-PET-CT Ganzkoerper  primaer mit KM-94391
+fdg_2b60c8135a_12-09-2005-NA-PET-CT Ganzkoerper  primaer mit KM-49696
+fdg_30287f520f_11-23-2003-NA-PET-CT Ganzkoerper  primaer mit KM-15029
+fdg_34aa521b46_03-30-2007-NA-PET-CT Ganzkoerper  primaer mit KM-44072
+fdg_389c968170_08-19-2005-NA-PET-CT Ganzkoerper  primaer mit KM-57236
+fdg_3cf68da275_03-20-2003-NA-PET-CT Ganzkoerper  primaer mit KM-37413
+fdg_3d6f425a76_01-28-2002-NA-PET-CT Ganzkoerper  primaer mit KM-67631
+fdg_402c061122_08-25-2003-NA-PET-CT Ganzkoerper nativ-22953
+fdg_44cfacfd6e_04-15-2007-NA-PET-CT Ganzkoerper  primaer mit KM-69456
+fdg_4cc808d16f_06-11-2006-NA-PET-CT Ganzkoerper  primaer mit KM-36881
+fdg_4ea806706c_10-30-2003-NA-PET-CT Ganzkoerper  primaer mit KM-87631
+fdg_55d55902c6_05-11-2006-NA-PET-CT Ganzkoerper  primaer mit KM-26216
+fdg_572fca6b44_05-23-2005-NA-PET-CT Ganzkoerper  primaer mit KM-19541
+fdg_5c1baad5d8_03-06-2003-NA-PET-CT Ganzkoerper  primaer mit KM-62219
+fdg_5d553bf6b4_09-16-2001-NA-PET-CT Ganzkoerper  primaer mit KM-78907
+fdg_5e339b2ecf_05-27-2006-NA-PET-CT Ganzkoerper  primaer mit KM-41089
+psma_02826eb561d6e0c7_2016-11-04
+psma_0ec0e718244b2a79_2015-06-19
+psma_0fcbcd7dc52d5b82_2020-06-19
+psma_14c16d0ce2b3229d_2020-02-22
+psma_1d7ce562612262cb_2019-11-01
+psma_28f9ecc106933531_2019-06-15
+psma_2ebe8e333bdbc130_2016-10-23
+psma_37af1d5c2373d0c4_2019-09-30
+psma_41260c3678449a2f_2020-06-12
+psma_4fc4664327ba8d0b_2014-06-06
+psma_4fc4664327ba8d0b_2014-12-19
+psma_5203bac8a9bfd9e2_2020-06-06
+psma_602ab51cfa8fae3b_2014-08-03
+psma_64a9ae45dc1a48f1_2018-11-12
+psma_64a9ae45dc1a48f1_2019-04-27

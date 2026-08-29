@@ -37,7 +37,7 @@ TAG=${TAG:-b6}
 LOG=/content/work/train/train_$TAG.log
 PROGRESS=/content/work/train/progress_$TAG.txt
 REPO=${REPO:-/content/autopet}
-EPOCHS=${EPOCHS:-120}                           # must match the trainer class NUM_EPOCHS
+EPOCHS=${EPOCHS:-${NUM_EPOCHS:-120}}                           # must match the trainer class NUM_EPOCHS
 # tmux sessions that own the GPU while an evaluation runs; B6 waits for all of them
 BUSY_SESSIONS=${BUSY_SESSIONS:-"b0 bchain"}
 # ALLOW_BUSY_GPU=1 runs alongside whatever else is on the GPU; this training is
@@ -182,6 +182,7 @@ ${S1_MAX_SAMPLES:+export S1_MAX_SAMPLES=$S1_MAX_SAMPLES}
 ${S1_CACHE_DIR:+export S1_CACHE_DIR=$S1_CACHE_DIR}
 ${N1_AUX_W:+export N1_AUX_W=$N1_AUX_W}
 ${N1_AUX_POS_WEIGHT:+export N1_AUX_POS_WEIGHT=$N1_AUX_POS_WEIGHT}
+${NUM_EPOCHS:+export NUM_EPOCHS=$NUM_EPOCHS}
 # the B6 knobs live in the trainer class -- never let a stale export win
 unset nnUNet_interactive_k_probs nnUNet_interactive_p_independent \\
       nnUNet_interactive_epochs nnUNet_interactive_lr \\

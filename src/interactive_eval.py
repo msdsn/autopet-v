@@ -1096,6 +1096,10 @@ def make_parser() -> argparse.ArgumentParser:
                    help="iteration 0 (no scribbles) + 5 corrections, per the organizers")
     p.add_argument("--cases", type=str, nargs="*", default=None,
                    help="case tags (with or without the _0000 suffix) to evaluate")
+    p.add_argument("--cases_file", type=str, default=None,
+                   help="file with one case tag per line (blank lines and #-comments "
+                        "ignored); merged into --cases. docs/valset_screen39.txt is the "
+                        "stratified 39-case screening subset")
     p.add_argument("--limit", type=int, default=None)
     p.add_argument("--prev_pred_dir", type=str, default=None,
                    help="reuse iter_k.nii.gz from a previous run (resume / re-score)")
@@ -1223,6 +1227,11 @@ def main(argv: Optional[Sequence[str]] = None) -> Dict:
         strict_pairing=args.strict_pairing,
         logger=logger,
     )
+    if args.cases_file:
+        with open(args.cases_file) as f:
+            from_file = [ln.strip() for ln in f
+                         if ln.strip() and not ln.lstrip().startswith("#")]
+        args.cases = list(args.cases or []) + from_file
     cases = select_cases(cases, args.cases, args.limit)
     assign_strategies(cases, args.strategy, args.strategy_order.split(","))
     if not cases:
