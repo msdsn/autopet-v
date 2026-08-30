@@ -13,8 +13,9 @@
 # `--network=none` => nothing may be downloaded at inference time.  The weights are
 # baked in at build time (below) and nnU-Net is initialised from an absolute path.
 #
-# The image ships the fine-tuned 5-channel interactive model under the post-processing
-# layer (AUTOPETV_PREDICTOR=interactive_postproc == harness variant B3).
+# The image ships two fine-tuned 5-channel interactive models -- a PlainConvUNet and a
+# ResEncL warm-started from LesionTracer -- whose foreground probabilities are averaged
+# under the post-processing layer (AUTOPETV_PREDICTOR=ensemble_postproc, harness row E2).
 # =============================================================================
 FROM pytorch/pytorch:2.6.0-cuda12.4-cudnn9-runtime
 # python 3.11 · torch 2.6.0+cu124 · cuDNN 9.  cu124 covers the evaluation A10G (sm_86)
@@ -170,7 +171,7 @@ COPY model_re/ /opt/algorithm/model_re/
 RUN if [ "$WITH_RE_MEMBER" = "1" ]; then \
       python -m pip install --no-cache-dir "gdown==5.2.2" \
    && mkdir -p /opt/algorithm/model_re/fold_0 \
-   && gdown --id "$RE_CKPT_GDRIVE_ID" \
+   && gdown --no-cookies -q "$RE_CKPT_GDRIVE_ID" \
             -O /opt/algorithm/model_re/fold_0/checkpoint_final.pth \
    && echo "$RE_CHECKPOINT_SHA256  /opt/algorithm/model_re/fold_0/checkpoint_final.pth" \
       | sha256sum -c - \
