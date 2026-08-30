@@ -58,6 +58,39 @@ repo root                     -> image
    covers a missing/corrupt model folder, a CUDA OOM, and a malformed `/input` -- all
    verified (see §7).
 
+### The model (v1.1: two members)
+
+v1.1 ships an ensemble of two interactive models that share the five-channel contract
+below but not their architecture:
+
+| member | folder in the image | architecture | plans | weights |
+|---|---|---|---|---|
+| B10 | `/opt/algorithm/model` | `PlainConvUNet`, 30.8 M | `nnUNetPlans_interactive` | repo parts (§2.1) |
+| RE | `/opt/algorithm/model_re` | `ResidualEncoderUNet`, 102.4 M, 192³ patches | `nnUNetPlans_re` | Drive file, sha256-pinned |
+
+`src/ensemble_predictor.py::EnsembleInteractivePredictor` runs both members to
+completion and averages their foreground probability **on the original image grid** —
+the only geometry the two plans agree on, since their preprocessed grids differ in
+spacing-independent shape. The mask is `p_fg > 0.5`, which is what nnU-Net's own
+`argmax` reduces to for two classes, so weights `[1, 0]` reproduce member 0 bit for bit
+(`src/test_ensemble_predictor.py`). Every member is handed the **ensemble's** previous
+final mask as channel 4, never its own, so no member ever sees a state the shipped
+pipeline would not produce.
+
+The RE member is warm-started from the autoPET III winning model of team LesionTracer
+(Rokuss et al., arXiv:2409.09478; Zenodo 10.5281/zenodo.14007247, CC BY 4.0) and
+fine-tuned for 100 epochs on the interactive task; `docs/train_pipeline.md` has the
+surgery, the PET renormalisation and the identity gate.
+
+Cost: one iteration is the sum of the members' iterations. Measured on an idle A100 over
+five cases at iteration 0 — one model 6.4 s median, the two-member ensemble 17.7 s
+(×2.8). Scaled to the container's measured 34.8–57.6 s per iteration on the challenge
+hardware that is 96–159 s, i.e. 8–13 % of the 20-minute per-iteration budget.
+
+`AUTOPETV_PREDICTOR=ensemble_postproc` with `AUTOPETV_ENSEMBLE_MEMBERS` selects it;
+setting `WITH_RE_MEMBER=0` at build time and `AUTOPETV_PREDICTOR=interactive_postproc`
+builds the single-model v0.2 image unchanged.
+
 ### The model (v0.2)
 
 `src/predictor.py::InteractiveNNUNetPredictor`, five input channels:
