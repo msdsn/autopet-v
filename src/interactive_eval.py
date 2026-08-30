@@ -376,6 +376,13 @@ def predictor_key(args) -> str:
         "resample_channels": getattr(args, "resample_channels", None),
         "resample_logits": getattr(args, "resample_logits", None),
     }
+    if base_predictor_name(args) == "ensemble":
+        # every member's weights and checkpoint, and the shared encoding, are in the key
+        ident["members"] = list(getattr(args, "ensemble_members", None) or [])
+        ident["weights"] = list(getattr(args, "ensemble_weights", None) or [])
+        ident["guidance_radius"] = resolve_guidance_radius(args)
+        ident["mirror_axes"] = (list(args.mirror_axes)
+                                if getattr(args, "mirror_axes", None) else None)
     if base_predictor_name(args) == "interactive_nnunet":
         # guidance encoding and mirroring axes change what the network sees
         ident["guidance_radius"] = resolve_guidance_radius(args)
@@ -1038,6 +1045,25 @@ def build_base_predictor(args) -> Predictor:
             num_resample_threads=args.resample_threads,
             **common,
         )
+    if name == "ensemble":
+        from ensemble_predictor import build_ensemble  # noqa: E402
+        if not getattr(args, "ensemble_members", None):
+            raise ValueError("--base_predictor ensemble needs --ensemble_members")
+        common.pop("model_folder")
+        common.pop("folds")
+        common.pop("checkpoint_name")
+        return build_ensemble(
+            args.ensemble_members, getattr(args, "ensemble_weights", None),
+            folds=tuple(args.folds),
+            resample_channels=args.resample_channels,
+            resample_logits=args.resample_logits,
+            num_resample_threads=args.resample_threads,
+            guidance_radius=resolve_guidance_radius(args),
+            use_state_dir=args.interactive_state_dir,
+            deterministic=not args.no_cudnn_deterministic,
+            force_mirror_axes=(tuple(args.mirror_axes) if args.mirror_axes else None),
+            **common,
+        )
     if name == "interactive_nnunet":
         if args.model_folder is None:
             common.pop("model_folder")          # let the class pick its own default
@@ -1149,10 +1175,18 @@ def make_parser() -> argparse.ArgumentParser:
                         "--base_predictor in src/postproc's interaction layer")
     p.add_argument("--base_predictor",
                    choices=["fast_baseline_nnunet", "baseline_nnunet", "interactive_nnunet",
-                            "threshold"],
+                            "threshold", "ensemble"],
                    default="fast_baseline_nnunet",
                    help="the model underneath --predictor postproc; it alone defines "
-                        "the prediction-cache namespace")
+                        "the prediction-cache namespace. 'ensemble' averages the "
+                        "foreground softmax of the --ensemble_members on the original "
+                        "image grid, so members may have different plans")
+    p.add_argument("--ensemble_members", type=str, nargs="*", default=None,
+                   help="members of --base_predictor ensemble, each "
+                        "'<model_folder>[:<checkpoint>[:<weight>]]'. Weights are "
+                        "normalised; give them here or with --ensemble_weights, not both")
+    p.add_argument("--ensemble_weights", type=float, nargs="*", default=None,
+                   help="one weight per member (normalised); default is equal weights")
     p.add_argument("--postproc_config", type=str, default=None,
                    help="json or yaml file with a (possibly partial, possibly nested) "
                         "PostProcConfig; unknown keys are an error")

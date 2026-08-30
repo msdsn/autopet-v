@@ -175,15 +175,29 @@ tmux has-session -t ${TAG}progress 2>/dev/null || tmux new -d -s ${TAG}progress 
   "bash -c 'export MODEL_NAME=$MODEL PROGRESS_FILE=$PROGRESS TOTAL_EPOCHS=$EPOCHS; \
             exec python3 -u $REPO/scripts/env/progress_watch.py' > /content/work/train/${TAG}progress.log 2>&1"
 
+# What proves a healthy start depends on the path. A fresh run loads the init and runs
+# the identity gate, so the gate line is the right marker. A `--c` resume never runs it:
+# initialize() returns early because the checkpoint on disk wins, so waiting for the
+# gate line reports a false failure on a run that is training perfectly well -- and,
+# worse, the die comes *after* the tmux session exists, so a real failure would leave a
+# running job behind a "failed" exit code. Resume therefore waits for the config line,
+# which both paths print.
+if [ -n "$CONT" ]; then
+  MARKER="\[interactive\] epochs="
+  MARKER_DESC="the trainer config line"
+else
+  MARKER="\[RE\] identity assertion PASS"
+  MARKER_DESC="the RE identity gate"
+fi
 for _ in $(seq 1 60); do
   sleep 5
   if grep -qE "Traceback|RuntimeError|Could not find requested" "$LOG" 2>/dev/null; then
     say "the trainer FAILED to start -- last lines:"; tail -25 "$LOG"; exit 1
   fi
-  grep -q "\[RE\] identity assertion PASS" "$LOG" 2>/dev/null && break
+  grep -q "$MARKER" "$LOG" 2>/dev/null && break
 done
-grep -q "\[RE\] identity assertion PASS" "$LOG" 2>/dev/null \
-  || die "the RE identity gate did not pass within 300 s -- check $LOG"
+grep -q "$MARKER" "$LOG" 2>/dev/null \
+  || die "$MARKER_DESC did not appear within 300 s -- check $LOG"
 grep -h "\[interactive\] epochs=\|\[RE\] " "$LOG" | tail -5
 tmux ls | grep -E "train_$TAG|${TAG}progress"
 say "tail -f $LOG   |   cat $PROGRESS"

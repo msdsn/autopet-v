@@ -62,6 +62,63 @@ def report(name: str, diffs: List[float], names: List[str], top: int = 3) -> flo
     return mean
 
 
+def load_iterations(run_dir: str) -> Dict[str, Dict[int, dict]]:
+    """`metric_scores.json` as {case: {iteration: {"dice": ..., "dmm": ...}}}."""
+    with open(os.path.join(run_dir, "metric_scores.json")) as f:
+        raw = json.load(f)
+    out: Dict[str, Dict[int, dict]] = {}
+    for case, rows in raw.items():
+        out[case] = {int(r["iteration"]): r for r in rows}
+    return out
+
+
+def report_iterations(variant: str, control: str, top: int = 0) -> None:
+    """Paired mean Dice and DMM at every iteration both rows have.
+
+    The AUC is a summary of this curve; when a lever moves only one end of it -- and
+    iteration 0 is the end the GC preliminary leaderboard ranks -- the AUC hides that.
+    """
+    a, b = load_iterations(variant), load_iterations(control)
+    shared = sorted(set(a) & set(b))
+    its = sorted({i for c in shared for i in a[c]} & {i for c in shared for i in b[c]})
+    print(f"per iteration, paired over {len(shared)} shared case(s):")
+    print(f"  {'iter':<5}{'n':>4}  {'control':>9} {'variant':>9} {'paired d':>10} "
+          f"{'sem':>8}   {'control':>9} {'variant':>9} {'paired d':>10} {'sem':>8}")
+    print(f"  {'':<5}{'':>4}  {'--- Dice':>9} {'':>9} {'':>10} {'':>8}   "
+          f"{'--- DMM':>9} {'':>9} {'':>10} {'':>8}")
+    for it in its:
+        row = [f"  {it:<5}"]
+        n_shown = None
+        for key in ("dice", "dmm"):
+            va, vb, dif = [], [], []
+            for c in shared:
+                ra, rb = a[c].get(it), b[c].get(it)
+                if ra is None or rb is None:
+                    continue
+                x, y = ra.get(key), rb.get(key)
+                if x is None or y is None:
+                    continue
+                if isinstance(x, float) and math.isnan(x):
+                    continue
+                if isinstance(y, float) and math.isnan(y):
+                    continue
+                va.append(float(x))
+                vb.append(float(y))
+                dif.append(float(x) - float(y))
+            if not dif:
+                row.append(f"{'':>9} {'':>9} {'':>10} {'':>8}")
+                continue
+            n = len(dif)
+            m = sum(dif) / n
+            var = sum((d - m) ** 2 for d in dif) / (n - 1) if n > 1 else 0.0
+            sem = math.sqrt(var / n) if n > 1 else 0.0
+            if n_shown is None:
+                n_shown = n
+                row.append(f"{n:>4} ")
+            row.append(f" {sum(vb)/n:>9.4f} {sum(va)/n:>9.4f} {m:>+10.4f} {sem:>8.4f}  ")
+        print("".join(row))
+
+
 def pooled(run_dir: str) -> dict:
     with open(os.path.join(run_dir, "run.json")) as f:
         return json.load(f)["results"]
@@ -73,6 +130,9 @@ def main():
     ap.add_argument("variant")
     ap.add_argument("control")
     ap.add_argument("--top", type=int, default=3, help="how many extreme cases to list")
+    ap.add_argument("--per_iteration", action="store_true",
+                    help="also print the paired Dice/DMM curve, iteration by iteration; "
+                         "iteration 0 is what the GC preliminary leaderboard ranks")
     args = ap.parse_args()
 
     va, ca = load(args.variant), load(args.control)
@@ -96,6 +156,9 @@ def main():
     ok = (m_dmm > 0.05 and m_dice >= 0) or (m_dice > 0.05 and m_dmm >= 0)
     print(f"  screen gate (Δ>+0.05 on one metric, other not worse): "
           f"{'PASS' if ok else 'FAIL'}")
+    if args.per_iteration:
+        print()
+        report_iterations(args.variant, args.control, args.top)
 
 
 if __name__ == "__main__":
