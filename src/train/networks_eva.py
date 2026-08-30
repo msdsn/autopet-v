@@ -82,7 +82,8 @@ try:  # package import (src/train is a package)
 except ImportError:  # flat import (folder on sys.path, e.g. nnUNet_extTrainer)
     from networks import _freeze_init, _zero_, _init_skipping_frozen  # type: ignore
 
-__all__ = ["EVAFusionUNet", "EVA_MODEL_NAME", "render_eva_channels"]
+__all__ = ["EVAFusionUNet", "EVAInteractiveFusionUNet", "EVA_MODEL_NAME",
+           "render_eva_channels", "render_eva_interaction"]
 
 
 # -- rendering constants, shared with src/train/eva02_features.py ------------
@@ -347,3 +348,151 @@ class EVAFusionUNet(PlainConvUNet):
             out.append({"layer": layer, "lr": base_lr * scale, "base_lr": base_lr * scale,
                         "scale": scale, "params": params})
         return out
+
+
+# ---------------------------------------------------------------------------
+# B18 -- the same branch, but the ViT is told where the user pointed
+# ---------------------------------------------------------------------------
+
+def render_eva_interaction(x: torch.Tensor, slab: int = MIP_HALF) -> torch.Tensor:
+    """Network input ``(B, >=5, Z, Y, X)`` -> the three interaction channels, slabbed.
+
+    Channels 2 and 3 of the network input are the clipped-EDT tumour and background
+    guidance maps and channel 4 is the previous mask, all already in ``[0, 1]``; they
+    are passed through unchanged in value.
+
+    They are, however, spread over a ``+/-slab``-slice maximum along z, for the same
+    reason ``render_eva_channels`` builds a slab MIP of the PET: the backbone is 2D.
+    A scribble is a handful of voxels on one or two axial slices, so without the slab
+    it would be visible to 2 of the 112 slice-images and then averaged away by the
+    ``adaptive_avg_pool3d`` that reduces z from 112 to the fused stage's 14 -- a 1/56
+    dilution. With the slab the click is visible to every slice-image of the 27 mm
+    neighbourhood it lies in, which is the scale at which a 20 mm token can carry it.
+
+    A network with fewer than five input channels (the baseline probe) gets zeros, so
+    the branch degrades to B17 rather than raising.
+    """
+    if x.shape[1] < 5:
+        return x.new_zeros((x.shape[0], 3, *x.shape[2:]))
+    g = x[:, 2:5].clamp(0.0, 1.0)
+    if slab <= 0:
+        return g
+    return F.max_pool3d(g, kernel_size=(2 * slab + 1, 1, 1), stride=1, padding=(slab, 0, 0))
+
+
+class EVAInteractiveFusionUNet(EVAFusionUNet):
+    """B18 -- ``EVAFusionUNet`` whose ViT also sees the interaction state.
+
+    Why this and not "more EVA". B17's branch is fed ``render_eva_channels(x)``, which
+    reads channels 0 and 1 only: the token volume it fuses into stage 3 is a function
+    of the CT and the PET and of **nothing else**, so it is bit-identical at every one
+    of the six interaction iterations. The measured 39-case screen says exactly that:
+    the paired Dice deficit against the control is -0.002 at iteration 0, where the
+    interaction channels are all zero and the two networks agree, and -0.012 to -0.017
+    from iteration 2 on. A scribble-blind term added to the skip the decoder refines
+    from is an anchor: the more the user says, the more it costs.
+
+    The fix is one block -- **what the ViT is given**. A new zero-initialised
+    ``eva_interact_embed`` patchifies the three interaction channels on the same 14 px
+    grid as ``patch_embed`` and adds its tokens to the patch tokens, so the branch
+    becomes a *conditional* encoder. The upside it buys that no convolution at stage 3
+    can: EVA's self-attention is global over the slice, so one click can propagate to
+    the other lesions in the same slab, which is the mechanism interactive
+    segmentation actually wants and which a 3D U-Net's receptive field does not have.
+
+    Two things follow, and they are inseparable from the first:
+
+    * ``patch_embed`` stays frozen and stays under ``no_grad`` -- it is pretrained and
+      unchanged -- but the **first ``eva_freeze_blocks`` blocks can no longer run
+      under ``no_grad``**, because the gradient of ``eva_interact_embed`` has to reach
+      it through them. Their parameters remain frozen (``requires_grad`` False, no
+      optimizer state, no weight gradients); only their activations join the graph,
+      gradient-checkpointed like the rest. Measured cost is in the trainer's bench.
+    * ``eva_interact_embed`` is zero, so at epoch 0 its tokens are zero, the token
+      volume is B17's, and ``eva_fuse`` is zero as well: the network is the B10
+      baseline function and the identity gate reads 0.0.
+
+    The zero-init also means the branch bootstraps in the usual order -- ``eva_fuse``
+    has to leave zero before ``eva_interact_embed`` sees any gradient at all, because
+    ``dL/dtokens = eva_fuse^T dL/dskip``. That is the B13 trap, and the trainer pays
+    for it with a dedicated, higher-rate parameter group over the two zero-init
+    modules rather than by breaking the identity gate.
+    """
+
+    def __init__(self, *args, eva_interact_slab: int = MIP_HALF, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.eva_interact_slab = int(eva_interact_slab)
+        # bias=False: a bias would be a learned constant added to every token of every
+        # slice, i.e. a scribble-blind term -- the thing this row exists to remove.
+        self.eva_interact_embed = _zero_(
+            nn.Conv2d(3, self.eva_dim, EVA_PATCH, stride=EVA_PATCH, bias=False))
+
+    # -- the 2.5D branch, now conditional --------------------------------
+    def _eva_blocks_cond(self, img: torch.Tensor, ctrl: torch.Tensor) -> torch.Tensor:
+        """``(N, 3, H, W)`` image + ``(N, 3, H, W)`` interaction -> ``(N, T, 768)``.
+
+        ``patch_embed`` runs under ``no_grad`` exactly as in B17 -- it is frozen and
+        its input does not depend on any parameter. The control tokens are added to
+        its output, which is what puts the rest of the stack in the graph.
+        """
+        m = self.eva
+        with torch.no_grad():
+            t = m.patch_embed(img)
+        c = self.eva_interact_embed(ctrl)                 # (N, C, gh, gw)
+        if t.dim() == 4 and t.shape[-1] == self.eva_dim:  # NHWC (dynamic_img_size)
+            c = c.permute(0, 2, 3, 1)
+        elif t.dim() == 3:                                # NLC
+            c = c.flatten(2).transpose(1, 2)
+        else:                                             # pragma: no cover
+            raise RuntimeError(f"unexpected patch_embed output shape {tuple(t.shape)}")
+        t = t + c.to(t.dtype)
+        t, rope = m._pos_embed(t)
+        t = m.norm_pre(t)
+        use_ckpt = self.eva_grad_checkpointing and self.training and torch.is_grad_enabled()
+        for blk in m.blocks:
+            if use_ckpt:
+                t = _grad_checkpoint(blk, t, rope, use_reentrant=False)
+            else:
+                t = blk(t, rope)
+        t = m.norm(t)
+        return t[:, self.eva_num_prefix:]
+
+    def eva_tokens(self, x: torch.Tensor) -> torch.Tensor:
+        """Network input ``(B, C, Z, Y, X)`` -> token volume ``(B, 768, Zt, gh, gw)``."""
+        b = x.shape[0]
+        img = render_eva_channels(x)                                    # (B, 3, Z, Y, X)
+        ctrl = render_eva_interaction(x, self.eva_interact_slab)        # (B, 3, Z, Y, X)
+        if self.eva_z_stride > 1:
+            img = img[:, :, ::self.eva_z_stride]
+            ctrl = ctrl[:, :, ::self.eva_z_stride]
+        zt = img.shape[2]
+
+        def _slices(v: torch.Tensor, mode: str) -> torch.Tensor:
+            v = v.permute(0, 2, 1, 3, 4).reshape(b * zt, 3, *v.shape[3:])
+            return F.interpolate(v, size=self.eva_img_size, mode=mode, align_corners=False)
+
+        img = _slices(img, "bilinear")
+        img = (img - self.eva_img_mean) / self.eva_img_std
+        # bilinear here too, and it cannot lose anything: 160 -> 224 and 128 -> 182 are
+        # *up*-samples, so every input voxel keeps a coefficient, and the +/-slab
+        # maximum has already thickened a one-voxel speck across the whole slab. The
+        # interaction channels are not normalised -- they are already in [0, 1] and the
+        # embedding that reads them is new, so any scaling would be absorbed by it.
+        ctrl = _slices(ctrl, "bilinear")
+
+        step = self.eva_chunk if self.eva_chunk > 0 else img.shape[0]
+        feats = torch.cat([self._eva_blocks_cond(img[i:i + step], ctrl[i:i + step])
+                           for i in range(0, img.shape[0], step)], dim=0)
+        gh, gw = self.eva_token_grid
+        return feats.reshape(b, zt, gh, gw, self.eva_dim).permute(0, 4, 1, 2, 3)
+
+    # -- introspection ----------------------------------------------------
+    def eva_fusion_parameters(self):
+        """The two zero-initialised modules that carry the branch into the U-Net.
+
+        They are what the trainer gives its own learning rate to: both start at zero,
+        so the whole branch is inert until they move, and a 20-epoch poly schedule
+        integrates ~3x less learning rate than the 80-epoch one B17's epoch-40
+        snapshot came from.
+        """
+        return list(self.eva_fuse.parameters()) + list(self.eva_interact_embed.parameters())

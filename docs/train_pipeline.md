@@ -720,6 +720,126 @@ TAG=b17 TRAINER=nnUNetTrainer_InteractiveB17_80epochs PLANS=nnUNetPlans_b17 EPOC
 ALLOW_CONCURRENT_TRAIN=1 NICE=5 bash scripts/env/train_b6.sh
 ```
 
+### B18 -- the same branch, conditioned on the interaction
+
+B17's fusion is a function of channels 0 and 1 only. `render_eva_channels` reads the CT
+and the PET, so the token volume added to the stage-3 skip is **bit-identical at all six
+interaction iterations**: whatever the user points at, the branch contributes the same
+map. The 39-case screen of the epoch-40 snapshot measures exactly the deficit that
+predicts. Paired against the `C0` control, per interaction iteration:
+
+| iteration | 0 | 1 | 2 | 3 | 4 | 5 |
+|---|---:|---:|---:|---:|---:|---:|
+| C0 Dice | 0.623 | 0.799 | 0.831 | 0.849 | 0.867 | 0.874 |
+| B17 Dice | 0.621 | 0.794 | 0.819 | 0.832 | 0.853 | 0.862 |
+| delta | **-0.002** | -0.005 | -0.012 | **-0.017** | -0.014 | -0.012 |
+
+At iteration 0 the interaction channels are zero and the two networks agree to within
+noise; the deficit appears only once the user starts talking, and it is six times larger
+by iteration 3. A scribble-blind term added to the skip the decoder refines from behaves
+as an anchor -- the more the interaction says, the more the fixed prior costs.
+
+`EVAInteractiveFusionUNet` changes one block: **what the ViT is given**. A new
+`eva_interact_embed`, a zero-initialised `Conv2d(3, 768, 14, stride=14)` with no bias,
+patchifies the three interaction channels on the same 14 px grid as `patch_embed`, and
+its tokens are added to the patch tokens before the positional embedding. The branch
+becomes a conditional encoder, and it buys the one thing no convolution at stage 3 can:
+EVA's self-attention is global over the slice, so one click can propagate to the other
+lesions in the same slab.
+
+Three details make it work.
+
+**The slab.** `render_eva_interaction` spreads the guidance and previous-mask channels
+over a `+/-4`-slice maximum along z, exactly as the PET channel's slab MIP. A scribble is
+a handful of voxels on one or two axial slices; without the slab it would reach 2 of the
+112 slice-images and then be averaged away by the `adaptive_avg_pool3d` that reduces z
+from 112 to the fused stage's 14 -- a 1/56 dilution. With it the click is visible across
+the 27 mm neighbourhood it lies in, which is the scale a 20 mm token can carry.
+
+**The frozen prefix now runs in the graph.** `patch_embed` stays frozen and stays under
+`no_grad`: it is pretrained and unchanged. But the gradient of `eva_interact_embed` has
+to reach it through the blocks, so blocks 0-3 can no longer run under `no_grad`. Their
+parameters remain frozen -- no optimizer state, no weight gradients -- and only their
+activations join the graph, gradient-checkpointed like the other eight. Measured cost
+below; it is smaller than the B17 delta over B10.
+
+**A rate for the zero-init path, set by measurement.** Both new modules start at zero and
+`dL/dtokens = eva_fuse^T dL/dskip`, so `eva_interact_embed` sees no gradient at all until
+`eva_fuse` has left zero -- the trap that cost B13 its run. The rate on those two modules
+is therefore a real choice. The first B18 launch derived it from the poly-lr integral
+(`int_0^20 (1-t/20)^0.9 dt = 10.5` against the `int_0^40 (1-t/80)^0.9 dt = 30.8` the B17
+epoch-40 snapshot received) and used 3.0. That derivation assumed B17's fusion was weak.
+Measured on real store patches, it is not:
+
+| model | `eva_fuse` norm | fused residual rms / stage-3 skip rms | share of the residual that moves when a scribble is added |
+|---|---:|---:|---:|
+| B17 `checkpoint_final` (80 epochs, x1) | 1.92 | **1.52** | 0.000 (the branch never reads channels 2-4) |
+| B18 at x3, `checkpoint_ep10` (10 epochs) | 3.84 | **7.12** | **0.043** |
+
+B17's branch does not perturb the stage-3 skip, it **dominates** it -- and at x3 the
+residual reached seven times the skip in a tenth of the epochs, 96 % of it still
+scribble-blind. That run was stopped rather than screened.
+`nnUNetTrainer_InteractiveB18.FUSION_LR_MULT = 1.0` is B17's own rate, and the same
+numbers put a 20-epoch run at `eva_fuse` ~1.8 against B17's 1.92, so B18 and B17 differ in
+exactly one thing. It is the same SGD, the same weight decay, one `lr_scale`, applied to
+the 0.65 M zero-init parameters only, and it is printed in the training log. Any future
+row in this lineage should report the residual/skip ratio next to its screen number.
+
+Everything else is B17's: the same graft, the same dual optimizer (stock SGD over the
+U-Net exactly as `C0`, AdamW with the EVA-02 layer-decay ladder over the ViT) under
+`GroupScaledPolyLRScheduler`, the same `eva_pretrained: false` in the plans so the
+predictor never reaches the hub, the same stage-3 fusion.
+
+**Launch gate** (`train.test_networks_eva --variant b18`, A100-80GB, plans patch
+`112x160x128`, batch 2), all measured, none estimated:
+
+| check | result |
+|---|---|
+| pretrained weights survive `apply(initialize)` | max abs diff vs timm `0.000e+00` |
+| graft | 292 source tensors consumed, 236 new, all under `eva.` / `eva_fuse.` / `eva_interact_embed.` |
+| interaction embedding inert at init | `max abs d(tokens)` for one click `0.000e+00` |
+| interaction embedding connected when perturbed | `max abs d(tokens)` for one click `1.842e+01` |
+| token volume | `(2, 768, 112, 16, 13)` |
+| z-slices reaching the fusion | 112 / 112 |
+| epoch-0 identity, deep supervision on | max abs logit diff `0.000e+00` |
+| epoch-0 identity, deep supervision off | max abs logit diff `0.000e+00` |
+| checkpoint round-trip, `strict=True` | 471 MB, max abs logit diff `0.000e+00` |
+| parameters | 117.79 M (86.35 M EVA, 56.74 M trainable; 0.648 M zero-init fusion) |
+| forward + backward | **568.8 ms/step, 7.49 GiB peak** (B10 on the same idle box: 126.7 ms, 5.62 GiB) |
+
+```bash
+python -m train.make_arch_plans --base-plans $PREP/$DS/nnUNetPlans_interactive.json \
+    --variant b18 --out $PREP/$DS/nnUNetPlans_b18.json
+python -m train.test_networks_eva --variant b18 --round-trip \
+    --plans $PREP/$DS/nnUNetPlans_interactive.json \
+    --checkpoint <B10 checkpoint_final.pth> --cuda --bench --bench-baseline
+
+nnUNet_arch_refbatch=<work>/b10_ref_batch.pt INIT=<B10 checkpoint_final.pth> \
+TAG=b18 TRAINER=nnUNetTrainer_InteractiveB18_20epochs PLANS=nnUNetPlans_b18 EPOCHS=20 \
+ALLOW_CONCURRENT_TRAIN=1 NICE=5 bash scripts/env/train_b6.sh
+# note: train_b6.sh bakes a fixed set of variables into the tmux launcher, so
+# nnUNet_b18_fusion_lr_mult set in the environment is NOT forwarded -- change the class
+# default, or add the variable to the launcher template.
+```
+
+**Result: rejected.** The epoch-10 snapshot scores AUC-Dice 3.8789 / AUC-DMM 3.4207 on
+the 39-case screening subset against the `C0` control's 4.0940 / 3.6323 -- paired
+`dDice -0.2152 +/- 0.1497`, `dDMM -0.2117 +/- 0.1949`, gate FAIL on both, four times
+worse than B17. Per-iteration Dice 0.599 / 0.761 / 0.791 / 0.802 / 0.815 / 0.820.
+
+The interaction conditioning did engage -- the share of the fused residual that moves
+when a scribble is added is 5.6 % at epoch 5, 6.8 % at epoch 10 and 9.9 % at epoch 20,
+against B17's exact zero -- and it bought nothing. B18 is worse at **iteration 0**, where
+the interaction channels are zero and the new embedding contributes exactly nothing, so
+the conditioning cannot be what caused the loss; and the gap still widens monotonically
+with interactions, exactly as B17's did.
+
+Together with the frozen-feature probe that preceded B17 (EVA features on top of the
+network's own: hot-token tumour-vs-physiology AUC 0.9811 -> 0.9725) this closes the
+EVA-02 line. The branch sees the *same patch* the U-Net sees, at 20 mm tokens against
+stage 3's 16 mm cells, in 2D: it carries no information the network does not already
+have, and at 1.52x the rms of the skip it is added to it displaces one the decoder needs.
+
 ## Sampling and gating variants (S1, N1)
 
 Two more continuations of the B10 checkpoint against the same `C0` control. Neither touches the store,
@@ -1067,6 +1187,148 @@ real store through the real trainer: the gate passes at `0.000e+00`, the loss is
 against 0.73-0.76 for the 4->5-channel surgery on the organisers' baseline. The predictor then rebuilds
 `train.networks_re.ResEncInteractiveUNet` from the `plans.json` the trainer wrote next to `fold_0/`,
 with no wiring beyond `src` on `PYTHONPATH`, and runs the interactive loop on a real case.
+
+### Result
+
+Screened at epoch 40 on the 39-case list against the C0 control and the shipped B10 model, same
+scribble strategy per case, same post-processing (`scripts/eval_screen.sh`, `scripts/compare_runs.py`):
+
+| | AUC-Dice | AUC-DMM |
+|---|---|---|
+| C0 (control) | 4.0940 | 3.6323 |
+| B10 (shipped) | 4.1332 | 3.6683 |
+| **RE, 40 epochs** | **4.1144** | **3.6924** |
+| paired Δ vs C0 | +0.0204 ± 0.0848 (t +0.24) | +0.0601 ± 0.1559 (t +0.39) |
+| paired Δ vs B10 | −0.0188 ± 0.0701 (t −0.27) | +0.0241 ± 0.1498 (t +0.16) |
+
+**A null.** Every t is below 0.4 and both deltas against B10 straddle zero; two cases dominate the
+pooled means (one +2.6 Dice, one −1.5). The 102 M-parameter autoPET III champion, warm-started at the
+matching spacing with its tumour head intact and scoring **0.82 Dice zero-shot** on store patches, is
+not measurably better than the 30.8 M `PlainConvUNet` on this protocol at this budget. The interactive
+machinery — the previous-mask channel, the scribble compliance, the lesion-free gate — is what moves
+this metric, not backbone capacity. Lesion-free cases were 15/15 exact ties, which is the same point:
+the negative gate, not the network, owns that stratum.
+
+The one structured signal is a **tracer split**, consistent across both metrics and both references:
+RE is better on FDG (Δ Dice +0.092 / DMM +0.251 vs C0) and worse on PSMA (−0.094 / −0.076 vs C0).
+Each is within noise alone, but the sign is stable in 4 of 4 comparisons — and measuring the store
+gives it a mechanism.
+
+### Follow-up: `pet_renorm` needs per-tracer constants (measured, not launched)
+
+`pet_renorm="ctnorm"` inverts the store's z-score with **one** pair of cohort constants for every
+case. The store's channel 1 is `z = (SUV − mu_full) / sd_full` (`build_store.py` restores the
+full-volume statistics after the body crop), so the right constants are the cohort medians of
+`mu_full` / `sd_full`. Over **all 1611 store cases** (`pet_stats.py`, 0 skipped):
+
+| | n | `mu` median [p10, p90] | `sd` median [p10, p90] |
+|---|---:|---|---|
+| pooled (**what RE shipped**) | 1611 | 0.1038 [0.0675, 0.1622] | 0.6150 [0.4119, 1.1133] |
+| **FDG** | 1014 | **0.0899** [0.0610, 0.1156] | **0.5168** [0.3835, 0.6977] |
+| **PSMA** | 597 | **0.1441** [0.1151, 0.1835] | **0.9856** [0.7497, 1.2735] |
+
+**PSMA's `sd` is 1.9× FDG's**, and the pooled value sits close to the FDG one because FDG is 63 % of
+the cohort. So a PSMA case has its reconstructed SUV under-estimated by `0.9856 / 0.6150 = 1.60×`,
+and the damage is concentrated where `CTNormalization` is most brutal — the clip floor:
+
+```
+SUV floor 1.0433 sits at   z = +1.527   under the pooled constants (every case)
+                           z = +1.845   where it belongs for FDG
+                           z = +0.912   where it belongs for PSMA
+```
+
+For PSMA the floor is applied at `z = 1.527` when it belongs at `0.912`, so every voxel with
+`z ∈ (0.912, 1.527)` — genuine uptake above SUV 1.04 — is flattened onto the floor.
+
+**Measured, and it does not say what the arithmetic suggested.** `test_pet_renorm.py` runs the
+unmodified 2-channel LesionTracer on real store lesion patches under all four representations
+(mean Dice; 6 FDG / 7 PSMA cases):
+
+| | `none` | `pooled` (shipped) | `tracer` | `case` (exact) |
+|---|---|---|---|---|
+| FDG | 0.4946 | 0.7889 | 0.7997 | **0.8164** |
+| PSMA | 0.6981 | 0.7520 | 0.7657 | **0.7793** |
+| all | 0.6042 | 0.7690 | 0.7814 | **0.7965** |
+
+Two things follow, and the second retracts a claim made earlier in this section's first draft.
+
+1. **The ordering is monotone and the exact per-case constants win on both tracers**:
+   `none < pooled < tracer < case`, worth **+0.028 Dice** over the shipped `pooled` setting. The
+   approximation is real and removing it is the right direction.
+2. **It is not a PSMA-specific defect.** The `pooled → case` gain is +0.0275 on FDG and +0.0273 on
+   PSMA — equal to three decimal places. The clip-floor arithmetic above is correct about the
+   *magnitude* of the per-case error but wrong about its *consequence*: fixing it helps both tracers
+   equally, so **it does not explain the FDG-better / PSMA-worse split observed in the screen**. That
+   split remains unexplained. Note also that the raw-`z` column runs the other way (FDG 0.495 vs PSMA
+   0.698), i.e. the tracer asymmetry in this test has the opposite sign to the one in the screen.
+
+With 6 and 7 cases the ±0.028 is itself within a plausible noise band, so this is a direction, not a
+quantity. It is worth shipping because it is *exact* rather than because it is large.
+
+Two fixes, in increasing order of correctness:
+
+1. **Per-tracer constants** — `pet_renorm_mu/sd` as plans fields chosen by the tracer classifier we
+   already run at 100 % accuracy, i.e. `(0.0899, 0.5168)` for FDG and `(0.1441, 0.9856)` for PSMA.
+   Cheap, and it removes the 1.6× systematic error.
+2. **Exact per-case constants** — the true `mu_full` / `sd_full` are in each case's `.pkl` in the
+   store, and at inference the predictor computes the normalisation itself, so nothing has to be
+   estimated at all. Training is the only place a patch does not carry them, and `s1_sampler.py`
+   already shows the pattern for getting case-level state into the dataloader
+   (`S1RecordingDatasetBlosc2`). This removes the approximation entirely rather than halving it.
+
+Neither is launched here — the row was screened at a 39-case resolution of ±0.06–0.17, and a fix
+worth testing needs its own screen.
+
+### The PET normalisation is nearly blind to low-uptake lesions
+
+This is the most consequential thing the RE row measured, and it is a property of the
+pretrained backbone rather than of our adaptation of it.
+
+LesionTracer normalises PET with `CTNormalization` and
+`foreground_intensity_properties_per_channel["1"]`: clip to `[1.0433, 51.211]`, then
+`(x - 7.0638) / 7.9604`. Those constants are **foreground** statistics -- the mean SUV of a
+*lesion* in autoPET III is 7.06. Applied to a low-uptake lesion the clip floor lands above part
+of it and the division by 7.96 flattens the rest.
+
+`psma_41260c3678449a2f_2020-06-12` is the case that made this visible: 44 voxels = 1.076 mL, one
+component, **SUV min 0.92 / mean 1.46 / max 2.18**. The contrast each PET representation carries
+between the lesion's brightest voxel and the surrounding body:
+
+| PET representation | background | lesion mean | lesion max | contrast |
+|---|---|---|---|---|
+| store z-score, per case (C0, and RE3) | −0.1992 | 1.9851 | 3.0532 | **3.2524** |
+| `pet_renorm="ctnorm"`, pooled constants (RE) | −0.7563 | −0.7179 | −0.6340 | 0.1223 |
+| `pet_renorm="ctnorm"`, exact per-case constants (RE2) | −0.7563 | −0.7036 | −0.6137 | 0.1426 |
+
+**26.6× more contrast in the z-score channel.** The consequence is not a softer prediction, it is
+no prediction at all: on that case RE's foreground probability is **identically 0.0000 over the
+whole volume** at iterations 0–3, with 0, 3, 6 and 9 tumour scribbles present, while the same
+measurement on the C0 control gives 0.6876 mean / 1.0000 max inside the lesion and a 1.66 mL mask
+from the first scribble. RE's entire output on the case is the scribble-compliance stamp,
+0.0244 mL per point. `base_removed_ml` is 0.000 mL for every row at every iteration, so
+post-processing never touched it — there is no probability mass for a lower `prob_gate` to
+recover.
+
+Two corollaries worth carrying into the paper:
+
+* The **FDG/PSMA split** the RE screen showed is not about tracers. It is about **low-uptake
+  lesions**, of which PSMA has proportionally more. That is a mechanism that survives measurement;
+  the per-tracer-constants story did not (`test_pet_renorm` showed the per-case fix helps FDG and
+  PSMA equally, +0.0275 vs +0.0273).
+* **Exact per-case constants do not fix it.** For this case the per-case `sd` is 0.6697 against the
+  pooled 0.6249 — 1.07× — so RE2 buys 1.2× more contrast against the 26.6× that is missing. The
+  approximation was never the problem; the target normalisation is.
+
+The row that tests the other side of the trade is **RE3** (`pet_renorm="none"`,
+`nnUNetPlans_re3`): feed the store's per-case z-score unconverted and let the fine-tune move the
+stem. It gives up zero-shot agreement with the pretrained weights — `test_pet_renorm` measures the
+raw z-score at 0.604 mean Dice against 0.769 for the pooled ctnorm and 0.797 for the exact one —
+in exchange for the low-uptake sensitivity that the interactive protocol otherwise has to recover
+one scribble at a time. Its stem learning rate is deliberately **unchanged**: the gradient of an
+input column is `x_c ⊗ δ`, so a channel with ~26× the dynamic range already produces a
+proportionally larger gradient on exactly the weights that must move, and a learning-rate
+multiplier would cost the one-knob comparison against RE. `RE_STEM_LR_MULT` exists as a flag for a
+follow-up that wants to test it alone.
 
 ### Licence and attribution
 

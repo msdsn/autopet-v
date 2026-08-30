@@ -34,7 +34,8 @@ except ImportError:  # flat import
 
 from nnunetv2.utilities.get_network_from_plans import get_network_from_plans
 
-NEW_PREFIXES = ("eva.", "eva_fuse.")
+NEW_PREFIXES = {"b17": ("eva.", "eva_fuse."),
+                "b18": ("eva.", "eva_fuse.", "eva_interact_embed.")}
 
 
 def build(arch: dict, in_ch: int, n_classes: int, deep_supervision: bool) -> torch.nn.Module:
@@ -95,7 +96,15 @@ def main():
     ap.add_argument("--chunk", type=int, default=0)
     ap.add_argument("--freeze-blocks", type=int, default=4)
     ap.add_argument("--fuse-stages", nargs="+", type=int, default=None)
+    ap.add_argument("--variant", default="b17", choices=["b17", "b18"],
+                    help="b18 adds the interaction-conditioned patch embedding")
+    ap.add_argument("--interact-slab", type=int, default=4)
+    ap.add_argument("--round-trip", action="store_true",
+                    help="save the grafted network to a temporary checkpoint, rebuild "
+                         "it from the plans and assert bit-equal logits")
     args = ap.parse_args()
+    variant = args.variant
+    new_prefixes = NEW_PREFIXES[variant]
 
     torch.manual_seed(0)
     device = torch.device("cuda" if args.cuda and torch.cuda.is_available() else "cpu")
@@ -134,11 +143,12 @@ def main():
     print(f"deep supervision outputs: {[tuple(o.shape) for o in ref]}")
     base.to("cpu")
 
-    print("\n=== B17 ===")
-    plans = build_plans(base_plans, "b17", "nnUNetPlans_b17", args.configuration,
+    print(f"\n=== {variant.upper()} ===")
+    extra = {"eva_interact_slab": args.interact_slab} if variant == "b18" else {}
+    plans = build_plans(base_plans, variant, f"nnUNetPlans_{variant}", args.configuration,
                         eva_z_stride=args.z_stride, eva_chunk=args.chunk,
                         eva_freeze_blocks=args.freeze_blocks,
-                        eva_fuse_stages=args.fuse_stages)
+                        eva_fuse_stages=args.fuse_stages, **extra)
     arch = plans["configurations"][args.configuration]["architecture"]
     print(f"  network_class_name  {arch['network_class_name']}")
     print(f"  arch_kwargs (eva)   "
@@ -175,6 +185,8 @@ def main():
     n_eva = n_params(net.eva)
     n_eva_train = sum(p.numel() for p in net.eva.parameters() if p.requires_grad)
     n_fuse = sum(p.numel() for p in net.eva_fuse.parameters())
+    if variant == "b18":
+        n_fuse += sum(p.numel() for p in net.eva_interact_embed.parameters())
     print(f"  parameters          {n_params(net) / 1e6:.2f} M total "
           f"(+{(n_params(net) - n_base) / 1e6:.2f} M over B10)")
     print(f"    EVA-02-B          {n_eva / 1e6:.2f} M "
@@ -184,11 +196,43 @@ def main():
 
     missing, unexpected = graft_state_dict(net, sd, verbose=False)
     assert not unexpected, f"source tensors not consumed: {unexpected[:5]}"
-    stray = [k for k in missing if not any(k.startswith(p) for p in NEW_PREFIXES)]
+    stray = [k for k in missing if not any(k.startswith(p) for p in new_prefixes)]
     assert not stray, f"undeclared new tensors {stray[:5]}"
     print(f"  grafted             {len(sd)} source tensors, {len(missing)} new")
 
     net = net.to(device).eval()
+    if variant == "b18":
+        # The row exists because B17's tokens are the same at every interaction
+        # iteration. Assert the two halves of the fix, on the *token volume* so the
+        # test does not depend on eva_fuse having left zero:
+        #   (a) with zero interaction channels B18's tokens are B17's, which is what
+        #       makes the epoch-0 identity and the iteration-0 behaviour inherited;
+        #   (b) with a scribble in them they are different -- otherwise the new
+        #       embedding is disconnected and the run would measure nothing.
+        x0 = x.clone(); x0[:, 2:] = 0.0
+        x1 = x0.clone()
+        x1[:, 2, patch[0] // 2, patch[1] // 2, patch[2] // 2] = 1.0     # one tumour click
+        with torch.no_grad():
+            t0 = net.eva_tokens(x0.to(device))
+            t1 = net.eva_tokens(x1.to(device))
+        d_inert = (t1 - t0).abs().max().item()
+        print(f"  interaction embed at init  max |dtokens| for one click {d_inert:.3e} "
+              f"({'OK -- zero-init, so epoch 0 is B17' if d_inert == 0.0 else 'FAIL'})")
+        assert d_inert == 0.0, "eva_interact_embed is not zero at init"
+        with torch.no_grad():
+            torch.nn.init.normal_(net.eva_interact_embed.weight, std=0.02)
+            t1 = net.eva_tokens(x1.to(device))
+            t0b = net.eva_tokens(x0.to(device))
+            d_live = (t1 - t0b).abs().max().item()
+            torch.nn.init.zeros_(net.eva_interact_embed.weight)
+            t0c = net.eva_tokens(x0.to(device))
+            d_back = (t0c - t0).abs().max().item()
+        print(f"  interaction embed live     max |dtokens| for one click {d_live:.3e} "
+              f"({'OK -- the branch is conditional' if d_live > 0 else 'FAIL -- disconnected'})")
+        assert d_live > 0, "the interaction embedding does not reach the tokens"
+        assert d_back == 0.0, "re-zeroing the embedding did not restore the B17 tokens"
+        del t0, t1, t0b, t0c
+        torch.cuda.empty_cache() if device.type == "cuda" else None
     with torch.no_grad():
         tok = net.eva_tokens(x.to(device))
     zt = -(-patch[0] // args.z_stride)
@@ -240,11 +284,32 @@ def main():
     del base_ds
     torch.cuda.empty_cache() if device.type == "cuda" else None
 
+    if args.round_trip:
+        import os
+        import tempfile
+        from nnunetv2.utilities.get_network_from_plans import get_network_from_plans as _gnfp
+        tmp = os.path.join(tempfile.gettempdir(), f"{variant}_roundtrip.pth")
+        torch.save({"network_weights": net.state_dict()}, tmp)
+        rt = build(arch, in_ch, n_classes, True)
+        rt.load_state_dict(torch.load(tmp, map_location="cpu",
+                                      weights_only=False)["network_weights"], strict=True)
+        rt = rt.to(device).eval()
+        with torch.no_grad():
+            d3 = max_abs_diff(rt(x.to(device)), net(x.to(device)))
+        size_mb = os.path.getsize(tmp) / 1e6
+        os.remove(tmp)
+        rt.to("cpu"); del rt
+        torch.cuda.empty_cache() if device.type == "cuda" else None
+        print(f"  checkpoint round-trip  {size_mb:.0f} MB, strict=True, "
+              f"max |logit diff| {d3:.3e}  ({'OK' if d3 == 0.0 else 'FAIL'})")
+        if d3 != 0.0:
+            failures.append(f"checkpoint round-trip differs by {d3:.3e}")
+
     if args.bench and device.type == "cuda":
         print("\n=== forward + backward, plans batch ===")
         if args.bench_baseline:
             bench(base, x.to(device), device, "B10 PlainConvUNet")
-        dt = bench(net, x.to(device), device, "B17 EVAFusionUNet")
+        dt = bench(net, x.to(device), device, f"{variant.upper()} {type(net).__name__}")
         print(f"  -> 120 epochs at 250 steps: {dt * 250 * 120 / 3600:.2f} GPU-h "
               f"(GPU time only, the run is also dataloader-bound)")
 
@@ -253,7 +318,7 @@ def main():
         for f in failures:
             print(f"FAILED: {f}")
         raise SystemExit(1)
-    print("all B17 gate checks passed")
+    print(f"all {variant.upper()} gate checks passed")
 
 
 if __name__ == "__main__":

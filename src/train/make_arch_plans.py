@@ -42,7 +42,8 @@ def variant_architecture(base_arch: dict, variant: str, patch_size: Sequence[int
                          eva_img_size: Sequence[int] = None,
                          eva_fuse_stages: Sequence[int] = None,
                          eva_z_stride: int = 1, eva_freeze_blocks: int = 4,
-                         eva_chunk: int = 0, eva_grad_checkpointing: bool = True) -> dict:
+                         eva_chunk: int = 0, eva_grad_checkpointing: bool = True,
+                         eva_interact_slab: int = 4) -> dict:
     arch = deepcopy(base_arch)
     kw = arch["arch_kwargs"]
     if variant in ("b13", "b13b"):
@@ -61,7 +62,7 @@ def variant_architecture(base_arch: dict, variant: str, patch_size: Sequence[int
         kw["context_rope_theta"] = (
             [float(g) for g in bottleneck_grid(patch_size, kw["strides"], -1)]
             if context_rope_theta == "grid" else context_rope_theta)
-    elif variant == "b17":
+    elif variant in ("b17", "b18"):
         # B17: the trainable 2.5D EVA-02-B branch. The token volume is resized to the
         # fused stages' grids, so the only geometry the plans have to carry is the
         # per-slice input size (a multiple of 14 in both directions).
@@ -77,6 +78,13 @@ def variant_architecture(base_arch: dict, variant: str, patch_size: Sequence[int
         # pretrained weights are loaded once at surgery time by the B17 trainer and
         # travel in our own checkpoint from then on.
         kw["eva_pretrained"] = False
+        if variant == "b18":
+            # B18 differs from B17 in one block: the ViT is also given the three
+            # interaction channels, through a zero-init patch embedding of its own.
+            # `eva_interact_slab` is the +/- half-width in slices over which a
+            # scribble is spread before the 2D backbone sees it (0 = no slab).
+            arch["network_class_name"] = "train.networks_eva.EVAInteractiveFusionUNet"
+            kw["eva_interact_slab"] = int(eva_interact_slab)
     elif variant == "b14":
         arch["network_class_name"] = "train.networks.EditBranchUNet"
         ef = list(edit_features) if edit_features else list(DEFAULT_EDIT_FEATURES)
@@ -104,7 +112,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--base-plans", required=True, help="nnUNetPlans_interactive.json")
-    ap.add_argument("--variant", required=True, choices=["b13", "b13b", "b14", "b17"])
+    ap.add_argument("--variant", required=True, choices=["b13", "b13b", "b14", "b17", "b18"])
     ap.add_argument("--out", required=True, help="path of the plans file to write")
     ap.add_argument("--configuration", default="3d_fullres")
     ap.add_argument("--plans-name", default=None, help="default: basename of --out without .json")
@@ -124,6 +132,9 @@ def main():
     ap.add_argument("--eva-freeze-blocks", type=int, default=4)
     ap.add_argument("--eva-chunk", type=int, default=0,
                     help="slices per EVA forward chunk (0 = the whole batch at once)")
+    ap.add_argument("--eva-interact-slab", type=int, default=4,
+                    help="B18: +/- slices a scribble is spread over before the 2D "
+                         "backbone sees it (0 = the raw slice)")
     args = ap.parse_args()
 
     with open(args.base_plans) as f:
@@ -137,10 +148,10 @@ def main():
         extra = dict(context_type=args.context_type, context_layers=args.context_layers,
                      context_heads=args.context_heads, context_dim=args.context_dim,
                      context_mlp_ratio=args.context_mlp_ratio, context_rope_theta=theta)
-    elif args.variant == "b17":
+    elif args.variant in ("b17", "b18"):
         extra = dict(eva_img_size=args.eva_img_size, eva_fuse_stages=args.eva_fuse_stages,
                      eva_z_stride=args.eva_z_stride, eva_freeze_blocks=args.eva_freeze_blocks,
-                     eva_chunk=args.eva_chunk)
+                     eva_chunk=args.eva_chunk, eva_interact_slab=args.eva_interact_slab)
     else:
         extra = dict(edit_features=args.edit_features)
     plans = build_plans(base, args.variant, name, args.configuration, **extra)
@@ -156,7 +167,8 @@ def main():
               "context_heads", "context_rope_theta",
               "edit_features_per_stage", "n_guidance_channels",
               "eva_img_size", "eva_fuse_stages", "eva_z_stride", "eva_freeze_blocks",
-              "eva_chunk", "eva_grad_checkpointing", "eva_pretrained"):
+              "eva_chunk", "eva_grad_checkpointing", "eva_pretrained",
+              "eva_interact_slab"):
         if k in arch["arch_kwargs"]:
             print(f"  {k:<22} {arch['arch_kwargs'][k]}")
 

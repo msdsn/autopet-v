@@ -53,7 +53,8 @@ def total_stride(strides: Sequence) -> list:
 def build_plans(base_plans: dict, lt_plans: dict, plans_name: str = "nnUNetPlans_re",
                 configuration: str = "3d_fullres", lt_configuration: str = "3d_fullres",
                 patch_size: Sequence[int] = None, batch_size: int = None,
-                pet_renorm: str = "ctnorm", network_class: str = RE_CLASS) -> dict:
+                pet_renorm: str = "ctnorm", network_class: str = RE_CLASS,
+                pet_mode: str = "network") -> dict:
     plans = deepcopy(base_plans)
     plans["plans_name"] = plans_name
     plans["configurations"] = {configuration: plans["configurations"][configuration]}
@@ -75,6 +76,20 @@ def build_plans(base_plans: dict, lt_plans: dict, plans_name: str = "nnUNetPlans
     if network_class == RE_CLASS:
         arch["arch_kwargs"]["pet_renorm"] = str(pet_renorm)
     cfg["architecture"] = arch
+
+    # RE2: move the PET renormalisation out of the network and into the two ends of
+    # the contract -- nnU-Net's own normalization_schemes at inference (exactly
+    # LesionTracer's channel-1 scheme, no custom code on the container path) and an
+    # exact per-case inversion of the store's z-score at training time.
+    if pet_mode == "store_percase":
+        cfg["normalization_schemes"] = ["CTNormalization", "CTNormalization",
+                                        "NoNormalization", "NoNormalization", "NoNormalization"]
+        cfg["pet_store_renorm"] = "ctnorm_per_case"
+        arch["arch_kwargs"]["pet_renorm"] = "none"
+    elif pet_mode == "network":
+        cfg["pet_store_renorm"] = "none"
+    else:
+        raise ValueError(f"unknown pet_mode {pet_mode!r}")
 
     ps = [int(p) for p in (patch_size if patch_size is not None else lt_cfg["patch_size"])]
     tot = total_stride(arch["arch_kwargs"]["strides"])
@@ -99,7 +114,12 @@ def main():
     ap.add_argument("--patch-size", nargs=3, type=int, default=None,
                     help="default: LesionTracer's 192 192 192")
     ap.add_argument("--batch-size", type=int, default=2)
-    ap.add_argument("--pet-renorm", choices=["none", "ctnorm"], default="ctnorm")
+    ap.add_argument("--pet-renorm", choices=["none", "ctnorm"], default="ctnorm",
+                    help="network-side remap (pet_mode=network only)")
+    ap.add_argument("--pet-mode", choices=["network", "store_percase"], default="network",
+                    help="network: one pooled constant pair remapped inside forward (RE1). "
+                         "store_percase: CTNormalization on channel 1 at inference and an exact "
+                         "per-case inversion of the store at training (RE2)")
     ap.add_argument("--stock-class", action="store_true",
                     help="emit stock ResidualEncoderUNet instead (for the zero-shot reference)")
     args = ap.parse_args()
@@ -111,7 +131,7 @@ def main():
     name = args.plans_name or os.path.basename(args.out)[: -len(".json")]
     plans = build_plans(base, lt, name, args.configuration, args.lt_configuration,
                         args.patch_size, args.batch_size, args.pet_renorm,
-                        STOCK_CLASS if args.stock_class else RE_CLASS)
+                        STOCK_CLASS if args.stock_class else RE_CLASS, args.pet_mode)
 
     os.makedirs(os.path.dirname(os.path.abspath(args.out)), exist_ok=True)
     with open(args.out, "w") as f:
@@ -127,7 +147,9 @@ def main():
     print(f"  spacing            {cfg['spacing']}")
     print(f"  data_identifier    {cfg['data_identifier']}")
     print(f"  normalization      {cfg['normalization_schemes']}")
-    print(f"  pet_renorm         {kw.get('pet_renorm')}")
+    print(f"  pet_renorm         {kw.get('pet_renorm')} (network)")
+    print(f"  pet_store_renorm   {cfg.get('pet_store_renorm')} (data)")
+    print(f"  normalization      {cfg['normalization_schemes']}")
     print(f"  features_per_stage {kw['features_per_stage']}")
     print(f"  n_blocks_per_stage {kw['n_blocks_per_stage']}")
     print(f"  total stride       {total_stride(kw['strides'])}")
