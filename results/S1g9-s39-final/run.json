@@ -1,0 +1,220 @@
+{
+  "run_id": "S1g9-s39-final",
+  "label": "S1g9-s39-final: nnUNetTrainer_InteractiveS1__nnUNetPlans_interactive__3d_fullres checkpoint_final.pth + the shipped post-processing configuration, 6 iters, strategy=all, 39 cases (valset_screen39.txt)",
+  "finished_utc": "2026-08-30T10:08:37Z",
+  "gpu": "NVIDIA A100-SXM4-80GB",
+  "args": {
+    "input_cases": "/content/work/evalset",
+    "image_dir": "/content/work/evalset/imagesTr",
+    "label_dir": "/content/work/evalset/labelsTr",
+    "out_dir": "/content/work/runs/S1g9-s39-final",
+    "repo": "/content/autoPETV",
+    "strategy": "all",
+    "strategy_order": "centerline,random,boundary",
+    "max_iters": 6,
+    "cases": [
+      "fdg_0168f65af8_04-04-2003-NA-PET-CT Ganzkoerper  primaer mit KM-82224",
+      "fdg_07fec0d985_05-04-2006-NA-PET-CT Ganzkoerper  primaer mit KM-11312",
+      "fdg_0e9a98ecda_02-20-2003-NA-PET-CT Ganzkoerper  primaer mit KM-36915",
+      "fdg_15cfa01130_02-24-2001-NA-PET-CT Ganzkoerper  primaer mit KM-49873",
+      "fdg_1a1712f7d0_02-16-2007-NA-PET-CT Ganzkoerper  primaer mit KM-50630",
+      "fdg_20a607649d_01-27-2007-NA-PET-CT Ganzkoerper  primaer mit KM-84908",
+      "fdg_21853fc15b_10-12-2002-NA-PET-CT Ganzkoerper  primaer mit KM-55807",
+      "fdg_23ed525e82_08-01-2003-NA-PET-CT Ganzkoerper  primaer mit KM-24219",
+      "fdg_2a41141775_09-24-2005-NA-PET-CT Ganzkoerper  primaer mit KM-94391",
+      "fdg_2b60c8135a_12-09-2005-NA-PET-CT Ganzkoerper  primaer mit KM-49696",
+      "fdg_30287f520f_11-23-2003-NA-PET-CT Ganzkoerper  primaer mit KM-15029",
+      "fdg_34aa521b46_03-30-2007-NA-PET-CT Ganzkoerper  primaer mit KM-44072",
+      "fdg_389c968170_08-19-2005-NA-PET-CT Ganzkoerper  primaer mit KM-57236",
+      "fdg_3cf68da275_03-20-2003-NA-PET-CT Ganzkoerper  primaer mit KM-37413",
+      "fdg_3d6f425a76_01-28-2002-NA-PET-CT Ganzkoerper  primaer mit KM-67631",
+      "fdg_402c061122_08-25-2003-NA-PET-CT Ganzkoerper nativ-22953",
+      "fdg_44cfacfd6e_04-15-2007-NA-PET-CT Ganzkoerper  primaer mit KM-69456",
+      "fdg_4cc808d16f_06-11-2006-NA-PET-CT Ganzkoerper  primaer mit KM-36881",
+      "fdg_4ea806706c_10-30-2003-NA-PET-CT Ganzkoerper  primaer mit KM-87631",
+      "fdg_55d55902c6_05-11-2006-NA-PET-CT Ganzkoerper  primaer mit KM-26216",
+      "fdg_572fca6b44_05-23-2005-NA-PET-CT Ganzkoerper  primaer mit KM-19541",
+      "fdg_5c1baad5d8_03-06-2003-NA-PET-CT Ganzkoerper  primaer mit KM-62219",
+      "fdg_5d553bf6b4_09-16-2001-NA-PET-CT Ganzkoerper  primaer mit KM-78907",
+      "fdg_5e339b2ecf_05-27-2006-NA-PET-CT Ganzkoerper  primaer mit KM-41089",
+      "psma_02826eb561d6e0c7_2016-11-04",
+      "psma_0ec0e718244b2a79_2015-06-19",
+      "psma_0fcbcd7dc52d5b82_2020-06-19",
+      "psma_14c16d0ce2b3229d_2020-02-22",
+      "psma_1d7ce562612262cb_2019-11-01",
+      "psma_28f9ecc106933531_2019-06-15",
+      "psma_2ebe8e333bdbc130_2016-10-23",
+      "psma_37af1d5c2373d0c4_2019-09-30",
+      "psma_41260c3678449a2f_2020-06-12",
+      "psma_4fc4664327ba8d0b_2014-06-06",
+      "psma_4fc4664327ba8d0b_2014-12-19",
+      "psma_5203bac8a9bfd9e2_2020-06-06",
+      "psma_602ab51cfa8fae3b_2014-08-03",
+      "psma_64a9ae45dc1a48f1_2018-11-12",
+      "psma_64a9ae45dc1a48f1_2019-04-27"
+    ],
+    "cases_file": null,
+    "limit": null,
+    "prev_pred_dir": null,
+    "save_predictions": "all",
+    "official_case_skip": false,
+    "strict_pairing": true,
+    "eval_mode": "fixed",
+    "determinism_check": false,
+    "iter_budget_s": 600.0,
+    "official_empty_error_crash": false,
+    "replay_scribbles_dir": null,
+    "cache_dir": "/content/work/cache",
+    "cache_probabilities": false,
+    "cache_prob_dtype": "uint8",
+    "dmm_empty_gt": "official",
+    "stop_on_case_error": false,
+    "quiet": false,
+    "predictor": "postproc",
+    "base_predictor": "interactive_nnunet",
+    "postproc_config": "/content/autopet/submission/postproc_config.json",
+    "postproc_set": null,
+    "check_guarantees": "auto",
+    "strict_guarantees": false,
+    "keep_state": false,
+    "model_folder": "/content/nnUNet/nnUNet_results/Dataset998_AutoPETV/nnUNetTrainer_InteractiveS1__nnUNetPlans_interactive__3d_fullres",
+    "folds": [
+      0
+    ],
+    "checkpoint": "checkpoint_final.pth",
+    "device": "cuda",
+    "enable_tta": false,
+    "tile_step_size": 0.5,
+    "npp": 3,
+    "nps": 3,
+    "verbose_nnunet": false,
+    "resample_channels": "scipy",
+    "resample_logits": "torch",
+    "resample_threads": 4,
+    "guidance_radius": null,
+    "foveal_crop": false,
+    "foveal_fuse": "max",
+    "interactive_state_dir": false,
+    "no_cudnn_deterministic": false,
+    "mirror_axes": null,
+    "threshold": 2.5,
+    "min_component_voxels": 0
+  },
+  "predictor": "postproc(cached(interactive_nnunet))",
+  "n_cases": 39,
+  "max_iters": 6,
+  "max_auc": 5.0,
+  "results": {
+    "mean_auc_dice": 4.152333320200923,
+    "mean_auc_dmm": 3.690347296169659,
+    "final_score_50_50": 3.9213403081852913,
+    "mean_dice_per_iteration": [
+      0.626834064953435,
+      0.8168318977700731,
+      0.8507821502368017,
+      0.8635724098295745,
+      0.8700749623440773,
+      0.8753097350873591
+    ],
+    "mean_dmm_per_iteration": [
+      0.4017462761392924,
+      0.7130181967761433,
+      0.7834925217111407,
+      0.785840830132191,
+      0.801736242847135,
+      0.8107727332668088
+    ],
+    "by_lesion_status": {
+      "lesion_present": {
+        "n": 24,
+        "auc_dice": 3.8308749786598333,
+        "auc_dmm": 3.69034729616966
+      },
+      "lesion_absent": {
+        "n": 15,
+        "auc_dice": 4.666666666666667,
+        "auc_dmm": NaN
+      }
+    },
+    "by_tracer": {
+      "fdg": {
+        "all": {
+          "n": 24,
+          "auc_dice": 4.498935905739843,
+          "auc_dmm": 3.2959811512995616
+        },
+        "lesion_present": {
+          "n": 10,
+          "auc_dice": 3.7974461737756213,
+          "auc_dmm": 3.2959811512995616
+        },
+        "lesion_absent": {
+          "n": 14,
+          "auc_dice": 5.0,
+          "auc_dmm": NaN
+        }
+      },
+      "psma": {
+        "all": {
+          "n": 15,
+          "auc_dice": 3.5977691833386514,
+          "auc_dmm": 3.9720373996483027
+        },
+        "lesion_present": {
+          "n": 14,
+          "auc_dice": 3.8547526964342693,
+          "auc_dmm": 3.9720373996483027
+        },
+        "lesion_absent": {
+          "n": 1,
+          "auc_dice": 0.0,
+          "auc_dmm": NaN
+        }
+      }
+    }
+  },
+  "empty_error_region_exposure": {
+    "total_iters_with_zero_fp": 97,
+    "total_iters_with_zero_fn": 92,
+    "cases_propagated": []
+  },
+  "determinism_iter0_mismatches": [],
+  "timing": {
+    "total_seconds": 5380.41,
+    "median_iteration_seconds": {
+      "fdg": 35.34,
+      "psma": 17.43
+    },
+    "median_case_seconds": {
+      "fdg": 129.72,
+      "psma": 104.59
+    },
+    "n_model_iterations": {
+      "fdg": 74,
+      "psma": 90
+    }
+  },
+  "cache": {
+    "root": "/content/work/cache/interactive_nnunet_9e2b6bd54e",
+    "hits": 70,
+    "misses": 164,
+    "prob_upgrades": 0,
+    "store_probabilities": true,
+    "prob_dtype": "uint8",
+    "level": "base",
+    "model_calls": 164,
+    "cache_calls": 70
+  },
+  "worst_cases_auc_dice": [
+    "psma_28f9ecc106933531_2019-06-15_0000",
+    "fdg_0168f65af8_04-04-2003-NA-PET-CT Ganzkoerper  primaer mit KM-82224_0000",
+    "psma_41260c3678449a2f_2020-06-12_0000",
+    "fdg_23ed525e82_08-01-2003-NA-PET-CT Ganzkoerper  primaer mit KM-24219_0000",
+    "fdg_5d553bf6b4_09-16-2001-NA-PET-CT Ganzkoerper  primaer mit KM-78907_0000",
+    "psma_602ab51cfa8fae3b_2014-08-03_0000",
+    "psma_0fcbcd7dc52d5b82_2020-06-19_0000",
+    "fdg_20a607649d_01-27-2007-NA-PET-CT Ganzkoerper  primaer mit KM-84908_0000",
+    "psma_2ebe8e333bdbc130_2016-10-23_0000",
+    "psma_37af1d5c2373d0c4_2019-09-30_0000"
+  ]
+}
