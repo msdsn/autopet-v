@@ -50,7 +50,8 @@ ENV nnUNet_raw="/opt/algorithm/nnUNet_raw" \
     nnUNet_extTrainer="/opt/algorithm/src/train" \
     AUTOPETV_MODEL_FOLDER="/opt/algorithm/model" \
     AUTOPETV_TMP_DIR="/opt/algorithm/tmp" \
-    AUTOPETV_PREDICTOR="interactive_postproc" \
+    AUTOPETV_PREDICTOR="ensemble_postproc" \
+    AUTOPETV_ENSEMBLE_MEMBERS="/opt/algorithm/model,/opt/algorithm/model_re" \
     AUTOPETV_CHECKPOINT="checkpoint_final.pth" \
     AUTOPETV_POSTPROC_CONFIG="/opt/algorithm/submission/postproc_config.json" \
     AUTOPETV_MIRROR_AXES="" \
@@ -154,6 +155,29 @@ RUN case "$WEIGHTS_SOURCE" in \
  && rm -rf /opt/algorithm/model_src \
  && du -sh /opt/algorithm/model \
  && chown -R algorithm:algorithm /opt/algorithm/model
+
+# --- second ensemble member: the ResEncL model (row E2) --------------------
+# Its plans.json / dataset.json are small enough to live in the repo; the 410 MB
+# checkpoint is not, so it is fetched once at build time from a read-only Drive link
+# and pinned by sha256.  The file holds weights only -- the optimizer state that makes
+# the training checkpoint 819 MB is stripped, and the remaining tensors were verified
+# equal to the training checkpoint's before upload.  Set WITH_RE_MEMBER=0 to build the
+# single-model image (then also set AUTOPETV_PREDICTOR=interactive_postproc).
+ARG WITH_RE_MEMBER="1"
+ARG RE_CKPT_GDRIVE_ID="1Vt-x2JZIbZRn5yL7lzTjZWzxmRIJxQNJ"
+ARG RE_CHECKPOINT_SHA256="ec85432120826bee3ab841cf99469cb751603bd562e8af087271e50143dddeb1"
+COPY model_re/ /opt/algorithm/model_re/
+RUN if [ "$WITH_RE_MEMBER" = "1" ]; then \
+      python -m pip install --no-cache-dir "gdown==5.2.2" \
+   && mkdir -p /opt/algorithm/model_re/fold_0 \
+   && gdown --id "$RE_CKPT_GDRIVE_ID" \
+            -O /opt/algorithm/model_re/fold_0/checkpoint_final.pth \
+   && echo "$RE_CHECKPOINT_SHA256  /opt/algorithm/model_re/fold_0/checkpoint_final.pth" \
+      | sha256sum -c - \
+   && (python -m pip uninstall -y gdown || true) \
+   && du -sh /opt/algorithm/model_re \
+   && chown -R algorithm:algorithm /opt/algorithm/model_re ; \
+    else echo "[weights] WITH_RE_MEMBER=0 -- single-model image"; fi
 
 # ---------------------------------------------------------------------------
 # FALLBACK (git-LFS) -- if every network route fails, delete the block above and

@@ -158,6 +158,11 @@ def wipe_roots(sim: str, which: Sequence[str]) -> None:
         shutil.rmtree(os.path.join(sim, name, "state"), ignore_errors=True)
 
 
+#: what the image sets for the predictor; `main` switches this to the ensemble
+SHIPPED_PREDICTOR = {"AUTOPETV_PREDICTOR": "interactive_postproc",
+                      "AUTOPETV_ENSEMBLE_MEMBERS": ""}
+
+
 def container_env(sim: str, model_folder: str, extra: Optional[Dict[str, str]] = None) -> Dict[str, str]:
     env = {
         "AUTOPETV_INPUT_DIR": os.path.join(sim, "input"),
@@ -168,7 +173,8 @@ def container_env(sim: str, model_folder: str, extra: Optional[Dict[str, str]] =
         "AUTOPETV_OUTPUT_ROOT": os.path.join(sim, "output"),
         "AUTOPETV_TMP_DIR": os.path.join(sim, "tmp"),
         "AUTOPETV_MODEL_FOLDER": model_folder,
-        "AUTOPETV_PREDICTOR": "interactive_postproc",
+        # SHIPPED_PREDICTOR carries what the image sets: one model, or the E2 ensemble
+        **SHIPPED_PREDICTOR,
         "AUTOPETV_NPP": "1",
         "AUTOPETV_NPS": "1",
         # the image sets these; the simulation must not inherit whatever the shell has
@@ -296,6 +302,11 @@ def main() -> int:
     ap.add_argument("--max_iters", type=int, default=3)
     ap.add_argument("--harness_dir", default=None,
                     help="reuse an existing harness run instead of running it again")
+    ap.add_argument("--ensemble_members", nargs="*", default=None,
+                    help="model folders of the shipped ensemble (row E2); with this the "
+                         "container runs AUTOPETV_PREDICTOR=ensemble_postproc and the "
+                         "harness reference runs --base_predictor ensemble, so the two "
+                         "sides stay the same experiment")
     ap.add_argument("--skip_container", action="store_true")
     ap.add_argument("--seed", type=int, default=20260828)
     args = ap.parse_args()
@@ -304,6 +315,11 @@ def main() -> int:
     report: dict = {"cases": {}, "utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
                     "max_iters": args.max_iters, "model_folder": args.model_folder,
                     "cases_requested": args.cases}
+    if args.ensemble_members:
+        SHIPPED_PREDICTOR["AUTOPETV_PREDICTOR"] = "ensemble_postproc"
+        SHIPPED_PREDICTOR["AUTOPETV_ENSEMBLE_MEMBERS"] = ",".join(args.ensemble_members)
+        report["ensemble_members"] = list(args.ensemble_members)
+        print(f"[config] shipped predictor: ensemble of {len(args.ensemble_members)} members")
     check_shipped_config_matches_b3(report)
 
     # ---- 1. the offline harness (the reference) --------------------------
@@ -315,7 +331,9 @@ def main() -> int:
                "--out_dir", harness, "--repo", args.repo,
                "--cases", *args.cases,
                "--max_iters", str(args.max_iters),
-               "--predictor", "postproc", "--base_predictor", "interactive_nnunet",
+               "--predictor", "postproc",
+               "--base_predictor", "ensemble" if args.ensemble_members else "interactive_nnunet",
+               *(["--ensemble_members", *args.ensemble_members] if args.ensemble_members else []),
                "--model_folder", args.model_folder, "--checkpoint", "checkpoint_final.pth",
                "--keep_state", "--save_predictions", "all",
                "--npp", "1", "--nps", "1",

@@ -45,8 +45,9 @@ def main() -> int:
           repr(cfg["predictor"]), f"known: {KNOWN_PREDICTORS}")
 
     add_src_to_path()
-    interactive = cfg["predictor"] in ("interactive", "interactive_postproc")
-    postproc = cfg["predictor"] in ("postproc", "interactive_postproc")
+    ensemble = cfg["predictor"] in ("ensemble", "ensemble_postproc")
+    interactive = ensemble or cfg["predictor"] in ("interactive", "interactive_postproc")
+    postproc = cfg["predictor"] in ("postproc", "interactive_postproc", "ensemble_postproc")
 
     # 3. the shipped post-processing config --------------------------------
     if postproc:
@@ -67,18 +68,41 @@ def main() -> int:
                 check("pass_cached_prev_pred is on for the interactive model",
                       pp.pass_cached_prev_pred)
 
-    # 4. the model folder ---------------------------------------------------
-    mf = cfg["model_folder"]
-    check("AUTOPETV_MODEL_FOLDER is set", bool(mf), str(mf))
-    if not mf:
-        return 0 if ok else 1
+    # 4. the model folder(s) ------------------------------------------------
+    # An ensemble ships one folder per member and every one of them has to satisfy the
+    # same contract, so the checks below run once per folder.
+    if ensemble:
+        members = [spec.split(":")[0] for spec in cfg["ensemble_members"]]
+        check("AUTOPETV_ENSEMBLE_MEMBERS names at least two members", len(members) >= 2,
+              str(members))
+        if not members:
+            return 1
+    else:
+        members = [cfg["model_folder"]] if cfg["model_folder"] else []
+        check("AUTOPETV_MODEL_FOLDER is set", bool(members), str(cfg["model_folder"]))
+        if not members:
+            return 0 if ok else 1
+    for mf in members:
+        if not _check_model_folder(mf, cfg, check, interactive):
+            return 1
+
+    if interactive:
+        _check_trainer_classes(check)
+
+    print("\nRESULT:", "IMAGE SELF-CHECK PASSED" if ok else "FAILURES ABOVE")
+    return 0 if ok else 1
+
+
+def _check_model_folder(mf: str, cfg: dict, check, interactive: bool) -> bool:
+    """The per-model-folder contract: files present, channels and normalization right."""
+    print(f"model folder: {mf}")
     dj_path = os.path.join(mf, "dataset.json")
     pl_path = os.path.join(mf, "plans.json")
     ck_path = os.path.join(mf, "fold_0", cfg["checkpoint"])
     for p in (dj_path, pl_path, ck_path):
         check(f"exists: {os.path.relpath(p, mf)}", os.path.isfile(p), p)
     if not all(os.path.isfile(p) for p in (dj_path, pl_path, ck_path)):
-        return 1
+        return False
 
     dj = json.load(open(dj_path))
     pl = json.load(open(pl_path))
@@ -97,63 +121,65 @@ def main() -> int:
               not any(pl["configurations"]["3d_fullres"]["use_mask_for_norm"]))
     else:
         check("dataset.json declares 4 channels", n_ch == 4, str(dj.get("channel_names")))
+    return True
 
-    # 5. the trainer class the checkpoint names -----------------------------
-    if interactive:
-        ext = register_external_trainer()
-        print(f"  nnUNet_extTrainer={ext}")
-        check("nnUNet_extTrainer points at an existing dir",
-              bool(ext) and any(os.path.isdir(p) for p in ext.split(os.pathsep)), str(ext))
-        # The checkpoint names one trainer class and nnU-Net has to import it to rebuild
-        # the network.  Which one it names depends on the model, so resolve every trainer
-        # class the repo declares rather than hard-coding one.
-        import re as _re
 
-        train_dir0 = (ext or "").split(os.pathsep)[0]
-        declared = []
-        if train_dir0 and os.path.isdir(train_dir0):
-            for fn in sorted(os.listdir(train_dir0)):
-                if fn.endswith(".py"):
-                    with open(os.path.join(train_dir0, fn)) as fh:
-                        declared += _re.findall(r"^class\s+(nnUNetTrainer_\w+)", fh.read(), _re.M)
-        check("src/train declares at least one trainer class", bool(declared),
-              f"{len(declared)} found")
-        try:
-            from nnunetv2.utilities.find_objects import recursive_find_trainer_class_by_name
+def _check_trainer_classes(check) -> None:
+    """The checkpoints name trainer classes; nnU-Net must be able to import them all."""
+    from submission.predictor_gc import register_external_trainer
 
-            unresolved = []
-            for name in declared:
-                try:
-                    if recursive_find_trainer_class_by_name(name) is None:
-                        unresolved.append(name)
-                except Exception as exc:
-                    unresolved.append(f"{name} ({exc!r})")
-            check("nnU-Net resolves every trainer class in src/train", not unresolved,
-                  f"{len(declared)} class(es)", "unresolved: " + ", ".join(unresolved))
-        except Exception as exc:  # pragma: no cover
-            check("nnU-Net resolves every trainer class in src/train", False, repr(exc))
+    ext = register_external_trainer()
+    print(f"  nnUNet_extTrainer={ext}")
+    check("nnUNet_extTrainer points at an existing dir",
+          bool(ext) and any(os.path.isdir(p) for p in ext.split(os.pathsep)), str(ext))
+    # The checkpoint names one trainer class and nnU-Net has to import it to rebuild
+    # the network.  Which one it names depends on the model, so resolve every trainer
+    # class the repo declares rather than hard-coding one.
+    import re as _re
 
-        # `recursive_find_trainer_class_by_name` imports every module in that folder until
-        # it finds the class, so all of them must be import-safe inside the image (no GPU,
-        # no dataset, no official-challenge checkout).  Alphabetical order may stop the
-        # search early, so check them all here.
-        import importlib
+    train_dir0 = (ext or "").split(os.pathsep)[0]
+    declared = []
+    if train_dir0 and os.path.isdir(train_dir0):
+        for fn in sorted(os.listdir(train_dir0)):
+            if fn.endswith(".py"):
+                with open(os.path.join(train_dir0, fn)) as fh:
+                    declared += _re.findall(r"^class\s+(nnUNetTrainer_\w+)", fh.read(), _re.M)
+    check("src/train declares at least one trainer class", bool(declared),
+          f"{len(declared)} found")
+    try:
+        from nnunetv2.utilities.find_objects import recursive_find_trainer_class_by_name
 
-        train_dir = (ext or "").split(os.pathsep)[0]
-        if train_dir and train_dir not in sys.path:
-            sys.path.insert(0, train_dir)
-        bad = []
-        for fn in sorted(os.listdir(train_dir)):
-            if not fn.endswith(".py") or fn.startswith("_"):
-                continue
+        unresolved = []
+        for name in declared:
             try:
-                importlib.import_module(fn[:-3])
+                if recursive_find_trainer_class_by_name(name) is None:
+                    unresolved.append(name)
             except Exception as exc:
-                bad.append(f"{fn}: {exc!r}")
-        check("every module in src/train imports cleanly", not bad, "", "; ".join(bad))
+                unresolved.append(f"{name} ({exc!r})")
+        check("nnU-Net resolves every trainer class in src/train", not unresolved,
+              f"{len(declared)} class(es)", "unresolved: " + ", ".join(unresolved))
+    except Exception as exc:  # pragma: no cover
+        check("nnU-Net resolves every trainer class in src/train", False, repr(exc))
 
-    print("\nRESULT:", "IMAGE SELF-CHECK PASSED" if ok else "FAILURES ABOVE")
-    return 0 if ok else 1
+    # `recursive_find_trainer_class_by_name` imports every module in that folder until
+    # it finds the class, so all of them must be import-safe inside the image (no GPU,
+    # no dataset, no official-challenge checkout).  Alphabetical order may stop the
+    # search early, so check them all here.
+    import importlib
+
+    train_dir = (ext or "").split(os.pathsep)[0]
+    if train_dir and train_dir not in sys.path:
+        sys.path.insert(0, train_dir)
+    bad = []
+    for fn in sorted(os.listdir(train_dir)):
+        if not fn.endswith(".py") or fn.startswith("_"):
+            continue
+        try:
+            importlib.import_module(fn[:-3])
+        except Exception as exc:
+            bad.append(f"{fn}: {exc!r}")
+    check("every module in src/train imports cleanly", not bad, "", "; ".join(bad))
+
 
 
 if __name__ == "__main__":

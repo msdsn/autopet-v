@@ -22,6 +22,8 @@ __all__ = [
 ]
 
 KNOWN_PREDICTORS = (
+    "ensemble_postproc",
+    "ensemble",
     "interactive_postproc",
     "interactive",
     "postproc",
@@ -90,6 +92,16 @@ def _guidance_radius() -> float:
     return float(v) if v else 10.0
 
 
+def _env_list(name: str) -> list:
+    """Comma-separated environment list; empty entries dropped.
+
+    A comma is the separator rather than `os.pathsep` because an ensemble member spec
+    is `<folder>[:<checkpoint>[:<weight>]]` and already uses the colon.
+    """
+    raw = os.environ.get(name, "")
+    return [item.strip() for item in raw.split(",") if item.strip()]
+
+
 def predictor_config() -> dict:
     """The full resolved configuration; logged verbatim so a run can be replayed."""
     folds = os.environ.get("AUTOPETV_FOLDS", "0")
@@ -108,6 +120,8 @@ def predictor_config() -> dict:
         "npp": int(os.environ.get("AUTOPETV_NPP", "1")),
         "nps": int(os.environ.get("AUTOPETV_NPS", "1")),
         "tmp_dir": os.environ.get("AUTOPETV_TMP_DIR") or None,
+        "ensemble_members": _env_list("AUTOPETV_ENSEMBLE_MEMBERS"),
+        "ensemble_weights": [float(x) for x in _env_list("AUTOPETV_ENSEMBLE_WEIGHTS")] or None,
         "postproc_config": pp or None,
         "guidance_radius": _guidance_radius(),
         "interactive_state_dir": _env_bool("AUTOPETV_INTERACTIVE_STATE_DIR", True),
@@ -188,6 +202,37 @@ def build_predictor(cfg: dict, logger=None):
         verbose=cfg["verbose_nnunet"],
         tmp_root=cfg["tmp_dir"],
     )
+
+    if kind in ("ensemble", "ensemble_postproc"):
+        register_external_trainer()
+        from ensemble_predictor import build_ensemble
+
+        members = cfg["ensemble_members"]
+        if not members:
+            raise ValueError(f"AUTOPETV_PREDICTOR={kind} needs AUTOPETV_ENSEMBLE_MEMBERS")
+        for spec in members:
+            folder = spec.split(":")[0]
+            if not os.path.isdir(folder):
+                raise FileNotFoundError(f"ensemble member folder not found: {folder}")
+        # every member gets the same inference settings; `model_folder`, `folds` and the
+        # checkpoint name are per member, so they are not part of the shared block
+        shared = {k: v for k, v in common.items()
+                  if k not in ("model_folder", "checkpoint_name")}
+        base = build_ensemble(
+            members, cfg["ensemble_weights"],
+            guidance_radius=cfg["guidance_radius"],
+            use_state_dir=cfg["interactive_state_dir"],
+            deterministic=cfg["cudnn_deterministic"],
+            force_mirror_axes=cfg["mirror_axes"],
+            **shared,
+        )
+        if logger is not None:
+            logger.info("[predictor] ensemble of %d members: %s, weights %s",
+                        len(base.members), base.member_labels,
+                        [round(w, 4) for w in base.weights])
+        if kind == "ensemble":
+            return base
+        return _wrap_postproc(base, cfg, logger)
 
     if kind in ("interactive", "interactive_postproc"):
         register_external_trainer()
