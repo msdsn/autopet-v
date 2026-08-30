@@ -1347,6 +1347,95 @@ published 2024-09-15; five folds of
 (`checkpoint_final.pth`, `progress.png`, `validation/summary.json` per fold) plus `plans.json`,
 `dataset.json` and `dataset_fingerprint.json`. Only fold 0 is used.
 
+## RE-N — the presence gate on the ResEncL backbone
+
+`RE-N` is `networks_re.ResEncInteractiveUNet` (the LesionTracer ResEncL warm start, 5 input channels,
+`pet_renorm="ctnorm"`) carrying the presence-gate head of `networks_n1.PresenceGateUNet`. It is built,
+tested and **not trained**: the block it ports lost its screen on the control backbone (see below), so
+the row was cancelled before it took a GPU slot. The files are documented because the row is one command
+away if that decision is revisited.
+
+| | |
+|---|---|
+| network | `train.networks_ren.ResEncPresenceGateUNet` |
+| plans | `nnUNetPlans_ren` (`make_ren_plans.py` from `nnUNetPlans_re.json`) |
+| trainer | `nnUNetTrainer_InteractiveREN{,_20epochs,_60epochs,_2epochs}` |
+| graft source | RE40 `checkpoint_final` |
+| added parameters | **257** on 102.353 M |
+
+### Where the gate taps, and why it is not a free choice
+
+N1's cell on the PlainConvUNet is 8×8×8 voxels = 6.37 mL, and its auxiliary `pos_weight` was *measured*
+at that density. Porting the block to a different cell size would change two things at once. At the
+192³ patch the ResEncL stages are:
+
+| stage | grid | C | cell | |
+|---|---|---:|---|---|
+| 2 | 48³ | 128 | 4³ = 0.796 mL | 8× too fine, needs a new `pos_weight` |
+| **3** | **24³** | **256** | **8³ = 6.370 mL** | **the tap — N1's cell exactly** |
+| 4 | 12³ | 320 | 16³ = 50.96 mL | too coarse for a 0.5–3 mL component |
+
+`_zero_and_freeze`, `_FREEZE_FLAG` and `PresenceGateUNet._fuse` are imported from `networks_n1` and
+called directly rather than re-derived, so the fusion contract is the same code object that produced the
+N1 row: the map is added to channel 1 only, `forward` returns `fused + [gate]` with deep supervision on,
+and returns the single fused tensor with it off — the stock inference contract, so `src/predictor.py`,
+`submission/process.py` and the Dockerfile are untouched.
+
+### The three launch assertions, all explicit
+
+Inheriting them implicitly is how they get lost, so one overridden hook calls all three:
+
+1. `gate_head` is exactly zero **after** `network.apply(network.initialize)` — nnU-Net re-initialises
+   after construction and the `_FREEZE_FLAG` guard is what stops it.
+2. Bit-exact equality with a stock in-process `ResidualEncoderUNet` of the same shape carrying the same
+   weights, on the pre-remapped input. In-process, so the expected value is `0.0` and not a tolerance.
+3. `SourceIdentityGateMixin` against the RE checkpoint rebuilt from `nnUNetPlans_re.json`.
+
+RE's own "randomise channels 2–4 ⇒ 0.000" assertion is **not** reused: it holds only for a graft straight
+off LesionTracer, whose stem columns 2–4 are zero. RE-N grafts from RE40, whose stem columns have
+trained, so it would be false — it is replaced by (2)+(3), not dropped in favour of (3) alone.
+
+Measured on a100 (`test_networks_ren.py`, patch 64³, grafted from RE40): gate head `|w|max 0.0e+00`,
+956 tensors grafted with `gate_head.*` the only additions and nothing unexpected, and `0.000e+00` against
+stock with deep supervision **on and off**.
+
+### Kill criteria, in the loop rather than in a post-mortem
+
+`GateRatioAuxLoss` samples `rms(gate) / rms(seg logit)` at the final head every 50 steps and the trainer
+**aborts** above `REN_GATE_RATIO_MAX` (0.25); the head's weight norm, bias, the presence BCE and the
+positive-cell fraction are printed every epoch. Two earlier rider blocks reached 1.52 and 7.12 on that
+ratio and both were diagnosed only after the run.
+
+```bash
+python -m train.make_ren_plans --base-plans $PREP/$DS/nnUNetPlans_re.json --out $PREP/$DS/nnUNetPlans_ren.json
+python -m train.test_networks_ren --plans $PREP/$DS/nnUNetPlans_ren.json --checkpoint <RE40 final> --patch 64 64 64
+INIT=<RE40 final> TAG=ren TRAINER=nnUNetTrainer_InteractiveREN_20epochs PLANS=nnUNetPlans_ren \
+    N1_AUX_W=0.5 N1_AUX_POS_WEIGHT=139.58 bash scripts/env/train_b6.sh
+```
+
+### `pos_weight` is geometry-dependent, and 192³ is not 112×160×128
+
+`train.measure_n1_prior` at the same 6.37 mL cell, 80 batches:
+
+| plans | patch | gate grid | positive cells | label-empty patches | `pos_weight` |
+|---|---|---|---:|---:|---:|
+| `nnUNetPlans_interactive` | 112×160×128 | 14×20×16 | 1.076 % | 44.4 % | 91.96 |
+| `nnUNetPlans_re` | 192³ | 24³ | 0.711 % | 32.5 % | **139.58** |
+
+Same physical cell, different patch composition: the larger patch carries more body around the lesion it
+is centred on, so a smaller fraction of its cells contain one. The by-product is worth recording on its
+own — **a 192³ patch is label-empty 32.5 % of the time against the 112×160×128 patch's 44.4 %.**
+
+### Why the row was cancelled
+
+On the 39-case screen, paired against the `C0` control, the block lost on the backbone it was ported
+from: `N1g9-s39-e80` scored ΔAUC-Dice **−0.129 ± 0.109** and ΔAUC-DMM **−0.277 ± 0.210**. The
+per-iteration split says why, and it is a design finding rather than a tuning one: N1 wins **only** at
+iteration 0 (DMM 0.391 → 0.411) and loses every iteration after it (DMM@5 0.800 → 0.737). A presence
+prior that is fixed per patch fights the scribble corrections — the correction is local, the gate's
+6.37 mL cell is not, so a cell that has decided "lesion here" keeps pushing the foreground logit up in
+the region a background scribble has just asked to clear.
+
 ## Known limitations
 
 * **The corruption model is a proxy for the model's own errors.** True RITM-style iterative training (a
