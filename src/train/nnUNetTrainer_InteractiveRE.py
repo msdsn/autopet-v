@@ -31,13 +31,24 @@ the shipped row runs one learning rate.
 
 ## The launch gate
 
-"Epoch 0 is LesionTracer" is checked in-process, not assumed. ``_assert_identity_at_init``
-rebuilds the **stock 2-channel** ``ResidualEncoderUNet`` from the same ``arch_kwargs``,
-loads it with our own grafted weights sliced back to two stem columns, and asserts the
-two networks agree to < 1e-5 on a fixed probe batch. Building both in the *same*
-process is what makes the tolerance meaningful: ``run_training`` sets
-``cudnn.benchmark = True``, so a cached reference from another process disagrees at
-~1e-2 on logits of magnitude ~20 (see ``identity_gate.py``).
+"Epoch 0 is LesionTracer" is checked in-process, not assumed, and both halves of the
+check are **bit-exact** rather than tolerance-based:
+
+* randomising input channels 2-4 must move the logits by exactly 0 -- the stem's new
+  columns are zero, so the interaction cannot reach the output yet;
+* a stock ``ResidualEncoderUNet`` built from the same ``arch_kwargs`` at the same
+  ``input_channels = 5``, carrying this network's own weights, must reproduce the
+  logits exactly on the pre-remapped input -- so the subclass is stock plus
+  ``pet_renorm`` and nothing else.
+
+Both networks are built in the *same* process, which is what makes "exactly" mean
+0.0: ``run_training`` sets ``cudnn.benchmark = True`` and a cached reference from
+another process disagrees at ~1e-2 on logits of magnitude 20 (see ``identity_gate.py``).
+For the same reason the gate does not compare against a 2-*channel* network: a
+``(32, 2, ...)`` stem and a ``(32, 5, ...)`` stem are different convolutions with
+different autotuned kernels and TF32 paths, and they disagree at 1.1e-01 on an A100
+while the identical comparison in float64 on the CPU is 0.000e+00
+(``train.test_networks_re --f64-identity``).
 """
 
 from __future__ import annotations
@@ -81,8 +92,13 @@ class nnUNetTrainer_InteractiveRE(nnUNetTrainer_InteractiveV2_negfp):
     IDENTITY_TOL: float = 1e-5
     IDENTITY_BATCH: int = 1
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    # nnUNetTrainer.__init__ fills my_init_kwargs by walking
+    # inspect.signature(self.__init__) against its own locals(), so the signature has
+    # to be spelled out here; (*args, **kwargs) makes it look for a local named 'args'
+    # and raises KeyError before the first epoch.
+    def __init__(self, plans: dict, configuration: str, fold: int, dataset_json: dict,
+                 device: torch.device = torch.device("cuda")):
+        super().__init__(plans, configuration, fold, dataset_json, device)
         self.stem_lr_mult = _env_float("RE_STEM_LR_MULT", self.STEM_LR_MULT)
         self.print_to_log_file(
             f"[RE] stem_lr_mult={self.stem_lr_mult} identity_tol={self.IDENTITY_TOL}")
@@ -149,60 +165,78 @@ class nnUNetTrainer_InteractiveRE(nnUNetTrainer_InteractiveV2_negfp):
         return x
 
     def _assert_identity_at_init(self, mod) -> None:
-        """The grafted 5-channel network must equal the stock 2-channel LesionTracer.
+        """Two exact assertions, in-process, on the real patch.
 
-        The reference is built here, in this process, from the same ``arch_kwargs``
-        with ``input_channels = 2`` and the *stock* ``ResidualEncoderUNet`` class, and
-        loaded with this network's own weights, the stem sliced back to its first two
-        columns. It therefore tests exactly the two claims the surgery makes: the
-        interaction columns are zero (channels 2-4 cannot move the output) and nothing
-        else was disturbed. ``pet_renorm`` is applied to the reference's input by hand,
-        because the stock class does not carry it.
+        (a) The interaction columns of the stem are zero, so channels 2-4 cannot
+            reach the output: randomising them must change the logits by **exactly**
+            zero. That is shape-independent and bit-exact.
+        (b) The network is stock ``ResidualEncoderUNet`` plus ``pet_renorm`` and
+            nothing else: a stock class built from the same ``arch_kwargs`` with the
+            same ``input_channels = 5``, carrying this network's own weights, must
+            reproduce the logits exactly on the pre-remapped input. Same shapes means
+            the same cuDNN kernels, so "exactly" means 0.0 and not a tolerance.
+
+        Together with the strict graft (0 missing, 0 unexpected, 0 shape mismatch)
+        those two statements *are* "epoch 0 is the LesionTracer model". Comparing
+        against a 2-*channel* network instead would be the same mathematical claim
+        but not a bit-exact test: a (32, 2, ...) stem and a (32, 5, ...) stem are
+        different convolutions, cuDNN autotunes them differently and TF32 rounds
+        them differently, and the measured disagreement is 1.1e-01 on logits of
+        magnitude 20 -- while the identical comparison in float64 on the CPU is
+        0.000e+00. ``train.test_networks_re --f64-identity`` runs that one.
         """
-        from dynamic_network_architectures.architectures.unet import ResidualEncoderUNet
-
-        arch = self.configuration_manager.configuration["architecture"]
-        kw = {k: v for k, v in arch["arch_kwargs"].items() if k not in ("pet_renorm",)}
         from nnunetv2.utilities.get_network_from_plans import get_network_from_plans
-        ref = get_network_from_plans(
-            "dynamic_network_architectures.architectures.unet.ResidualEncoderUNet",
-            kw, arch["_kw_requires_import"], 2,
-            int(self.label_manager.num_segmentation_heads),
-            allow_init=True, deep_supervision=self.enable_deep_supervision)
-
-        sd = {k: v.detach().clone() for k, v in mod.state_dict().items()}
-        for k in STEM_CONV_KEYS:
-            if k in sd:
-                sd[k] = sd[k][:, :2].contiguous()
-        ref.load_state_dict(sd, strict=True)
 
         x = self._identity_probe_batch().to(self.device)
-        x_ref = mod._remap_pet(x)[:, :2] if hasattr(mod, "_remap_pet") else x[:, :2]
         was_training = mod.training
-        ref = ref.to(self.device).eval()
         mod.eval()
         try:
+            x2 = x.clone()
+            x2[:, 2:] = torch.rand_like(x2[:, 2:])
+            with torch.no_grad():
+                a, b = mod(x), mod(x2)
+            if not isinstance(a, (list, tuple)):
+                a, b = [a], [b]
+            d_inert = max((p.float() - q.float()).abs().max().item() for p, q in zip(a, b))
+            if d_inert != 0.0:
+                raise RuntimeError(
+                    f"[RE] identity assertion FAILED: randomising the interaction "
+                    f"channels moved the logits by {d_inert:.3e}; the stem's new "
+                    f"columns are not zero")
+
+            arch = self.configuration_manager.configuration["architecture"]
+            kw = {k: v for k, v in arch["arch_kwargs"].items() if k != "pet_renorm"}
+            ref = get_network_from_plans(
+                "dynamic_network_architectures.architectures.unet.ResidualEncoderUNet",
+                kw, arch["_kw_requires_import"], int(self.num_input_channels),
+                int(self.label_manager.num_segmentation_heads),
+                allow_init=True, deep_supervision=self.enable_deep_supervision)
+            ref.load_state_dict(mod.state_dict(), strict=True)
+            ref = ref.to(self.device).eval()
+            x_ref = mod._remap_pet(x) if hasattr(mod, "_remap_pet") else x
             with torch.no_grad():
                 out, r = mod(x), ref(x_ref)
-        finally:
-            if was_training:
-                mod.train()
+            if not isinstance(out, (list, tuple)):
+                out, r = [out], [r]
+            d = max((p.float() - q.float()).abs().max().item() for p, q in zip(out, r))
             ref.to("cpu")
             del ref
             torch.cuda.empty_cache()
+        finally:
+            if was_training:
+                mod.train()
 
-        if not isinstance(out, (list, tuple)):
-            out, r = [out], [r]
-        d = max((a.float() - b.float()).abs().max().item() for a, b in zip(out, r))
         if d >= self.IDENTITY_TOL:
             raise RuntimeError(
                 f"[RE] identity assertion FAILED: max |logit diff| {d:.3e} >= "
-                f"{self.IDENTITY_TOL:g} against the stock 2-channel ResidualEncoderUNet")
+                f"{self.IDENTITY_TOL:g} against a stock ResidualEncoderUNet of the "
+                f"same shape carrying the same weights")
         self.print_to_log_file(
-            f"[RE] identity assertion PASS: max |logit diff| {d:.3e} < "
-            f"{self.IDENTITY_TOL:g} on {tuple(x.shape)}, in-process against a stock "
-            f"2-channel ResidualEncoderUNet carrying the same weights "
-            f"(pet_renorm={getattr(mod, 'pet_renorm', 'n/a')})")
+            f"[RE] identity assertion PASS: interaction channels inert "
+            f"(max |logit diff| {d_inert:.3e}), and the network equals a stock "
+            f"in-process ResidualEncoderUNet + pet_renorm="
+            f"{getattr(mod, 'pet_renorm', 'n/a')} to {d:.3e} < {self.IDENTITY_TOL:g} "
+            f"on {tuple(x.shape)}")
 
     # ------------------------------------------------------------------
     # optimizer

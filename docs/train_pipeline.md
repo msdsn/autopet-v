@@ -23,6 +23,11 @@ stock `nnUNetv2_train` — no fork of nnU-Net, no changes to the preprocessed st
 | `nnUNetTrainer_InteractiveArch.py` | the B13/B14/C0 trainers and the epoch-0 identity gate |
 | `make_arch_plans.py` | writes the variant plans (`nnUNetPlans_b13/b14.json`) |
 | `test_networks.py` | shapes, epoch-0 equivalence, parameter counts, speed and VRAM |
+| `networks_re.py` | the RE network: LesionTracer's ResEncL at 5 channels, plus the PET remap |
+| `make_re_plans.py` | writes `nnUNetPlans_re.json` (our plans, their architecture) |
+| `init_from_lesiontracer.py` | 2 -> 5 input-channel surgery onto the ResEncL |
+| `nnUNetTrainer_InteractiveRE.py` | the RE trainer and its bit-exact launch gate |
+| `test_networks_re.py` | the RE launch gate, including the `pet_renorm` measurement |
 
 ## Model input
 
@@ -896,6 +901,189 @@ paired Δ against the control on these 39 cases is therefore meaningful; an arbi
 `eval_variant.sh` because case names contain spaces: the list has to reach `interactive_eval.py` as a
 bash array of `--cases` arguments, and **`interactive_eval.py` has no `--cases_file` option** —
 `eval_variant.sh`'s `CASES_FILE` branch passes a flag that does not exist and aborts the run.
+
+## ResEncL warm start (RE)
+
+Every row above changes the method on top of the organisers' 30.79 M `PlainConvUNet`. RE changes the
+**backbone and its pretraining**, and keeps the method fixed: it is the B10 recipe
+(`nnUNetTrainer_InteractiveV2_negfp` — same interaction distribution, same lesion-free FP term, same
+store, same 39-case screen) fine-tuned from the **autoPET III challenge winner**, team LesionTracer's
+ResEncL (Zenodo 14007247, CC BY 4.0).
+
+| | C0 (control) | RE |
+|---|---|---|
+| network | `PlainConvUNet` | `train.networks_re.ResEncInteractiveUNet` (`ResidualEncoderUNet`) |
+| parameters | 30.79 M | **102.35 M** |
+| patch | 112 × 160 × 128 = 2.29 M voxels | **192³ = 7.08 M voxels** |
+| spacing | [3.0, 2.0364, 2.0364] | **the same** |
+| init | organisers' 1000-epoch Dataset998 baseline | LesionTracer fold 0, epoch 1500, MultiTalent-pretrained |
+| schedule | 120 epochs, lr 5e-4 | 40 (screen) / 120 / 100, lr 5e-4 |
+
+The spacing coincidence is what makes the row affordable at all: their plans resample to
+`[3.0, 2.0364201068878174, 2.0364201068878174]`, which is *byte-identical* to ours, so the pretrained
+filters see the millimetres they were trained on and the 39.5 GB store needs no rebuild. Their
+`foreground_intensity_properties_per_channel["0"]` is byte-identical to ours as well (mean
+107.73438968591431, std 286.34403119451997) — both fingerprints come from the same autoPET cohort — so
+the CT channel needs no correction either. The 40-epoch screen is not an arbitrary budget: at batch 2,
+40 × 250 × 2 × 7.08 M = 1.42·10¹¹ training voxels against the control's 120 × 250 × 2 × 2.29 M =
+1.37·10¹¹, so the screen sees **the same number of voxels** as the row it is compared with.
+
+| file | what it does |
+|---|---|
+| `networks_re.py` | `ResEncInteractiveUNet` (5 channels + the PET remap) and the strict graft |
+| `make_re_plans.py` | writes `nnUNetPlans_re.json` |
+| `init_from_lesiontracer.py` | the 2 → 5 channel surgery, `re_init_5ch.pth` |
+| `nnUNetTrainer_InteractiveRE.py` | the trainer and its 40 / 100 / 120-epoch variants |
+| `test_networks_re.py` | the launch gate |
+| `scripts/env/train_re.sh` | the launcher |
+
+### What is in the checkpoint, and what is kept
+
+Building stock `ResidualEncoderUNet` from *their* `plans.json` at `input_channels=2, num_classes=2`
+and diffing against `fold_0/checkpoint_final.pth` gives **0 missing tensors, 0 shape mismatches and
+exactly 10 unexpected ones** — `decoder.organ_seg_layers.*`, the 11-class MultiTalent organ
+supervision, a module stock `ResidualEncoderUNet` does not have. So there is no architecture to
+reverse-engineer: 6 stages, features `[32, 64, 128, 256, 320, 320]`, blocks `[1, 3, 4, 6, 6, 6]`,
+strides `[1,1,1]` then five `[2,2,2]`, `conv_bias=true`, `InstanceNorm3d`, LeakyReLU.
+
+The surgery does exactly three things:
+
+1. **stem 2 → 5 input channels**, CT and PET copied, the three interaction columns **zero**. The tensor
+   has four aliases (`encoder.stem.convs.0.{conv,all_modules.0}.weight` and both again under
+   `decoder.encoder.…`, because the decoder holds a reference to the encoder) and all four are patched.
+   Zero rather than Kaiming: the gradient of an *input* column is `x_c ⊗ δ`, which is non-zero on the
+   first step, unlike a zero-initialised *output* projection.
+2. **drop the 10 organ tensors.** They are an auxiliary training head; we have no organ labels.
+3. **keep `decoder.seg_layers.*` verbatim.** This is the decision that makes the row worth running.
+   Their heads are `(2, C, 1, 1, 1)` and their shipped `dataset.json` is `{"background": 0,
+   "tumor": 1}` — two classes, *our* two classes, at our spacing. There is nothing to slice and nothing
+   to re-initialise, and re-initialising would turn "warm start" into "warm encoder, cold output" and
+   throw away the calibration of a model that scores Dice 0.687 on its own autoPET III validation.
+   Consequently there is no re-initialised head and no separate head learning rate; `RE_STEM_LR_MULT`
+   (default 1.0) exists for the one module that does start partly from nothing, the stem.
+
+### The PET normalisation mismatch — the one real incompatibility, and its measurement
+
+Their channel 1 is **`CTNormalization` on SUV** with fip["1"]:
+`(clip(SUV, 1.0433, 51.211) − 7.0638) / 7.9604`. Ours is **per-case `ZScoreNormalization`**. These are
+not close: theirs floors at SUV 1.04, so ~93 % of body voxels sit on the floor at −0.755, while ours
+preserves the low-uptake range and reaches ≈ +30 on a hot lesion. Feeding our channel to their stem is
+feeding it a distribution it has never seen.
+
+The store cannot be rebuilt in the time available, so the remap lives **inside the network**
+(`pet_renorm="ctnorm"`, a plans field, so the predictor rebuilds the identical function from the
+`plans.json` written next to `fold_0/` with no extra wiring):
+
+```
+SUV ≈ z · 0.6249 + 0.1088          # cohort medians of the store's per-case pet_norm_correction
+x₁   = (clip(SUV, 1.0433, 51.211) − 7.0638) / 7.9604
+```
+
+The cohort medians are the same constants `networks_eva.py` renders B17 with (120 store cases; the
+per-case `sd` spans 0.44–1.14), because a training patch carries no per-case correction. That is an
+approximation — a case at `sd = 1.14` has its reconstructed SUV under-estimated by 1.8× — and the
+decision not to argue about it but measure it: `test_networks_re --zeroshot` runs the **unmodified**
+2-channel LesionTracer on real store patches centred on a lesion and scores it against the stored label
+under both representations.
+
+| | mean Dice, 8 real store lesion patches |
+|---|---|
+| `pet_renorm="none"` (our per-case z-score) | 0.4766 |
+| `pet_renorm="ctnorm"` | **0.8181** |
+
+Per patch the gap is 0.39 → 0.93, 0.16 → 0.90, 0.00 → 0.62. `ctnorm` is therefore the shipped default,
+and the number is also the honest measure of how warm the warm start is: **0.82 Dice zero-shot**, before
+a single fine-tuning step and with the interaction channels still inert.
+
+### The launch gate
+
+Both halves are **bit-exact**, not tolerance-based, and both run in the training process:
+
+* randomising input channels 2–4 moves the logits by exactly `0.000e+00` — the stem's new columns are
+  zero, so the interaction cannot reach the output yet;
+* a stock `ResidualEncoderUNet` built from the same `arch_kwargs` at the same `input_channels = 5`,
+  carrying the network's own weights, reproduces the logits at exactly `0.000e+00` on the pre-remapped
+  input — so the subclass is stock plus `pet_renorm` and nothing else.
+
+The gate deliberately does **not** assert against a 2-*channel* network. A `(32, 2, …)` stem and a
+`(32, 5, …)` stem are different convolutions; cuDNN autotunes them differently and TF32 rounds them
+differently, and the measured disagreement is `1.058e-01` on logits of magnitude 45 (2.3·10⁻³ relative)
+on an A100 — while the identical comparison in float64 on the CPU at a 64³ patch is `0.000e+00`
+(`--f64-identity`). That is the same float-noise trap `identity_gate.py` documents for the file-based
+gate, one level deeper.
+
+```bash
+python -m train.make_re_plans --base-plans $PREP/$DS/nnUNetPlans_interactive.json \
+    --lesiontracer-plans <LT>/plans.json --out $PREP/$DS/nnUNetPlans_re.json \
+    --patch-size 192 192 192 --batch-size 2 --pet-renorm ctnorm
+python -m train.init_from_lesiontracer --src <LT>/fold_0/checkpoint_final.pth \
+    --dst <work>/weights/re_init_5ch.pth --plans $PREP/$DS/nnUNetPlans_re.json
+python -m train.test_networks_re --plans $PREP/$DS/nnUNetPlans_re.json \
+    --init <work>/weights/re_init_5ch.pth --cuda --bench --transform --zeroshot 8
+
+INIT=<work>/weights/re_init_5ch.pth TAG=re40 \
+TRAINER=nnUNetTrainer_InteractiveRE_40epochs PLANS=nnUNetPlans_re EPOCHS=40 \
+    bash scripts/env/train_re.sh
+```
+
+`train_re.sh` is `train_b6.sh`'s contract (TRAINER/TAG/PLANS/INIT/EPOCHS, the GPU guard, the generated
+launcher, the progress watcher, the `tmux` pair) with one change it needs: `train_b6.sh` validates the
+source checkpoint by reading `encoder.stages.0.0.convs.0.conv.weight`, which is the `PlainConvUNet`'s
+first conv and does not exist in a ResEncL, whose stem is `encoder.stem.convs.0.conv.weight`. The RE
+launcher finds the stem structurally — the 5-D weight with the smallest input dimension — so it works
+for either architecture, and additionally refuses a checkpoint that still carries organ heads.
+
+### Cost, and what was actually measured
+
+Every number below comes from a box that was **simultaneously running one training, two evaluation
+chains and a post-processing sweep** at load average 20 on 12 vCPU, so all of them are upper bounds;
+B10's own step time inflates 125 ms -> 328 ms (2.6x) under that kind of co-residency.
+
+| | measured | how |
+|---|---|---|
+| parameters | **102.353 M** | `test_networks_re` |
+| forward+backward, batch 2 at 192^3 | **540 ms/step, peak 18.59 GiB** (2389 ms with a second training co-resident) | `--bench`, synthetic batch |
+| the same at 128 x 160 x 160 | 233 ms/step, peak 8.92 GiB | `--bench` on `nnUNetPlans_re128.json` |
+| real epoch, 4 train + 1 val iteration | **4.9 s** -> ~1.0-1.1 s per optimizer step | 2-epoch end-to-end run |
+| interaction transform at 192^3 | mean 4352 ms / median 1727 ms | `bench_transform --patch 192 192 192` |
+| the same at 112 x 160 x 128 | mean 1015 ms / median 665 ms | idle reference for it is 99 ms mean |
+| inference, one 400 x 400 x 326 case | **16.1 s** iteration 0, 9.4 s iteration 1 | `interactive_eval.py`, 20 min budget |
+
+18.6 GiB at batch 2 is comfortable on an 80 GB A100, so **no gradient checkpointing and no patch
+reduction is needed**; `nnUNetPlans_re128.json` (patch 128 x 160 x 160 = 3.28 M voxels, 233 ms/step,
+8.92 GiB) exists as the fallback for a tighter box, not for this one. At 540 ms/step a 250-iteration
+epoch is **135 s of GPU** plus ~10 s of validation, against ~154 s of dataloader for 500 samples over
+12 workers, so the run stays roughly balanced rather than GPU-bound: **40 epochs in ~2.0-2.5 h**.
+
+The transform scales as expected -- 4.3x the time for 3.1x the volume -- which puts the idle
+expectation at ~425 ms per patch; amortised over 12 dataloader workers that is ~18 s per epoch and not
+the bottleneck. nnU-Net's own `SpatialTransform` at 3.1x the volume is the larger CPU cost.
+
+### End to end
+
+`nnUNetv2_train 998 3d_fullres 0 -tr nnUNetTrainer_InteractiveRE_2epochs -p nnUNetPlans_re` runs the
+real store through the real trainer: the gate passes at `0.000e+00`, the loss is the B10 compound
+(`w_lesion_free=1.0`), and validation pseudo-Dice is **0.856 at epoch 0** and 0.908 at epoch 1 --
+against 0.73-0.76 for the 4->5-channel surgery on the organisers' baseline. The predictor then rebuilds
+`train.networks_re.ResEncInteractiveUNet` from the `plans.json` the trainer wrote next to `fold_0/`,
+with no wiring beyond `src` on `PYTHONPATH`, and runs the interactive loop on a real case.
+
+### Licence and attribution
+
+The weights are **CC BY 4.0** — commercial use and redistribution of derivatives permitted, attribution
+required — as recorded in the Zenodo metadata (`metadata.license.id == "cc-by-4.0"`). The archive
+itself carries **no LICENSE file**; the licence lives on the record. Anything trained from them must
+cite:
+
+> M. Rokuss et al., *From FDG to PSMA: A Hitchhiker's Guide to Multitracer, Multicenter Lesion
+> Segmentation in PET/CT Imaging*, arXiv:2409.09478, 2024. Model weights: Zenodo record 14007247,
+> https://doi.org/10.5281/zenodo.14007247, CC BY 4.0.
+
+Archive: `autoPET-3-LesionTracer.zip`, 3 808 128 600 bytes, md5 `c7e55243ade51e284fbeb77523aaa2b7`,
+published 2024-09-15; five folds of
+`Dataset222_AutoPETIII_2024/autoPET3_Trainer__nnUNetResEncUNetLPlansMultiTalent__3d_fullres_bs3`
+(`checkpoint_final.pth`, `progress.png`, `validation/summary.json` per fold) plus `plans.json`,
+`dataset.json` and `dataset_fingerprint.json`. Only fold 0 is used.
 
 ## Known limitations
 
